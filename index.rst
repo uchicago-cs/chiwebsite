@@ -1,22 +1,12 @@
-.. The UChicago chi-Projects documentation master file, created by
-   sphinx-quickstart on Sun Jul 13 17:23:10 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to The UChicago chi-Projects's documentation!
-=====================================================
-
-Contents:
+Lorem chi-Projects Ipsum
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   chidb.rst
+   chirc.rst
+   chitcp.rst
+   chistributed.rst
+   chisubmit.rst
 
