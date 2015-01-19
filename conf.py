@@ -91,6 +91,7 @@ exclude_patterns = ['_build']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
+highlight_language = 'none'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -123,11 +124,11 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-        ("chidb", "chidb"),
-        ("chirc", "chirc"),
-        ("chitcp", "chitcp"),
-        ("chistributed", "chistributed"),
-        ("chisubmit", "chisubmit"),
+        #("chidb", "chidb/index"),
+        #("chirc", "chirc/index"),
+        #("chitcp", "chitcp/index"),
+        #("chistributed", "chistributed/index"),
+        #("chisubmit", "chisubmit/index"),
     ],
 
     # Render the next and previous page links in navbar. (Default: true)
