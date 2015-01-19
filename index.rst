@@ -4,9 +4,9 @@ Lorem chi-Projects Ipsum
    :maxdepth: 2
    :hidden:
 
-   chidb.rst
-   chirc.rst
-   chitcp.rst
-   chistributed.rst
-   chisubmit.rst
+   chidb/index.rst
+   chirc/index.rst
+   chitcp/index.rst
+   chistributed/index.rst
+   chisubmit/index.rst
 
