@@ -124,7 +124,7 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-        #("chidb", "chidb/index"),
+        ("About", "about"),
         #("chirc", "chirc/index"),
         #("chitcp", "chitcp/index"),
         #("chistributed", "chistributed/index"),
@@ -132,10 +132,10 @@ html_theme_options = {
     ],
 
     # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': True,
+    'navbar_sidebarrel': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': True,
+    'navbar_pagenav': False,
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
@@ -160,7 +160,7 @@ html_theme_options = {
 
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': "footer",
+    'source_link_position': None,
 
     # Bootswatch (http://bootswatch.com/) theme.
     #
