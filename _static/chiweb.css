@@ -26,3 +26,7 @@ navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:fo
 .pager li>a:hover {
     background-color: #9f2425;
 }
+
+.main-panels {
+    padding-top: 15px;
+}

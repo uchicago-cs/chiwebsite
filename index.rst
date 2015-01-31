@@ -1,24 +1,29 @@
 
 .. raw:: html
     
+    <div class="main-panels">
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">chirc</h3>
+                <h3 class="panel-title"><a href="chirc/index.html">chirc</a></h3>
               </div>
               <div class="panel-body">
-                chirc is an awesome project.
+                <p>chirc is an awesome project.</p>
+                
+                <p><a href="chirc/index.html">Learn more...</a></p>
               </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">chidb</h3>
+                <h3 class="panel-title"><a href="chidb/index.html">chidb</a></h3>
               </div>
               <div class="panel-body">
-                chidb is an awesome project.
+                <p>chidb is an awesome project.</p>
+                
+                <p><a href="chidb/index.html">Learn more...</a></p>
               </div>
             </div>
         </div>
@@ -28,20 +33,24 @@
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">chiTCP</h3>
+                <h3 class="panel-title"><a href="chitcp/index.html">chiTCP</a></h3>
               </div>
               <div class="panel-body">
-                chiTCP is an awesome project.
+                <p>chiTCP is an awesome project.</p>
+                
+                <p><a href="chitcp/index.html">Learn more...</a></p>
               </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">chistributed</h3>
+                <h3 class="panel-title"><a href="chistributed/index.html">chistributed</a></h3>
               </div>
               <div class="panel-body">
-                chistributed is an awesome project.
+                <p>chistributed is an awesome project.</p>
+                
+                <p><a href="chistributed/index.html">Learn more...</a></p>
               </div>
             </div>
         </div>
@@ -51,14 +60,18 @@
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">chisubmit</h3>
+                <h3 class="panel-title"><a href="chisubmit/index.html">chisubmit</a></h3>
               </div>
               <div class="panel-body">
-                chisubmit is an awesome project.
+                <p>chisubmit is an awesome project.</p>
+                
+                <p><a href="chisubmit/index.html">Learn more...</a></p>
               </div>
             </div>
         </div>
     </div>
+    </div>
+    
 .. toctree::
    :maxdepth: 2
    :hidden:
