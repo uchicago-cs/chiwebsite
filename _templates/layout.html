@@ -4,6 +4,14 @@
 {# Custom CSS overrides #}
 {% set bootswatch_css_custom = ['_static/chiweb.css'] %}
 
+{% block htmltitle %}
+{%- if pagename == "index" %}
+<title>{{ docstitle|e }}</title>
+{%- else %}
+<title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+{%- endif %}
+{% endblock %}
+
 {% block sidebar1 %}
 {%- if pagename != "index" %}
 <div class="row">
