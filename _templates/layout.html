@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block sidebar1 %}
-{%- if pagename != master_doc %}
+{%- if pagename != master_doc and pagename not in pages_without_nav %}
 <div class="row">
     <div class="col-md-12">
         <ul class="breadcrumb">
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block sidebar2 %} 
-{%- if pagename != master_doc %}
+{%- if pagename != master_doc and pagename not in pages_without_nav %}
 <nav class="related">
   <ul class="pager">
   {%- if prev and not pagename.endswith("/index") %}

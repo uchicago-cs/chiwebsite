@@ -173,6 +173,10 @@ html_theme_options = {
     'bootstrap_version': "3",
 }
 
+html_context = {
+                "pages_without_nav": ["about"]
+                }
+
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
