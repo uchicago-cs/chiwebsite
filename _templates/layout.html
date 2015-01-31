@@ -4,7 +4,24 @@
 {# Custom CSS overrides #}
 {% set bootswatch_css_custom = ['_static/chiweb.css'] %}
 
+{% block sidebar1 %}
+{%- if pagename != "index" %}
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="{{ pathto(master_doc) }}">{{ project|e }}</a></li>
+        {%- for parent in parents %}
+          <li><a href="{{ parent.link|e }}">{{ parent.title }}</a></li>
+        {%- endfor %}
+            <li class="active">{{ title }}</li>
+        </ul>
+    </div>
+{%- endif %}
+</div>
+{% endblock %}
+
 {% block sidebar2 %} 
+{%- if pagename != "index" %}
 <nav class="related">
   <ul class="pager">
   {%- if prev %}
@@ -27,4 +44,5 @@
   {%- endif %}
   </ul>
 </nav>
+{%- endif %}
 {% endblock %}
