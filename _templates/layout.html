@@ -5,7 +5,7 @@
 {% set bootswatch_css_custom = ['_static/chiweb.css'] %}
 
 {% block htmltitle %}
-{%- if pagename == "index" %}
+{%- if pagename == master_doc %}
 <title>{{ docstitle|e }}</title>
 {%- else %}
 <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block sidebar1 %}
-{%- if pagename != "index" %}
+{%- if pagename != master_doc %}
 <div class="row">
     <div class="col-md-12">
         <ul class="breadcrumb">
@@ -29,10 +29,10 @@
 {% endblock %}
 
 {% block sidebar2 %} 
-{%- if pagename != "index" %}
+{%- if pagename != master_doc %}
 <nav class="related">
   <ul class="pager">
-  {%- if prev %}
+  {%- if prev and not pagename.endswith("/index") %}
     <li class="previous">
     <a href="{{ prev.link|e }}" title="{{ _('Previous Chapter: ') + prev.title|striptags }}">
       {%- if theme_bootstrap_version == "2" -%}<span class="icon-chevron-left visible-tablet"></span>{%- endif -%}
