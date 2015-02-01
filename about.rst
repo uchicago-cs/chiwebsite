@@ -30,3 +30,10 @@ faculty have contributed to the UChicago χ-Projects over the years:
 
   * Colin Hudler, Techstaff, Department of Computer Science
 
+Acknowledgements
+----------------
+
+Development of chiTCP was partially funded by the University of Chicago's
+`Physical Sciences Collegiate Division <https://college.uchicago.edu/academics/physical-sciences-collegiate-division>`__.
+
+
