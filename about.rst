@@ -20,6 +20,7 @@ faculty have contributed to the UChicago χ-Projects over the years:
 
 * chidb
 
+  * Allen Nelson (A.B.'07, S.M.'13)
   * `Adam Shaw <http://people.cs.uchicago.edu/~adamshaw/>`__, Senior Lecturer, Department of Computer Science
 
 * chistributed
