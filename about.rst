@@ -3,12 +3,31 @@
 The UChicago χ-Projects
 =======================
 
+The UChicago χ-Projects are a collection of programming assignments developed at the University of Chicago's
+`Department of Computer Science <http://www.cs.uchicago.edu/>`__ for majors-level CS undergraduate courses.
+
+So far, these assignments have been used only internally at the University of Chicago, but we are in the process
+of migrating all our documentation to this new website, so some of the assignments are not yet ready
+for use outside the University of Chicago. If you are interested in using any of these assignments in any of your 
+courses, please don't hesitate to :ref:`contact us <contact>`.
+
+How do you pronounce "chi"?
+---------------------------
+
+In our original LaTeX documentation, the project names were written with the greek letter χ instead of "chi":
+χdb, χIRC, χTCP, and χstributed. This was intended as a terrible pun on the fact that the projects were also
+developed at the University of **Chi**-cago. However, the "chi" in the projects should be pronounced "kai"
+(like the greek letter χ), not "shi" as in "Chicago". 
+
 
 Contributors
 ------------
 
-A number of UChicago students (most of whom are now alums), staff, and 
-faculty have contributed to the UChicago χ-Projects over the years:
+The original author and primary developer of the χ-Projects is `Borja Sotomayor <http://people.cs.uchicago.edu/~borja/>`__, 
+Lecturer in Computer Science at the University of Chicago.
+
+A number of University of Chicago students (most of whom are now alums), staff, and 
+faculty have also contributed to the UChicago χ-Projects over the years:
 
 * chiTCP
 
@@ -34,7 +53,16 @@ faculty have contributed to the UChicago χ-Projects over the years:
 Acknowledgements
 ----------------
 
+The University of Chicago's `Department of Computer Science <http://www.cs.uchicago.edu/>`__ has provided 
+copious amounts of support for these projects, including funding for student developers.
+
 Development of chiTCP was partially funded by the University of Chicago's
 `Physical Sciences Collegiate Division <https://college.uchicago.edu/academics/physical-sciences-collegiate-division>`__.
 
+.. _contact:
 
+Contact
+-------
+
+If you have any questions about the UChicago χ-Projects, or you are interested in using any of these assignments
+in your courses, please contact `Borja Sotomayor <mailto:borja@cs.uchicago.edu>`__.
