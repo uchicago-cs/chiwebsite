@@ -19,6 +19,34 @@ this::
 
     make check LOG=DEBUG
 
+You do *not* need to run ``chitcpd`` for the tests to run. The tests automatically
+launch a chiTCP daemon during the tests.
+
+Running tests selectively
+-------------------------
+
+The entire test suite can take a long time to run, specially when you start working
+on the project, since most of the tests will time out. You can run individual groups
+of tests like this:
+
+* TCP connection establishment::
+
+    CK_RUN_CASE="3-way handshake" make check
+  
+* TCP connection termination::
+
+    CK_RUN_CASE="Connection termination" make check
+
+* TCP data transfer::
+
+    CK_RUN_CASE="Client sends, Server receives" make check
+    CK_RUN_CASE="Echo" make check
+
+* TCP over an unreliable network::
+
+    CK_RUN_CASE="Dropped packets" make check
+    CK_RUN_CASE="Out of order packets" make check
+
 
 Echo server and client
 ----------------------
@@ -36,6 +64,10 @@ and client. The echo server creates a passive socket on port 7 and, when a
 client connects on that port, every byte the client sends will be sent back
 verbatim. It is a simple way of testing that basic operations, like connecting
 or sending small messages, work correctly.
+
+Take into account that ``echo-server`` and ``echo-client`` both use the *chisocket*
+library. This means that you **must** run ``chitcpd`` on the same machine you're running
+``echo-server`` and ``echo-client``. Otherwise, the chisocket library will not work.
 
 When testing with these applications, we suggest you run ``chitcpd`` with option
 ``-vv``. This will print detailed output about what your TCP implementation is
@@ -183,6 +215,49 @@ Finally, both the client will prompt you to press any key to exit:
 
     Press any key to exit...
     
+
+The "simple tester"
+-------------------
+
+The echo client and server can still be cumbersome for testing since they require
+running three different programs (chitcpd, echo-server, and echo-client) and staying
+on top of how each of them behaves.
+
+So, we have an additional sample program that runs a server and client simultaneously.
+The client connects to the server, sends a single message, and then both of them initiate
+a simultanous tear-down. This sample program is built along with the echo client/server
+samples by running this::
+   
+    make samples
+
+To run it, make sure ``chitcpd`` is running (with option ``-vv`` as suggested earlier) and
+then just run this from the ``samples`` directory::
+
+    ./simple-tester
+
+Assuming a correct TCP implementation, the simple tester will print out every TCP state
+transition during the communication, as well as the value of the TCP variables::
+
+    Socket 1: [SND.UNA =   225  SND.NXT =   226  RCV.NXT =     0]              ->     SYN_SENT
+    Socket 2: [SND.UNA =    99  SND.NXT =   100  RCV.NXT =   226]              ->     SYN_RCVD
+    Socket 1: [SND.UNA =   226  SND.NXT =   226  RCV.NXT =   100]     SYN_SENT ->  ESTABLISHED
+    Socket 2: [SND.UNA =   100  SND.NXT =   100  RCV.NXT =   226]     SYN_RCVD ->  ESTABLISHED
+    Socket 1: Sent 'Hello, chiTCP!'
+    Socket 2: Recv 'Hello, chiTCP!'
+    Socket 1: [SND.UNA =   226  SND.NXT =   240  RCV.NXT =   100]  ESTABLISHED ->   FIN_WAIT_1
+    Socket 2: [SND.UNA =   100  SND.NXT =   100  RCV.NXT =   240]  ESTABLISHED ->   FIN_WAIT_1
+    Socket 1: [SND.UNA =   240  SND.NXT =   241  RCV.NXT =   101]   FIN_WAIT_1 ->      CLOSING
+    Socket 2: [SND.UNA =   100  SND.NXT =   101  RCV.NXT =   241]   FIN_WAIT_1 ->      CLOSING
+    Socket 1: [SND.UNA =   241  SND.NXT =   241  RCV.NXT =   101]      CLOSING ->    TIME_WAIT
+    Socket 2: [SND.UNA =   101  SND.NXT =   101  RCV.NXT =   241]      CLOSING ->    TIME_WAIT
+    Socket 1: [SND.UNA =   241  SND.NXT =   241  RCV.NXT =   101]    TIME_WAIT ->       CLOSED
+    Socket 2: [SND.UNA =   101  SND.NXT =   101  RCV.NXT =   241]    TIME_WAIT ->       CLOSED
+
+Socket 1 is the active opener, and Socket 2 is the passive opener (note: sometimes the active
+opener will get Socket 0). Although you may see different values for the Initial Sequence Number, 
+the relative progression of the TCP variables should be the same. Similarly, the order of the 
+state transitions may be slightly different than shown above.
+
     
 Wireshark dissector
 -------------------

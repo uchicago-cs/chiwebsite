@@ -23,14 +23,12 @@ The chiTCP documentation is divided into the following sections:
 
 * :ref:`chitcp-architecture`: Provides an overview of chiTCP's internal
   architecture.
+* :ref:`chitcp-installing`: Instructions on how to install, build, and run
+  chiTCP.
 * :ref:`chitcp-implementing`: A guide to implementing chiTCP.
 * :ref:`chitcp-assignment1` and :ref:`chitcp-assignment2`: The chiTCP
   programming assignments. Please note that your instructor may provide
   additional instructions on how to do these assignments.
 * :ref:`chitcp-testing`: Suggestions and strategies for testing your
   implementation.
-* :ref:`chitcp-installing`: Instructions on how to install chiTCP. Please note
-  that chiTCP may already be installed in your school's computers. You should
-  only follow these instructions if you are installing chiTCP on your own
-  machine.
    

@@ -1,10 +1,26 @@
 .. _chitcp-installing:
 
-Installing and Building chiTCP
-==============================
+Installing, Building, and Running chiTCP
+========================================
+
+The source code for chiTCP can be found in the following GitHub repository:
+
+    https://github.com/uchicago-cs/chitcp
+
+To work on the assignments, all you need to do is clone this repository. However,
+please note that your instructor may give you more specific instructions on how
+to get the chiTCP code.
 
 Software Requirements
 ---------------------
+
+chiTCP has a number of software requirements. If you are doing the chiTCP assignments
+as part of a class, it's likely that this software is already installed on your
+school's computers. If so, you can skip this section, unless you want to run chiTCP
+on your own computer. Please note that, so far, chiTCP has only been tested on
+Linux systems. At this point, we cannot guarantee that chiTCP will build and run
+smoothly on Mac systems.
+
 
 Autotools
 ~~~~~~~~~
@@ -29,7 +45,7 @@ available as packages.
 
 chiTCP requires at least ``protobuf`` 2.6.1 and ``protobuf-c`` 1.0.2. If these
 versions are not available as packages on your operating system, you will need
-to install from source. You can find the appropriate tarballs at
+to install them from source. You can find the appropriate tarballs at
 http://code.google.com/p/protobuf/ and http://code.google.com/p/protobuf-c/.
 
 On most UNIX systems, you should be able to install ``protobuf`` by running the
@@ -112,31 +128,33 @@ during the build process), just run ``make`` like this:
 
 This will generate two files:
 
--  ``chitcpd``: The chiTCP daemon. You can verify that it works correctly by
-   running the following:
+-  ``chitcpd``: The chiTCP daemon (described in :ref:`chitcp-architecture`)
 
-   ::
+-  ``./.libs/libchitcp.so``: The ``libchitcp`` library. Any applications that
+   wants to use the chisocket library will need to link with this library.
+
+
+Running
+-------
+
+To run the chiTCP daemon, just run the following::
 
        ./chitcpd -v
 
-   You should see the following output:
+You should see the following output::
 
-   ::
+   [2014-02-02 11:36:07]   INFO lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket. TCP socket: 23300
 
-       [2014-02-02 11:36:07]   INFO lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket. TCP socket: 23300
+Take into account that you won't be able to do much with ``chitcpd`` until you've implemented 
+the ``tcp.c`` file. We do, however, provide a number of mechanisms for you to test your implementation.
+These are described in :ref:`chitcp-testing`
 
-   Note that, by default, ``chitcpd`` will run on port 23300. You can
-   specify an alternate port using the ``-p`` option.
+By default, ``chitcpd`` listens on TCP port 23300 and creates a UNIX socket on ``/tmp/chitcpd.socket``. If you
+are running ``chitcpd`` on a shared machine, these default values will likely conflict with other users running
+on that same machine. To specify an alternate port/UNIX socket, you need to set the following environment 
+variables on every terminal in which you are running chitcp programs (including ``chitcpd`` and any application 
+that uses the chisocket library)::
 
--  ``./.libs/libchitcp.so``: The ``libchitcp`` library. Any applications that
-   want to use the chisocket library will need to link with this library.
-
-The chiTCP code also includes a few sample programs that use the chisocket
-library. They can be built like this:
-
-::
-
-    make samples
-
-The sample executables will be generated in the ``samples`` directory.
+    export CHITCPD_PORT=30287  # Substitute for a different number
+    export CHITCPD_SOCK=/tmp/chitcpd.socket.$USER
 

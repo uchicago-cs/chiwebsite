@@ -20,9 +20,9 @@ communicate over a real network.
 
    intro.rst
    architecture.rst
+   installing.rst
    implementing.rst
    assignment1.rst
    assignment2.rst
    testing.rst
-   installing.rst
    

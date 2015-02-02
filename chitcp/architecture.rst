@@ -8,7 +8,7 @@ use chisocket functions to perform standard socket operations, like
 ``connect``, ``send``, ``recv``, etc. Instead of including the ``socket.h``
 system header, a chiTCP header must be included:
 
-::
+.. code-block:: c
 
     #include "chitcp/socket.h"
 
@@ -18,7 +18,7 @@ provide essentially the same functionality, although they do not support every
 possible flag and error code. However, this is enough to write simple clients
 and servers. For example:
 
-::
+.. code-block:: c
 
     clientSocket = chisocket_socket(PF_INET,       // Family: IPv4
                                     SOCK_STREAM,   // Type: Full-duplex stream (reliable)
@@ -40,13 +40,15 @@ library performing the standard socket operations (connect, send, recv, etc.)
 through the chiTCP daemon, instead of accessing the operating system’s TCP/IP
 stack directly.
 
+.. _chitcp-fig-architecture:
+
 .. figure:: architecture.png
    :alt: The chiTCP architecture
 
    The chiTCP architecture
-   [fig:architecture]
 
-Figure [fig:architecture] summarizes the chiTCP architecture. Applications that
+
+Figure :ref:`chitcp-fig-architecture` summarizes the chiTCP architecture. Applications that
 want to use chiTCP call the socket functions in the chisocket library, which
 communicates with the chiTCP daemon. This daemon includes three important
 components:
@@ -67,12 +69,14 @@ The chiTCP Network Layer is actually just regular TCP (i.e., the operating
 system’s TCP, *not* the one you are implementing). So, when chiTCP needs to get
 one of your TCP packets to another host, it does so by establishing a (real)
 TCP connection to that other host’s chiTCP daemon on port 23300.
-Figure [fig:layers] shows the packet encapsulation that happens in chiTCP .
+Figure :ref:`chitcp-fig-layers` shows the packet encapsulation that happens in chiTCP .
 Notice how, from chiTCP’s perspective, (real) TCP is essentially the *Network*
 layer of the protocol stack, while your implementation of TCP is the
 *Transport* layer. If we looked at this from a standard TCP/IP perspective,
 your TCP would simply be the payload of a (real) TCP packet.
 
+
+.. _chitcp-fig-layers:
 
 .. figure:: layers.png
    :alt: The chiTCP architecture
@@ -81,4 +85,3 @@ your TCP would simply be the payload of a (real) TCP packet.
    
    (*) chiTCP inserts a special header between the two TCP headers that contains 
    chiTCP-specific information.
-   [fig:layers]

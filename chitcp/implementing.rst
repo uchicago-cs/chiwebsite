@@ -3,6 +3,16 @@
 Implementation Guide
 ====================
 
+As you'll see, you are provided with a *lot* of code. Fortunately, you will
+only have to interact with a small portion of it. Most of the provide code
+is scaffolding for the chiTCP architecture, which will allow you to focus
+on implementing the TCP protocol on a single file: the ``tcp.c`` file.
+
+This implementation guide provides a roadmap for implementing TCP, as well
+as a description of header files and functions that you will need to be aware
+of as you implement your version of TCP. As a rule of thumb, if a function
+is not described here, you probably should not use it in your code.
+
 Implementing RFC 793
 --------------------
 
