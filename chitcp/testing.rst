@@ -121,7 +121,7 @@ server, you should see something like this::
 
 Please note that the actual values of the TCP variables will probably be
 different. To make this output even more useful, you may want to use
-``chitcp_tcp`` to print out the contents of (1) any TCP packet you send, and
+``chilog_tcp`` to print out the contents of (1) any TCP packet you send, and
 (2) any TCP packets you extract from the ``pending_packets``. If you do this,
 the output of ``chitcpd`` would look like this:
 
