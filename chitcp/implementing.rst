@@ -178,7 +178,23 @@ The parameters to the function are:
         tcp_data_t *tcp_data = &entry->socket_state.active.tcp_data;
         
 
-   The contents of the ``tcp_data_t`` struct are described below. You should
+   The contents of the ``tcp_data_t`` struct are described below. 
+   
+   ``entry`` also contains the value of the TCP state (SYN_SENT, ESTABLISHED, etc.)
+   in the ``tcp_state`` variable:
+
+   .. code-block:: c
+
+        tcp_state_t tcp_state = entry->tcp_state;
+      
+   Since each handler function corresponds to a specific state, you ordinarily
+   will not need to access this variable. However, if you write an auxiliary
+   function that needs to check a socket's current state, you can obtain the 
+   state via the ``tcp_state`` variable. Take into account that you should
+   *never* modify that variable directly. You should only modify it using the
+   ``chitcpd_update_tcp_state`` function described below. 
+   
+   Other than the TCP data and the TCP state, you should
    not access or modify any other information in ``entry``.
 
 -  ``event`` is the event that is being handled. The list of possible events
