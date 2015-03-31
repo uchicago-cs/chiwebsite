@@ -356,7 +356,7 @@ Register Manipulation Instructions
 +----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
 | ``SCopy``            | A register           | A register            |                      | A string :math:`s`   | Make a shallow copy of the contents of           |
 |                      | :math:`r_1`          | :math:`r_2`           |                      |                      | :math:`r_1` into :math:`r_2`. i.e., :math:`r_2`  |
-|                      |                      |                       |                      |                      |  must be left *pointing* to the same value as    |
+|                      |                      |                       |                      |                      | must be left *pointing* to the same value as     |
 |                      |                      |                       |                      |                      | :math:`r_1`.                                     |
 +----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
 
