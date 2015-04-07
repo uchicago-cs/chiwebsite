@@ -115,7 +115,7 @@ Physical organization
 A chidb file is divided into **pages** of size :math:`PageSize`,
 numbered from 1. Each page is used to store a table or index B-Tree
 node. Pages are sometimes referred to as ’blocks’ in the literature. They
-are the units of transfer between secondary storage and memory
+are the units of transfer between secondary storage and memory.
 
 A page contains a **page header** with metadata about the page, such
 as the type of page (e.g., does it store an internal table node? a leaf
@@ -193,7 +193,7 @@ internally in the database file.
 +-----------------------+---------------------------+----------------------------------------+
 | ``varint8``           | Unsigned 1-byte varint    | :math:`0 \leq x \leq 127`              |
 +-----------------------+---------------------------+----------------------------------------+
-| ``varint32``          | Unsigned 2-byte varint    | :math:`0 \leq x \leq 2^{28}-1`         |
+| ``varint32``          | Unsigned 4-byte varint    | :math:`0 \leq x \leq 2^{28}-1`         |
 +-----------------------+---------------------------+----------------------------------------+
 | ``string(n)``         | Nul-terminated string     | # of characters :math:`\leq` ``n``     |
 +-----------------------+---------------------------+----------------------------------------+
@@ -267,7 +267,7 @@ A table page is composed of four section: the **page header**, the
 
 To understand how they relate to each other, it is important to understand
 how cells are laid out in a page. A table page is, to put is simply, a
-container of cells. The bytes in a page of size Page–Size are numbered
+container of cells. The bytes in a page of size :math:`PageSize` are numbered
 from 0 to (:math:`PageSize-1`). Byte 0 is the *top* of the
 page, and byte (:math:`PageSize-1`) is the *bottom* of the
 page. Cells are stored in a page from the bottom up. For example, if a
@@ -356,9 +356,9 @@ following figure and table:
 +-------------+---------------------+--------------+---------------------------------------+
 | **Bytes**   | **Name**            | **Type**     | **Description**                       |
 +=============+=====================+==============+=======================================+
-| 0-3         | :math:ChildPage`    | ``uint32``   | See :ref:`chidb-physorg`              |
+| 0-3         | :math:`ChildPage`   | ``uint32``   | See :ref:`chidb-physorg`              |
 +-------------+---------------------+--------------+---------------------------------------+
-| 4-7         | :math:Key`          | ``varint32`` | See :ref:`chidb-physorg`              |
+| 4-7         | :math:`Key`         | ``varint32`` | See :ref:`chidb-physorg`              |
 +-------------+---------------------+--------------+---------------------------------------+
 
 
@@ -373,11 +373,11 @@ following figure and table:
 +-------------+-------------------------+-----------------------------+---------------------------------------+
 | **Bytes**   | **Name**                | **Type**                    | **Description**                       |
 +=============+=========================+=============================+=======================================+
-| 0-3         | :math:DBRecordSize`     | ``varint32``                | Length of DB–Record in bytes.         |
+| 0-3         | :math:`DBRecordSize`    | ``varint32``                | Length of DB–Record in bytes.         |
 +-------------+-------------------------+-----------------------------+---------------------------------------+
-| 4-7         | :math:Key`              | ``varint32``                | See :ref:`chidb-physorg`              |
+| 4-7         | :math:`Key`             | ``varint32``                | See :ref:`chidb-physorg`              |
 +-------------+-------------------------+-----------------------------+---------------------------------------+
-| 8-...       | :math:DBRecord`         | See :ref:`chidb-records`    | See :ref:`chidb-physorg`              |
+| 8-...       | :math:`DBRecord`        | See :ref:`chidb-records`    | See :ref:`chidb-physorg`              |
 +-------------+-------------------------+-----------------------------+---------------------------------------+
 
 
@@ -474,11 +474,11 @@ following figure and table:
 +-------------+--------------------+------------+---------------------------------------+
 | **Bytes**   | **Name**           | **Type**   | **Description**                       |
 +=============+====================+============+=======================================+
-| 0-3         | :math:ChildPage`   | ``uint32`` | See :ref:`chidb-physorg`              |
+| 0-3         | :math:`ChildPage`  | ``uint32`` | See :ref:`chidb-physorg`              |
 +-------------+--------------------+------------+---------------------------------------+
-| 8-11        | :math:KeyIdx`      | ``uint32`` | See :ref:`chidb-physorg`              |
+| 8-11        | :math:`KeyIdx`     | ``uint32`` | See :ref:`chidb-physorg`              |
 +-------------+--------------------+------------+---------------------------------------+
-| 12-15       | :math:KeyPk`       | ``uint32`` | See :ref:`chidb-physorg`              |
+| 12-15       | :math:`KeyPk`      | ``uint32`` | See :ref:`chidb-physorg`              |
 +-------------+--------------------+------------+---------------------------------------+
 
 
@@ -493,9 +493,9 @@ following figure and table:
 +-------------+------------------+------------+---------------------------------------+
 | **Bytes**   | **Name**         | **Type**   | **Description**                       |
 +=============+==================+============+=======================================+
-| 4-7         | :math:KeyIdx`    | ``uint32`` | See :ref:`chidb-physorg`              |
+| 4-7         | :math:`KeyIdx`   | ``uint32`` | See :ref:`chidb-physorg`              |
 +-------------+------------------+------------+---------------------------------------+
-| 8-11        | :math:KeyPk`     | ``uint32`` | See :ref:`chidb-physorg`              |
+| 8-11        | :math:`KeyPk`    | ``uint32`` | See :ref:`chidb-physorg`              |
 +-------------+------------------+------------+---------------------------------------+
 
 Notice how the internal and leaf cells only differ in the :math:`ChildPage` field.
