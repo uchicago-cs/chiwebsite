@@ -161,6 +161,16 @@ Please take into account that the repository creation is not instantaneous. Ther
 minutes between completing your registration and having your 
 repository created. 
 
+.. note::
+
+   Once your repository is created, you will be able to access it on GitHub or GitLab. However, before you
+   can pull or push from/to GitHub or GitLab, you have to make sure you add your SSH key to Github or GitLab.
+   
+   Instructions for adding your SSH key on GitHub can be found `here <https://help.github.com/articles/generating-ssh-keys/>`__.
+   
+   Instructions for adding your SSH key on a GitLab server will depend on the setup of your server, but
+   general instructions can be found `here <https://about.gitlab.com/2014/03/04/add-ssh-key-screencast/>`__.
+
 If your course is using GitHub, you will receive an "invitation e-mail" from GitHub asking you to join a group. 
 Make sure you accept this invitation; you will not be able to access your repository until you do. 
 
@@ -187,6 +197,14 @@ If your course is set up to use GitLab, you should see something like this::
    Repository URL: git@git-server.example.edu:COURSE_ID/TEAM_NAME.git
 
 Where, instead of ``git-server.example.edu``, you will see your course's GitLab server.
+
+.. note::
+
+   If your GitLab server is ``git-server.example.edu``, then it's likely that the URL to add
+   your SSH key to GitLab will be ``https://git-server.example.edu/profile/keys``. Unless
+   your instructor tells you otherwise, the username and password for the GitLab server
+   will likely be your university username and password.
+
 
 In the following instructions, we will be using the ``Repository URL`` value, which we will refer to as
 ``GIT_URL``.
