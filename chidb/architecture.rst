@@ -1,7 +1,7 @@
 .. _chidb-architecture:
 
 The chidb Architecture
-=======================
+======================
 
 This section describes the chidb architecture, summarized in the following figure:
 
@@ -49,35 +49,35 @@ return codes can be returned by that specific function.
 
 .. cssclass:: table-bordered
 
-+-------------------------+--------------------+----------------------------------------------------------+
-| **Name**                | **Integer code**   | **Description**                                          |
-+=========================+====================+==========================================================+
-| ``CHIDB_OK``            | 0                  | Succesful result                                         |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_EINVALIDSQL``   | 1                  | Invalid SQL                                              |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_ENOMEM``        | 2                  | Could not allocate memory                                |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_ECANTOPEN``     | 3                  | Unable to open the database file                         |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_ECORRUPT``      | 4                  | The database file is not well formed                     |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_ECONSTRAINT``   | 5                  | SQL statement failed because of a constraint violation   |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_EMISMATCH``     | 6                  | Data type mismatch                                       |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_EIO``           | 7                  | An I/O error has occurred when accessing the file        |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_EMISUSE``       | 8                  | API used incorrectly                                     |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_ROW``           | 100                | ``chidb_step()`` has another row ready                   |
-+-------------------------+--------------------+----------------------------------------------------------+
-| ``CHIDB_DONE``          | 101                | ``chidb_step()`` has finished executing                  |
-+-------------------------+--------------------+----------------------------------------------------------+
++-----------------------+------------------+--------------------------------------------------------+
+| **Name**              | **Integer code** | **Description**                                        |
++=======================+==================+========================================================+
+| ``CHIDB_OK``          | 0                | Succesful result                                       |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_EINVALIDSQL`` | 1                | Invalid SQL                                            |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_ENOMEM``      | 2                | Could not allocate memory                              |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_ECANTOPEN``   | 3                | Unable to open the database file                       |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_ECORRUPT``    | 4                | The database file is not well formed                   |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_ECONSTRAINT`` | 5                | SQL statement failed because of a constraint violation |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_EMISMATCH``   | 6                | Data type mismatch                                     |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_EIO``         | 7                | An I/O error has occurred when accessing the file      |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_EMISUSE``     | 8                | API used incorrectly                                   |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_ROW``         | 100              | ``chidb_step()`` has another row ready                 |
++-----------------------+------------------+--------------------------------------------------------+
+| ``CHIDB_DONE``        | 101              | ``chidb_step()`` has finished executing                |
++-----------------------+------------------+--------------------------------------------------------+
 
 
 ``chidb_open``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 The ``chidb_open`` function is used to open a chidb file. Its signature
 is the following:
@@ -101,7 +101,7 @@ The return value of the function can be ``CHIDB_OK``, ``CHIDB_ENOMEM``,
 ``CHIDB_ECANTOPEN``, ``CHIDB_ECORRUPT``, or ``CHIDB_EIO``.
 
 ``chidb_close``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 The ``chidb_close`` function is used to close a chidb file. Its
 signature is the following:
@@ -116,7 +116,7 @@ The return value of the function can be ``CHIDB_OK`` or
 ``CHIDB_EMISUSE`` (if called on a database that is already closed).
 
 ``int chidb_prepare``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 The ``chidb_prepare`` function is used to prepare a SQL statement for
 execution. Internally, this will require compiling the SQL statement
@@ -139,7 +139,7 @@ The return value of the function can be ``CHIDB_OK``,
 ``CHIDB_EINVALIDSQL``, ``CHIDB_ENOMEM``.
 
 ``int chidb_step``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 The ``chidb_step`` function runs a prepared SQL statement until a result
 row is available (or just runs the SQL statement to completion if it is
@@ -165,7 +165,7 @@ The function can also return ``CHIDB_ECONSTRAINT``, ``CHIDB_EMISMATCH``,
 ``CHIDB_EIO``.
 
 ``int chidb_finalize``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 The ``chidb_finalize`` function finalizes a SQL statement, freeing all
 resources associated with it.
@@ -180,7 +180,7 @@ The return value of the function can be ``CHIDB_OK`` or
 ``CHIDB_EMISUSE`` (if called on a statement that is already finalized).
 
 Column access functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Once a SQL statement has been prepared, the following three functions
 can be used to obtain information on the columns of the rows that will
@@ -213,19 +213,19 @@ table.
 
 .. cssclass:: table-bordered
 
-+------------------------------+-----------------------------+----------------------------------------------------------+
-| **Header Value**             | **SQL Type**                | **Description**                                          |
-+==============================+=============================+==========================================================+
-| 0                            | ``NULL``                    | Null value                                               |
-+------------------------------+-----------------------------+----------------------------------------------------------+
-| 1                            | ``BYTE``                    | 1-byte signed integer                                    |
-+------------------------------+-----------------------------+----------------------------------------------------------+
-| 2                            | ``SMALLINT``                | 2-byte signed integer                                    |
-+------------------------------+-----------------------------+----------------------------------------------------------+
-| 4                            | ``INTEGER``                 | 4-byte signed integer                                    |
-+------------------------------+-----------------------------+----------------------------------------------------------+
-| :math:`2\cdot\texttt{n}+13`  | ``TEXT``                    | Character string                                         |
-+------------------------------+-----------------------------+----------------------------------------------------------+
++-----------------------------+--------------+-----------------------+
+| **Header Value**            | **SQL Type** | **Description**       |
++=============================+==============+=======================+
+| 0                           | ``NULL``     | Null value            |
++-----------------------------+--------------+-----------------------+
+| 1                           | ``BYTE``     | 1-byte signed integer |
++-----------------------------+--------------+-----------------------+
+| 2                           | ``SMALLINT`` | 2-byte signed integer |
++-----------------------------+--------------+-----------------------+
+| 4                           | ``INTEGER``  | 4-byte signed integer |
++-----------------------------+--------------+-----------------------+
+| :math:`2\cdot\texttt{n}+13` | ``TEXT``     | Character string      |
++-----------------------------+--------------+-----------------------+
 
 
 ``chidb_column_name`` returns a pointer to a null-terminated string
@@ -344,21 +344,21 @@ Register Manipulation Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``Integer``          | An integer :math:`i` | A register :math:`r`  |                      |                      | Store :math:`i` in :math:`r`.                    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``String``           | A length :math:`l`   | A register :math:`r`  |                      | A string :math:`s`   | Store :math:`s` (with length :math:`l`) in       |
-|                      |                      |                       |                      |                      | :math:`r`.                                       |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Null``             |                      | A register :math:`r`  |                      |                      | Store a null value in :math:`r`.                 |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``SCopy``            | A register           | A register            |                      | A string :math:`s`   | Make a shallow copy of the contents of           |
-|                      | :math:`r_1`          | :math:`r_2`           |                      |                      | :math:`r_1` into :math:`r_2`. i.e., :math:`r_2`  |
-|                      |                      |                       |                      |                      | must be left *pointing* to the same value as     |
-|                      |                      |                       |                      |                      | :math:`r_1`.                                     |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++-------------+----------------------+----------------------+----+--------------------+-------------------------------------------------+
+| Instruction | P1                   | P2                   | P3 | P4                 | Description                                     |
++=============+======================+======================+====+====================+=================================================+
+| ``Integer`` | An integer :math:`i` | A register :math:`r` |    |                    | Store :math:`i` in :math:`r`.                   |
++-------------+----------------------+----------------------+----+--------------------+-------------------------------------------------+
+| ``String``  | A length :math:`l`   | A register :math:`r` |    | A string :math:`s` | Store :math:`s` (with length :math:`l`) in      |
+|             |                      |                      |    |                    | :math:`r`.                                      |
++-------------+----------------------+----------------------+----+--------------------+-------------------------------------------------+
+| ``Null``    |                      | A register :math:`r` |    |                    | Store a null value in :math:`r`.                |
++-------------+----------------------+----------------------+----+--------------------+-------------------------------------------------+
+| ``SCopy``   | A register           | A register           |    | A string :math:`s` | Make a shallow copy of the contents of          |
+|             | :math:`r_1`          | :math:`r_2`          |    |                    | :math:`r_1` into :math:`r_2`. i.e., :math:`r_2` |
+|             |                      |                      |    |                    | must be left *pointing* to the same value as    |
+|             |                      |                      |    |                    | :math:`r_1`.                                    |
++-------------+----------------------+----------------------+----+--------------------+-------------------------------------------------+
 
 
 
@@ -367,30 +367,35 @@ Control Flow Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``Eq``               | A register           | A jump address        | A register           |                      | If the contents of :math:`r_1` are equal to      |
-|                      | :math:`r_1`          | :math:`j`             | :math:`r_2`          |                      | the contents of :math:`r_2`, jump to :math:`j`.  |
-|                      |                      |                       |                      |                      | Otherwise, do nothing. This instruction assumes  |
-|                      |                      |                       |                      |                      | that the types of the contents of both registers |
-|                      |                      |                       |                      |                      | are the same.                                    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Ne``               | Same as ``Eq``, but testing for inequality of values                                                                                          |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Lt``               | Same as ``Eq``, but testing for the value in :math:`r_1` being less than the value in :math:`r_2`                                             |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Le``               | Same as ``Eq``, but testing for the value in :math:`r_1` being less than or equal to the value in :math:`r_2`                                 |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Gt``               | Same as ``Eq``, but testing for the value in :math:`r_1` being greater than the value in :math:`r_2`                                          |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Ge``               | Same as ``Eq``, but testing for the value in :math:`r_1` being greater than or equal to the value in :math:`r_2`                              |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Halt``             | An integer           |                       |                      | An error message     | Halt execution of the database machine and       |
-|                      | :math:`n`            |                       |                      | :math:`s`            | return error code :math:`n`. If :math:`n\neq 0`, |
-|                      |                      |                       |                      |                      | set the machine’s error message to :math:`s`.    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| Instruction | P1                                                                                                               | P2             | P3          | P4               | Description                                      |
++=============+==================================================================================================================+================+=============+==================+==================================================+
+| ``Eq``      | A register                                                                                                       | A jump address | A register  |                  | If the contents of :math:`r_1` are equal to      |
+|             | :math:`r_1`                                                                                                      | :math:`j`      | :math:`r_2` |                  | the contents of :math:`r_2`, jump to :math:`j`.  |
+|             |                                                                                                                  |                |             |                  | Otherwise, do nothing. This instruction assumes  |
+|             |                                                                                                                  |                |             |                  | that the types of the contents of both registers |
+|             |                                                                                                                  |                |             |                  | are the same. The behaviour when either of the   |
+|             |                                                                                                                  |                |             |                  | registers is NULL is undefined.                  |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Ne``      | Same as ``Eq``, but testing for inequality of values                                                             |                |             |                  |                                                  |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Lt``      | Same as ``Eq``, but testing for the value in :math:`r_2` being less than the value in :math:`r_1`                |                |             |                  |                                                  |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Le``      | Same as ``Eq``, but testing for the value in :math:`r_2` being less than or equal to the value in :math:`r_1`    |                |             |                  |                                                  |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Gt``      | Same as ``Eq``, but testing for the value in :math:`r_2` being greater than the value in :math:`r_1`             |                |             |                  |                                                  |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Ge``      | Same as ``Eq``, but testing for the value in :math:`r_2` being greater than or equal to the value in :math:`r_1` |                |             |                  |                                                  |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Halt``    | An integer                                                                                                       |                |             | An error message | Halt execution of the database machine and       |
+|             | :math:`n`                                                                                                        |                |             | :math:`s`        | return error code :math:`n`. If :math:`n\neq 0`, |
+|             |                                                                                                                  |                |             |                  | set the machine’s error message to :math:`s`.    |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
 
+Note: Unless instructed otherwise, comparison of binary registers is not necessary. If instructed to implement it, then
+comparisons must be made byte by byte. Two binary blobs are equal if and only if they have the same length and contain 
+the exact same bytes. If two binary blobs have different lengths, order is determined by the common bytes between the two blobs.
+If the common bytes are equal, then the blob with the fewer bytes is considered to be less than the blob with more bytes. 
 
 
 Database Opening and Closing Instructions
@@ -398,19 +403,19 @@ Database Opening and Closing Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``OpenRead``         | A cursor :math:`c`   | A register :math:`r`. | The number of        |                      | Opens the B-Tree rooted at the page :math:`n`    |
-|                      |                      | The register must     | columns in the table |                      | for read-only access and stores a cursor for it  |
-|                      |                      | contain a page number | (0 if opening an     |                      | in :math:`c`                                     |
-|                      |                      | :math:`n`             | index)               |                      |                                                  |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``OpenWrite``        | Same as ``OpenRead`` but opening the B-Tree in read/write mode                                                                                |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``OpenRead``         | A cursor :math:`c`   |                       |                      |                      | Closes cursor :math:`c` and frees up any         |
-|                      |                      |                       |                      |                      | resources associated with it.                    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++---------------+----------------------------------------------------------------+-----------------------+----------------------+----+-------------------------------------------------+
+| Instruction   | P1                                                             | P2                    | P3                   | P4 | Description                                     |
++===============+================================================================+=======================+======================+====+=================================================+
+| ``OpenRead``  | A cursor :math:`c`                                             | A register :math:`r`. | The number of        |    | Opens the B-Tree rooted at the page :math:`n`   |
+|               |                                                                | The register must     | columns in the table |    | for read-only access and stores a cursor for it |
+|               |                                                                | contain a page number | (0 if opening an     |    | in :math:`c`                                    |
+|               |                                                                | :math:`n`             | index)               |    |                                                 |
++---------------+----------------------------------------------------------------+-----------------------+----------------------+----+-------------------------------------------------+
+| ``OpenWrite`` | Same as ``OpenRead`` but opening the B-Tree in read/write mode |                       |                      |    |                                                 |
++---------------+----------------------------------------------------------------+-----------------------+----------------------+----+-------------------------------------------------+
+| ``Close``     | A cursor :math:`c`                                             |                       |                      |    | Closes cursor :math:`c` and frees up any        |
+|               |                                                                |                       |                      |    | resources associated with it.                   |
++---------------+----------------------------------------------------------------+-----------------------+----------------------+----+-------------------------------------------------+
 
 
 Cursor Manipulation Instructions
@@ -418,43 +423,43 @@ Cursor Manipulation Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``Rewind``           | A cursor :math:`c`   | A jump address        |                      |                      | Makes cursor :math:`c` point to the first entry  |
-|                      |                      | :math:`j`             |                      |                      | in the B-Tree. If the B-Tree is empty, then jump |
-|                      |                      |                       |                      |                      | to :math:`j`.                                    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Next``             | A cursor :math:`c`   | A jump address        |                      |                      | Advance cursor :math:`c` to the next entry in    |
-|                      |                      | :math:`j`             |                      |                      | the B-Tree and jump to :math:`j`. If there are   |
-|                      |                      |                       |                      |                      | no more entries (if cursor :math:`c` was         |
-|                      |                      |                       |                      |                      | pointing at the last entry in the B-Tree),       |
-|                      |                      |                       |                      |                      | do nothing.                                      |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Prev``             | Same as ``Next`` but moving the cursor to the previous entry                                                                                  |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Seek``             | A cursor :math:`c`   | A jump address        | A register :math:`r`.|                      | Move cursor :math:`c` to point to the entry      |
-|                      |                      | :math:`j`             | The register must    |                      | with key equal to :math:`k`. If the cursor points|
-|                      |                      |                       | contain a key        |                      | to an index B-Tree, the key that must match is   |
-|                      |                      |                       | :math:`k`            |                      | :math:`IdxKey` in the :math:`(IdxKey,PKey)` pair.|
-|                      |                      |                       |                      |                      | If the B-Tree doesn’t contain :math:`k`, jump to |
-|                      |                      |                       |                      |                      | :math:`j`.                                       |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``SeekGt``           | Same as ``Seek``, but moving the cursor to the first entry such that its key is greater than :math:`k`.                                       |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``SeekGe``           | Same as ``Seek``, but moving the cursor to the first entry such that its key is greater than or equal to :math:`k`                            |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``IdxGt``            | A cursor :math:`c`   | A jump address        | A register :math:`r`.|                      | Cursor :math:`c` points to an index entry        |
-|                      |                      | :math:`j`             | The register must    |                      | containing a :math:`(IdxKey,PKey)` pair.         |
-|                      |                      |                       | contain a key        |                      | If :math:`PKey` is greater than :math:`k`,       |
-|                      |                      |                       | :math:`k`            |                      | jump to :math:`j`. Otherwise, do nothing.        |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``IdxGe``            | Same as ``IdxGt``, but testing for :math:`PKey` being greater than or equal to :math:`k`.                                                     |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``IdxLt``            | Same as ``IdxGt``, but testing for :math:`PKey` being less than :math:`k`.                                                                    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``IdxLe``            | Same as ``IdxGt``, but testing for :math:`PKey` being less than or equal to :math:`k`.                                                        |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| Instruction | P1                                                                                                                 | P2             | P3                    | P4 | Description                                       |
++=============+====================================================================================================================+================+=======================+====+===================================================+
+| ``Rewind``  | A cursor :math:`c`                                                                                                 | A jump address |                       |    | Makes cursor :math:`c` point to the first entry   |
+|             |                                                                                                                    | :math:`j`      |                       |    | in the B-Tree. If the B-Tree is empty, then jump  |
+|             |                                                                                                                    |                |                       |    | to :math:`j`.                                     |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``Next``    | A cursor :math:`c`                                                                                                 | A jump address |                       |    | Advance cursor :math:`c` to the next entry in     |
+|             |                                                                                                                    | :math:`j`      |                       |    | the B-Tree and jump to :math:`j`. If there are    |
+|             |                                                                                                                    |                |                       |    | no more entries (if cursor :math:`c` was          |
+|             |                                                                                                                    |                |                       |    | pointing at the last entry in the B-Tree),        |
+|             |                                                                                                                    |                |                       |    | do nothing.                                       |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``Prev``    | Same as ``Next`` but moving the cursor to the previous entry                                                       |                |                       |    |                                                   |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``Seek``    | A cursor :math:`c`                                                                                                 | A jump address | A register :math:`r`. |    | Move cursor :math:`c` to point to the entry       |
+|             |                                                                                                                    | :math:`j`      | The register must     |    | with key equal to :math:`k`. If the cursor points |
+|             |                                                                                                                    |                | contain a key         |    | to an index B-Tree, the key that must match is    |
+|             |                                                                                                                    |                | :math:`k`             |    | :math:`IdxKey` in the :math:`(IdxKey,PKey)` pair. |
+|             |                                                                                                                    |                |                       |    | If the B-Tree doesn’t contain :math:`k`, jump to  |
+|             |                                                                                                                    |                |                       |    | :math:`j`.                                        |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``SeekGt``  | Same as ``Seek``, but moving the cursor to the first entry such that its key is greater than :math:`k`.            |                |                       |    |                                                   |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``SeekGe``  | Same as ``Seek``, but moving the cursor to the first entry such that its key is greater than or equal to :math:`k` |                |                       |    |                                                   |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``IdxGt``   | A cursor :math:`c`                                                                                                 | A jump address | A register :math:`r`. |    | Cursor :math:`c` points to an index entry         |
+|             |                                                                                                                    | :math:`j`      | The register must     |    | containing a :math:`(IdxKey,PKey)` pair.          |
+|             |                                                                                                                    |                | contain a key         |    | If :math:`PKey` is greater than :math:`k`,        |
+|             |                                                                                                                    |                | :math:`k`             |    | jump to :math:`j`. Otherwise, do nothing.         |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``IdxGe``   | Same as ``IdxGt``, but testing for :math:`PKey` being greater than or equal to :math:`k`.                          |                |                       |    |                                                   |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``IdxLt``   | Same as ``IdxGt``, but testing for :math:`PKey` being less than :math:`k`.                                         |                |                       |    |                                                   |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
+| ``IdxLe``   | Same as ``IdxGt``, but testing for :math:`PKey` being less than or equal to :math:`k`.                             |                |                       |    |                                                   |
++-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
 
  
 Cursor Access Instructions
@@ -462,20 +467,20 @@ Cursor Access Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``Column``           | A cursor :math:`c`   | A column number       | A register :math:`r`.|                      | Store in register :math:`r` the value in the     |
-|                      |                      | :math:`n`             |                      |                      | :math:`n`-th column of the entry pointed at by   |
-|                      |                      |                       |                      |                      | cursor :math:`c`. Columns are numbered from 0.   |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``Key``              | A cursor :math:`c`   | A register :math:`r`. |                      |                      | Store in register :math:`r` the value of the     |
-|                      |                      |                       |                      |                      | key of the entry pointed at by cursor :math:`c`. |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``IdxKey``           | A cursor :math:`c`   | A register :math:`r`. |                      |                      | Cursor :math:`c` points to an index entry        |
-|                      |                      |                       |                      |                      | containing a :math:`(IdxKey,PKey)` pair. Store   |
-|                      |                      |                       |                      |                      | :math:`PKey` in :math:`r`.                       |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++-------------+--------------------+-----------------------+-----------------------+----+--------------------------------------------------+
+| Instruction | P1                 | P2                    | P3                    | P4 | Description                                      |
++=============+====================+=======================+=======================+====+==================================================+
+| ``Column``  | A cursor :math:`c` | A column number       | A register :math:`r`. |    | Store in register :math:`r` the value in the     |
+|             |                    | :math:`n`             |                       |    | :math:`n`-th column of the entry pointed at by   |
+|             |                    |                       |                       |    | cursor :math:`c`. Columns are numbered from 0.   |
++-------------+--------------------+-----------------------+-----------------------+----+--------------------------------------------------+
+| ``Key``     | A cursor :math:`c` | A register :math:`r`. |                       |    | Store in register :math:`r` the value of the     |
+|             |                    |                       |                       |    | key of the entry pointed at by cursor :math:`c`. |
++-------------+--------------------+-----------------------+-----------------------+----+--------------------------------------------------+
+| ``IdxKey``  | A cursor :math:`c` | A register :math:`r`. |                       |    | Cursor :math:`c` points to an index entry        |
+|             |                    |                       |                       |    | containing a :math:`(IdxKey,PKey)` pair. Store   |
+|             |                    |                       |                       |    | :math:`PKey` in :math:`r`.                       |
++-------------+--------------------+-----------------------+-----------------------+----+--------------------------------------------------+
 
 
 
@@ -486,19 +491,19 @@ Database Record Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``MakeRecord``       | A register           | An integer :math:`n`  | A register           |                      | Create a database record using the values from   |
-|                      | :math:`r_1`          |                       | :math:`r_2`          |                      | registers :math:`r_1` through :math:`r_1+n-1`,   |
-|                      |                      |                       |                      |                      | and store the record in :math:`r_2`.             |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``ResultRow``        | A register :math:`r` | An integer :math:`n`  |                      |                      | This instructions indicates that a result row    |
-|                      |                      |                       |                      |                      | has been produced and pauses execution for the   |
-|                      |                      |                       |                      |                      | database machine user to fetch the result row.   |
-|                      |                      |                       |                      |                      | The result row is formed by the values stored    |
-|                      |                      |                       |                      |                      | in registers :math:`r` through :math:`r+n-1`.    |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++----------------+----------------------+----------------------+-------------+----+------------------------------------------------+
+| Instruction    | P1                   | P2                   | P3          | P4 | Description                                    |
++================+======================+======================+=============+====+================================================+
+| ``MakeRecord`` | A register           | An integer :math:`n` | A register  |    | Create a database record using the values from |
+|                | :math:`r_1`          |                      | :math:`r_2` |    | registers :math:`r_1` through :math:`r_1+n-1`, |
+|                |                      |                      |             |    | and store the record in :math:`r_2`.           |
++----------------+----------------------+----------------------+-------------+----+------------------------------------------------+
+| ``ResultRow``  | A register :math:`r` | An integer :math:`n` |             |    | This instructions indicates that a result row  |
+|                |                      |                      |             |    | has been produced and pauses execution for the |
+|                |                      |                      |             |    | database machine user to fetch the result row. |
+|                |                      |                      |             |    | The result row is formed by the values stored  |
+|                |                      |                      |             |    | in registers :math:`r` through :math:`r+n-1`.  |
++----------------+----------------------+----------------------+-------------+----+------------------------------------------------+
 
 
 
@@ -507,21 +512,21 @@ Insertion Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``Insert``           | A cursor :math:`c`   | A register            | A register           |                      | Inserts an entry, with key :math:`k` and value   |
-|                      |                      | :math:`r_1`.          | :math:`r_2`.         |                      | :math:`v`, in the B-Tree pointed at by cursor    |
-|                      |                      | The register must     | The register must    |                      | :math:`c`.                                       |
-|                      |                      | contain a database    | contain a key        |                      |                                                  |
-|                      |                      | record :math:`v`      | :math:`k`            |                      |                                                  |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``IdxInsert``        | A cursor :math:`c`   | A register            | A register           |                      | Add a new :math:`(IdxKey,PKey)` entry in the     |
-|                      |                      | :math:`r_1`.          | :math:`r_2`.         |                      | index B-Tree pointed at by cursor :math:`c`.     |
-|                      |                      | The register must     | The register must    |                      |                                                  |
-|                      |                      | contain a key         | contain a key        |                      |                                                  |
-|                      |                      | :math:`IdxKey`        | :math:`PKey`         |                      |                                                  |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++---------------+--------------------+--------------------+-------------------+----+------------------------------------------------+
+| Instruction   | P1                 | P2                 | P3                | P4 | Description                                    |
++===============+====================+====================+===================+====+================================================+
+| ``Insert``    | A cursor :math:`c` | A register         | A register        |    | Inserts an entry, with key :math:`k` and value |
+|               |                    | :math:`r_1`.       | :math:`r_2`.      |    | :math:`v`, in the B-Tree pointed at by cursor  |
+|               |                    | The register must  | The register must |    | :math:`c`.                                     |
+|               |                    | contain a database | contain a key     |    |                                                |
+|               |                    | record :math:`v`   | :math:`k`         |    |                                                |
++---------------+--------------------+--------------------+-------------------+----+------------------------------------------------+
+| ``IdxInsert`` | A cursor :math:`c` | A register         | A register        |    | Add a new :math:`(IdxKey,PKey)` entry in the   |
+|               |                    | :math:`r_1`.       | :math:`r_2`.      |    | index B-Tree pointed at by cursor :math:`c`.   |
+|               |                    | The register must  | The register must |    |                                                |
+|               |                    | contain a key      | contain a key     |    |                                                |
+|               |                    | :math:`IdxKey`     | :math:`PKey`      |    |                                                |
++---------------+--------------------+--------------------+-------------------+----+------------------------------------------------+
 
 
 B-Tree Creation Instructions
@@ -529,14 +534,14 @@ B-Tree Creation Instructions
 
 .. cssclass:: table-bordered
 
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| Instruction          | P1                   |  P2                   | P3                   | P4                   | Description                                      |
-+======================+======================+=======================+======================+======================+==================================================+
-| ``CreateTable``      | A register :math:`r` |                       |                      |                      | Create a new table B-Tree and store its root     |
-|                      |                      |                       |                      |                      | page in :math:`r`.                               |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
-| ``CreateIndex``      | Same as ``CreateTable``, but creating an index B-Tree.                                                                                        |
-+----------------------+----------------------+-----------------------+----------------------+----------------------+--------------------------------------------------+
++-----------------+--------------------------------------------------------+----+----+----+----------------------------------------------+
+| Instruction     | P1                                                     | P2 | P3 | P4 | Description                                  |
++=================+========================================================+====+====+====+==============================================+
+| ``CreateTable`` | A register :math:`r`                                   |    |    |    | Create a new table B-Tree and store its root |
+|                 |                                                        |    |    |    | page in :math:`r`.                           |
++-----------------+--------------------------------------------------------+----+----+----+----------------------------------------------+
+| ``CreateIndex`` | Same as ``CreateTable``, but creating an index B-Tree. |    |    |    |                                              |
++-----------------+--------------------------------------------------------+----+----+----+----------------------------------------------+
 
 
 
