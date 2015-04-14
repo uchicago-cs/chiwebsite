@@ -295,6 +295,8 @@ interesting query optimizations. This subset has the following main constraints:
 #. In accordance with the chidb file format, CREATE INDEX can only
    create indexes on a single integer field.
 
+.. _chidb-dbm:
+
 Database Machine
 ----------------
 
@@ -308,7 +310,7 @@ architecture is summarized in the following figure:
 
 The DBM program
     A DBM program is composed of one or more DBM instructions. An
-    instruction contains an operator code and up to four operands: P1,
+    instruction contains an operation code and up to four operands: P1,
     P2, P3, and P4. P1 through P3 are signed 32-bit integers, and P4 is
     a pointer to a null-terminated string. All the DBM instructions are
     described below. Instructions in the DBM program are
