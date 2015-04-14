@@ -13,5 +13,8 @@ from scratch but, if you want to run chisubmit at your scool, you can check out 
 .. toctree::
    :maxdepth: 2
 
+   common.rst
    students.rst
+   instructors.rst
+   graders.rst
    
