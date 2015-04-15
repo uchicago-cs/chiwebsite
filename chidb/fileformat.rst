@@ -240,7 +240,7 @@ contains constant values. The layout of the header is shown the following figure
 
 Note that, at this point, all values except
 :math:`PageSize` can be safely ignored, but they must all be properly
-initialized to the values shown in the following table.
+initialized to the values shown in the following table. 
 
 .. cssclass:: table-bordered
 
@@ -258,6 +258,10 @@ initialized to the values shown in the following table.
 | 60-43       | :math:`UserCookie`           | ``uint32`` | Available to the user for read-write access. Initialized to ``0``                                    |
 +-------------+------------------------------+------------+------------------------------------------------------------------------------------------------------+
 
+Furthermore,
+a chidb file will only be considered valid if it has the same initial values
+shown in the above table. This means that, when implementing chidb, you
+do not need to worry about updating :math:`FileChangeCounter` and :math:`SchemaVersion`.
 
 Table pages
 -----------
