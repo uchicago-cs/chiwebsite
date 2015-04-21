@@ -32,6 +32,17 @@ of tests like this:
     CK_RUN_CASE="Step 6: Insertion into a leaf without splitting" make check
     CK_RUN_CASE="Step 7: Insertion with splitting" make check
     CK_RUN_CASE="Step 8: Supporting index B-Trees" make check
+    
+* Assignment 2::
+
+   CK_RUN_SUITE="dbm-register" make check
+   CK_RUN_SUITE="dbm-flow" make check
+   CK_RUN_SUITE="dbm-cursor" make check
+   CK_RUN_SUITE="dbm-record" make check
+   CK_RUN_SUITE="dbm-sql-select" make check
+   CK_RUN_SUITE="dbm-sql-insert" make check
+   CK_RUN_SUITE="dbm-sql-create" make check
+   CK_RUN_SUITE="dbm-index" make check
 
 
 Sample "string" B-Tree files
@@ -95,7 +106,7 @@ We also provide several well-formed chidb files, which can also be used to test 
 
 
 ``tests/files/databases/1table-1page.cdb``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This file contains a single table occupying a single page (page 2).
 
@@ -141,3 +152,116 @@ This file contains a single table and an index on that table. The table occupies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a file with the same table and index as the previous file, but where the table B-Tree has height 3. The total size of the file is 202 pages.
+
+
+.. _chidb-dbmf:
+
+
+The DBM File Format
+-------------------
+
+To test your implementation of the Database Machine (DBM), chidb provides a format for specifying DBM programs
+that can be easily loaded and run before you have a code generator that can translate SQL to DBM operations.
+Many sample programs are included in ``tests/files/dbm-programs``, and they are run automatically
+as part of the tests when running ``make check``.
+
+The DBM File (DBMF) format is divided into four sections, separated by ``%%``::
+
+   Database file
+   
+   %%
+   
+   DBM instructions
+   
+   %%
+   
+   Query results
+   
+   %%
+   
+   Expected register values
+   
+
+The *database file* specification can be one of the following:
+
+* ``NO DBFILE``: Indicates that no database file is necessary to run this DBM program.
+* ``CREATE`` *file*: Creates a new database called *file* in ``tests/files/generated/``, and
+  run the DBM program on it.
+* ``USE`` *file*: Take database *file* from ``tests/files/databases/``, create a copy in
+  ``tests/files/generated/``, and run the DBM program on it.
+  
+The *DBM instructions* contains a list of DBM instructions in the following format::
+
+   opcode P1 P2 P3 P4
+   
+Each value can be separated by any amount of space characters. 
+When an operation does not expect a value for one of its parameters, an underscore character is
+used. For example::
+
+   Integer 42  5   _   _
+
+When present, P4 must always be written with double quotes. For example::
+
+   String 13  5   _   "Hello, world!"
+
+The *query results* contain one line per row returned by the program. Each column can be
+separated by any amount of space characters. Strings must be written in double quotes,
+and a null value must be written as ``NULL``. For example::
+
+   21000  "Programming Languages"   75    89
+   23500  "Databases"               NULL  42
+   27500  "Operating Systems"       NULL  89
+    
+If the *query results* section is empty, no checks will be performed on the rows returned
+by the program.
+
+The *expected register values* contains specifications of registers in the following format::
+
+   R_N type [value]
+   
+Where ``N`` is the register number, ``type`` is ``unspecified``, ``null``, ``integer``, ``string``, or ``binary``.
+Optionally, a value can be provided (note: values cannot be provided for binary registers). If a value
+is not provided, the tests will only check whether the type of the register is correct.
+
+For example::
+
+   R_0 integer 2
+   R_1 integer 1
+   R_2 null
+   R_3 string "Hard Drive"
+   R_4 integer 240
+   R_5 binary
+
+Note that not all registers have to be specified. In other words, if the program uses a register, and it is not
+included in the *expected register values*, that will not result in an error.
+
+This is an example of a complete DBMF file, corresponding to running ``SELECT * FROM courses`` on file
+``1table-1page.cdb`` described above::
+
+   USE 1table-1page.cdb
+   
+   %%
+   
+   Integer      2  0  _  _  
+   OpenRead     0  0  4  _
+   Rewind       0  9  _  _
+   Key          0  1  _  _
+   Column       0  1  2  _ 
+   Column       0  2  3  _ 
+   Column       0  3  4  _ 
+   ResultRow    1  4  _  _
+   Next         0  3  _  _
+   Close        0  _  _  _
+   Halt         _  _  _  _
+   
+   %%
+   
+   21000  "Programming Languages"   75    89
+   23500  "Databases"               NULL  42
+   27500  "Operating Systems"       NULL  89
+   
+   %%
+   
+   R_0 integer 2
+   R_1 integer
+

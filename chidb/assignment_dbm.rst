@@ -94,7 +94,13 @@ set the correct field of the ``chidb_dbm_register_t`` struct).
 Testing your DBM
 ----------------
 
-TODO (will add most of this to the Testing page)
+Most of your testing will involve running DBM programs written in the :ref:`DBM File Format <chidb-dbmf>`.
+All these programs are stored in ``tests/files/dbm-programs``, and are run automatically by ``make check``.
+The steps below also specify the location of the test programs that correspond to each step, as well
+as how to run the tests only on those files.
+
+When testing your implementation, you may also want to use the ``.dbmrun`` command in the
+:ref:`chidb shell <chidb-shell>`
 
 
 Step 1: Implement the Register Manipulation Instructions
@@ -163,17 +169,20 @@ entry in a B-Tree in *amortized* :math:`O(1)` time (or, very informally: *most*,
 of the times you move to the next or previous entry, the operation must happen in :math:`O(1)` time). 
 Hint: this will require an auxiliary data structure of size :math:`O(\log(n))`.
 
-The DBM programs to test these instructions are located in ``tests/files/dbm-programs/cursor/``.
+**NOTE**: The cursor tests are not yet available, but will be added soon.
 
-You can run just those DBM programs by running the following::
-
-   make tests/check_dbm && CK_RUN_SUITE="dbm-cursor" tests/check_dbm
+.. 
+   The DBM programs to test these instructions are located in ``tests/files/dbm-programs/cursor/``.
    
-Take into account that these programs only perform some rudimentary tests on cursors, and they may
-pass even with incomplete implementations of cursors. The reason for this is that, at this point,
-you haven't implemented the column access functions, so it is not possible to check whether a cursor
-is actually in the correct position. However, the programs do test most basic operations on cursors so,
-if you pass all these tests, it's probably safe to move on to the next steps of the assignment.
+   You can run just those DBM programs by running the following::
+   
+      make tests/check_dbm && CK_RUN_SUITE="dbm-cursor" tests/check_dbm
+      
+   Take into account that these programs only perform some rudimentary tests on cursors, and they may
+   pass even with incomplete implementations of cursors. The reason for this is that, at this point,
+   you haven't implemented the column access functions, so it is not possible to check whether a cursor
+   is actually in the correct position. However, the programs do test most basic operations on cursors so,
+   if you pass all these tests, it's probably safe to move on to the next steps of the assignment.
 
 Step 4: SELECT queries
 ----------------------
@@ -252,12 +261,15 @@ Implement the following instructions:
 
 Once you have implemented these instructions, along with cursors, your DBM will be complete enough
 to run programs that create, manipulate, and query Index B-Trees.
+
+**NOTE**: The index tests are not yet available, but will be added soon.
+
+..
+   Several DBM programs to test the index instructions are located in ``tests/files/dbm-programs/index/``.
+   The files themselves contain comments specifying what SQL query the program corresponds to.
    
-Several DBM programs to test the index instructions are located in ``tests/files/dbm-programs/index/``.
-The files themselves contain comments specifying what SQL query the program corresponds to.
-
-You can run just those DBM programs by running the following::
-
-   make tests/check_dbm && CK_RUN_SUITE="dbm-index" tests/check_dbm
-
+   You can run just those DBM programs by running the following::
    
+      make tests/check_dbm && CK_RUN_SUITE="dbm-index" tests/check_dbm
+   
+      
