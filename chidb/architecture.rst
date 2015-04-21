@@ -393,6 +393,8 @@ Control Flow Instructions
 |             | :math:`n`                                                                                                        |                |             | :math:`s`        | return error code :math:`n`. If :math:`n\neq 0`, |
 |             |                                                                                                                  |                |             |                  | set the machine’s error message to :math:`s`.    |
 +-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
+| ``Noop``    |                                                                                                                  |                |             |                  | Does nothing.                                    |
++-------------+------------------------------------------------------------------------------------------------------------------+----------------+-------------+------------------+--------------------------------------------------+
 
 Note: Unless instructed otherwise, comparison of binary registers is not necessary. If instructed to implement it, then
 comparisons must be made byte by byte. Two binary blobs are equal if and only if they have the same length and contain 
