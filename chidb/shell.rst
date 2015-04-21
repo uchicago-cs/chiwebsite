@@ -1,0 +1,141 @@
+.. _chidb-shell:
+
+The chidb Shell
+===============
+
+Building your project with ``make`` will generate an executable called ``chidb``.
+This is the chidb shell, which you will be able to use to run SQL queries on chidb
+files once you've completed Assignment 3. However, it also includes a number of features
+that can be useful in Assignment 2.
+
+To start the chidb shell, just run this::
+  
+   ./chidb DBFILE
+   
+Where ``DBFILE`` is the chidb file you want to operate on.
+   
+You should see the following prompt::
+
+   chidb>
+   
+Running SQL queries
+-------------------
+
+To run a SQL query, just type it into the shell. Don't forget to include a ``;`` at the end of the statement::
+
+   chidb> SELECT * from courses;
+   21000|Programming Languages|75|89
+   23500|Databases||42
+   27500|Operating Systems||89
+
+Take into account that SQL queries won't work until you've implemented the code generator in Assignment 3. Until
+then, we provide a barebones code generator that will always return five rows with three columns: an integer identifier,
+the SQL query, and the NULL value::
+
+   chidb> SELECT * from courses;
+   1|SELECT * from courses;|
+   2|SELECT * from courses;|
+   3|SELECT * from courses;|
+   4|SELECT * from courses;|
+   5|SELECT * from courses;|
+
+Running DBM programs
+--------------------
+
+You can run :ref:`DBMF files <chidb-dbmf>` from the shell using the ``.dbmrun`` command. However,
+the shell *only* uses the "DBM instructions" portion of the file. If the program is intended to
+be run on a specific chidb file, it must be opened in the shell. For example::
+
+   $ ./chidb tests/files/databases/1table-1page.cdb
+   chidb> .dbmrun tests/files/dbm-programs/sql-select/select-002.dbmf
+   RESULT ROWS
+   -----------
+   21000,"Programming Languages",75,89
+   23500,"Databases",NULL,42
+   27500,"Operating Systems",NULL,89
+   
+        opcode          P1     P2     P3     P4
+        --------------- ------ ------ ------ ------
+     0: Integer         2      0      0      NULL
+     1: OpenRead        0      0      4      NULL
+     2: Rewind          0      9      0      NULL
+     3: Key             0      1      0      NULL
+     4: Column          0      1      2      NULL
+     5: Column          0      2      3      NULL
+     6: Column          0      3      4      NULL
+     7: ResultRow       1      4      0      NULL
+     8: Next            0      3      0      NULL
+     9: Close           0      0      0      NULL
+    10: Halt            0      0      0      NULL
+        --------------- ------ ------ ------ ------
+   
+   REGISTERS
+   ---------
+   R_0 = 2
+   R_1 = 27500
+   R_2 = "Operating Systems"
+   R_3 = NULL
+   R_4 = 89
+
+The shell also does not validate whether the result rows and registers match the ones specified in
+the files. These checks are only performed when the DBMF file is run as part of the test suite
+when running ``make check``.
+
+Other commands
+--------------
+
+The shell provides a number of other auxiliary commands, all of which start with a ``.``:
+
+* ``.open FILENAME``: Closes the existing database (if any) and opens ``FILENAME``.
+* ``.parse "SQL"``: Shows the parse tree for statement ``SQL``.
+* ``.headers on|off``: Switch display of headers on or off in query results.
+* ``.mode MODE``: Switch display mode. ``MODE`` is one of:
+  * ``column``: Left-aligned columns
+  * ``list``: Values delimited by ``|`` (default)
+* ``.help``: Print a help message with all the available commands.
+
+
+Running non-interactively
+-------------------------
+
+If you want to run a single SQL statement or a single chidb shell command, you can run it
+from the command-line (without entering the chidb shell) by using the ``-c`` parameter. 
+For example:: 
+
+   $ ./chidb tests/files/databases/1table-1page.cdb -c "SELECT * from courses;"
+   21000|Programming Languages|75|89
+   23500|Databases||42
+   27500|Operating Systems||89
+
+Auxiliary commands, including ``.dbmrun``, can also be run::
+
+   $ ./chidb tests/files/databases/1table-1page.cdb -c ".dbmrun tests/files/dbm-programs/sql-select/select-002.dbmf"
+   RESULT ROWS
+   -----------
+   21000,"Programming Languages",75,89
+   23500,"Databases",NULL,42
+   27500,"Operating Systems",NULL,89
+   
+        opcode          P1     P2     P3     P4
+        --------------- ------ ------ ------ ------
+     0: Integer         2      0      0      NULL
+     1: OpenRead        0      0      4      NULL
+     2: Rewind          0      9      0      NULL
+     3: Key             0      1      0      NULL
+     4: Column          0      1      2      NULL
+     5: Column          0      2      3      NULL
+     6: Column          0      3      4      NULL
+     7: ResultRow       1      4      0      NULL
+     8: Next            0      3      0      NULL
+     9: Close           0      0      0      NULL
+    10: Halt            0      0      0      NULL
+        --------------- ------ ------ ------ ------
+   
+   REGISTERS
+   ---------
+   R_0 = 2
+   R_1 = 27500
+   R_2 = "Operating Systems"
+   R_3 = NULL
+   R_4 = 89
+
