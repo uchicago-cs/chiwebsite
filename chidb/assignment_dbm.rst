@@ -164,25 +164,24 @@ Do not underestimate the effort required to implement cursors: they can be a tri
 data structure to get right. We strongly encourage you to think through how the data structure
 itself will be implemented, and what functions you will implement around that data structure.
 
-In particular, take into account that cursors must be able to move to the next or previous 
+For full credit, cursors must be able to move to the next or previous 
 entry in a B-Tree in *amortized* :math:`O(1)` time (or, very informally: *most*, but not all,
-of the times you move to the next or previous entry, the operation must happen in :math:`O(1)` time). 
-Hint: this will require an auxiliary data structure of size :math:`O(\log(n))`.
+of the times you move to the next or previous entry, the operation must happen in :math:`O(1)` time)
+*and* use no more than :math:`O(\log(n))` space. As a first approximation to your cursor implementation,
+we suggest you ignore the :math:`O(\log(n))` space restriction (which allows for trivial solutions
+like simply loading an entire table into an array, and using that as your cursor). 
+ 
+The DBM programs to test these instructions are located in ``tests/files/dbm-programs/cursor/``.
 
-**NOTE**: The cursor tests are not yet available, but will be added soon.
+You can run just those DBM programs by running the following::
 
-.. 
-   The DBM programs to test these instructions are located in ``tests/files/dbm-programs/cursor/``.
+   make tests/check_dbm && CK_RUN_SUITE="dbm-cursor" tests/check_dbm
    
-   You can run just those DBM programs by running the following::
-   
-      make tests/check_dbm && CK_RUN_SUITE="dbm-cursor" tests/check_dbm
-      
-   Take into account that these programs only perform some rudimentary tests on cursors, and they may
-   pass even with incomplete implementations of cursors. The reason for this is that, at this point,
-   you haven't implemented the column access functions, so it is not possible to check whether a cursor
-   is actually in the correct position. However, the programs do test most basic operations on cursors so,
-   if you pass all these tests, it's probably safe to move on to the next steps of the assignment.
+Take into account that these programs only perform some rudimentary tests on cursors, and they may
+pass even with incomplete implementations of cursors. The reason for this is that, at this point,
+you haven't implemented the column access functions, so it is not possible to check whether a cursor
+is actually in the correct position. However, the programs do test most basic operations on cursors so,
+if you pass all these tests, it's probably safe to move on to the next steps of the assignment.
 
 Step 4: SELECT queries
 ----------------------
