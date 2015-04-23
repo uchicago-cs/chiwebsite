@@ -255,7 +255,7 @@ Implement the following instructions:
 * ``IdxGe``
 * ``IdxLt``
 * ``IdxLe``
-* ``IdxKey``
+* ``IdxPKey``
 * ``IdxInsert``
 * ``CreateIndex``
 
