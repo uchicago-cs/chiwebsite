@@ -455,14 +455,14 @@ Cursor Manipulation Instructions
 +-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
 | ``IdxGt``   | A cursor :math:`c`                                                                                                 | A jump address | A register :math:`r`. |    | Cursor :math:`c` points to an index entry         |
 |             |                                                                                                                    | :math:`j`      | The register must     |    | containing a :math:`(IdxKey,PKey)` pair.          |
-|             |                                                                                                                    |                | contain a key         |    | If :math:`PKey` is greater than :math:`k`,        |
+|             |                                                                                                                    |                | contain a key         |    | If :math:`IdxKey` is greater than :math:`k`,      |
 |             |                                                                                                                    |                | :math:`k`             |    | jump to :math:`j`. Otherwise, do nothing.         |
 +-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
-| ``IdxGe``   | Same as ``IdxGt``, but testing for :math:`PKey` being greater than or equal to :math:`k`.                          |                |                       |    |                                                   |
+| ``IdxGe``   | Same as ``IdxGt``, but testing for :math:`IdxKey` being greater than or equal to :math:`k`.                        |                |                       |    |                                                   |
 +-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
-| ``IdxLt``   | Same as ``IdxGt``, but testing for :math:`PKey` being less than :math:`k`.                                         |                |                       |    |                                                   |
+| ``IdxLt``   | Same as ``IdxGt``, but testing for :math:`IdxKey` being less than :math:`k`.                                       |                |                       |    |                                                   |
 +-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
-| ``IdxLe``   | Same as ``IdxGt``, but testing for :math:`PKey` being less than or equal to :math:`k`.                             |                |                       |    |                                                   |
+| ``IdxLe``   | Same as ``IdxGt``, but testing for :math:`IdxKey` being less than or equal to :math:`k`.                           |                |                       |    |                                                   |
 +-------------+--------------------------------------------------------------------------------------------------------------------+----------------+-----------------------+----+---------------------------------------------------+
 
  
@@ -481,7 +481,7 @@ Cursor Access Instructions
 | ``Key``     | A cursor :math:`c` | A register :math:`r`. |                       |    | Store in register :math:`r` the value of the     |
 |             |                    |                       |                       |    | key of the entry pointed at by cursor :math:`c`. |
 +-------------+--------------------+-----------------------+-----------------------+----+--------------------------------------------------+
-| ``IdxKey``  | A cursor :math:`c` | A register :math:`r`. |                       |    | Cursor :math:`c` points to an index entry        |
+| ``IdxPKey`` | A cursor :math:`c` | A register :math:`r`. |                       |    | Cursor :math:`c` points to an index entry        |
 |             |                    |                       |                       |    | containing a :math:`(IdxKey,PKey)` pair. Store   |
 |             |                    |                       |                       |    | :math:`PKey` in :math:`r`.                       |
 +-------------+--------------------+-----------------------+-----------------------+----+--------------------------------------------------+
