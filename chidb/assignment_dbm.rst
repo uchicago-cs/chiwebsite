@@ -158,6 +158,8 @@ Implement the following instructions:
 * ``Seek``
 * ``SeekGt``
 * ``SeekGe``
+* ``SeekLt``
+* ``SeekLe``
 
 To implement these instructions, you will have to implement a cursor type in ``dbm-cursor.[ch]``.
 Do not underestimate the effort required to implement cursors: they can be a tricky
