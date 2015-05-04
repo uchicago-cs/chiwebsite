@@ -263,14 +263,11 @@ Implement the following instructions:
 Once you have implemented these instructions, along with cursors, your DBM will be complete enough
 to run programs that create, manipulate, and query Index B-Trees.
 
-**NOTE**: The index tests are not yet available, but will be added soon.
+Several DBM programs to test the index instructions are located in ``tests/files/dbm-programs/index/``.
+The files themselves contain comments specifying what SQL query the program corresponds to.
 
-..
-   Several DBM programs to test the index instructions are located in ``tests/files/dbm-programs/index/``.
-   The files themselves contain comments specifying what SQL query the program corresponds to.
-   
-   You can run just those DBM programs by running the following::
-   
-      make tests/check_dbm && CK_RUN_SUITE="dbm-index" tests/check_dbm
+You can run just those DBM programs by running the following::
+
+   make tests/check_dbm && CK_RUN_SUITE="dbm-index" tests/check_dbm
    
       
