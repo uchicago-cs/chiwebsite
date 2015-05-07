@@ -208,7 +208,16 @@ The files themselves contain comments specifying what SQL query the program corr
 
 You can run just those DBM programs by running the following::
 
-   make tests/check_dbm && CK_RUN_SUITE="dbm-sql-select" tests/check_dbm
+   make tests/check_dbm && CK_RUN_SUITE="dbm-select" tests/check_dbm
+   
+.. warning::
+
+   Before Assignment III was published, the command to run the tests was::
+   
+      make tests/check_dbm && CK_RUN_SUITE="dbm-sql-select" tests/check_dbm
+      
+   If you have pulled the code for Assignment III, the above command will actually
+   run the SQL tests (and not the DBM tests with code equivalent to certain SQL statements).
 
 Step 5: INSERT statements
 -------------------------
@@ -226,8 +235,16 @@ The files themselves contain comments specifying what SQL query the program corr
 
 You can run just those DBM programs by running the following::
 
-   make tests/check_dbm && CK_RUN_SUITE="dbm-sql-insert" tests/check_dbm
+   make tests/check_dbm && CK_RUN_SUITE="dbm-insert" tests/check_dbm
    
+.. warning::
+
+   Before Assignment III was published, the command to run the tests was::
+   
+      make tests/check_dbm && CK_RUN_SUITE="dbm-sql-insert" tests/check_dbm
+      
+   If you have pulled the code for Assignment III, the above command will actually
+   run the SQL tests (and not the DBM tests with code equivalent to certain SQL statements).   
    
 Step 6: CREATE TABLE statements
 -------------------------------
@@ -244,7 +261,16 @@ The files themselves contain comments specifying what SQL query the program corr
 
 You can run just those DBM programs by running the following::
 
-   make tests/check_dbm && CK_RUN_SUITE="dbm-sql-create" tests/check_dbm
+   make tests/check_dbm && CK_RUN_SUITE="dbm-create" tests/check_dbm
+   
+.. warning::
+
+   Before Assignment III was published, the command to run the tests was::
+   
+      make tests/check_dbm && CK_RUN_SUITE="dbm-sql-create" tests/check_dbm
+      
+   If you have pulled the code for Assignment III, the above command will actually
+   run the SQL tests (and not the DBM tests with code equivalent to certain SQL statements).   
    
    
 Step 7: Index operations

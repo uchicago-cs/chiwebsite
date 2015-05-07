@@ -264,37 +264,6 @@ access functions on an unprepared statement, or accessing column values
 on a statement that has not produced a result row, will produce
 unexpected behaviour.
 
-Supported SQL
--------------
-
-chidb supports a very limited subset of the SQL language. However, this
-subset is still sufficiently featureful to run basic queries and perform
-interesting query optimizations. This subset has the following main constraints:
-
-#. The field list in a SELECT statement can only be a list of columns in
-   the form “[table.]column” or “\*”. Subqueries, arithmetic
-   expressions, and aggregate functions are not supported.
-
-#. The FROM clause can only be a list of table names. The AS operator is
-   not supported.
-
-#. The WHERE clause can only be a list of AND’ed conditions (e.g.,
-   *cond1* AND *cond2* …AND *condN*). Each condition can only be of the
-   form "column operator value" or "column operator column". Only the
-   :math:`=`, :math:`<>`, :math:`>`, :math:`<`, :math:`>=`, :math:`<=`,
-   IS NULL, and IS NOT NULL operators are supported.
-
-#. The VALUES clause of an INSERT operator must always provide literal
-   integer or string values. Subqueries or arithmetic operations are not
-   supported.
-
-#. In accordance with the chidb file format, CREATE TABLE can only
-   create tables with BYTE, SMALLINT, INTEGER, or TEXT columns. The
-   primary key can only be an INTEGER field.
-
-#. In accordance with the chidb file format, CREATE INDEX can only
-   create indexes on a single integer field.
-
 .. _chidb-dbm:
 
 Database Machine

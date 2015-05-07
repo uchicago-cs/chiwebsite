@@ -13,6 +13,7 @@ chidb is a didactic relational database management system (RDBMS) designed for t
    installing.rst
    assignment_btree.rst
    assignment_dbm.rst
+   assignment_codegen.rst
    testing.rst
    shell.rst
    

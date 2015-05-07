@@ -171,7 +171,7 @@ The DBM File (DBMF) format is divided into four sections, separated by ``%%``::
    
    %%
    
-   DBM instructions
+   DBM instructions or SQL statement
    
    %%
    
@@ -189,8 +189,9 @@ The *database file* specification can be one of the following:
   run the DBM program on it.
 * ``USE`` *file*: Take database *file* from ``tests/files/databases/``, create a copy in
   ``tests/files/generated/``, and run the DBM program on it.
-  
-The *DBM instructions* contains a list of DBM instructions in the following format::
+
+The next section can either contain DBM instructions or a SQL query. If it contains
+DBM instructions, this will be a list of DBM instructions in the following format::
 
    opcode P1 P2 P3 P4
    
@@ -203,6 +204,10 @@ used. For example::
 When present, P4 must always be written with double quotes. For example::
 
    String 13  5   _   "Hello, world!"
+
+If it contains a SQL statement, it will be a single SQL statement in a single line. This
+statement will be compiled into a DBM program when the DBMF file is loaded, which requires
+a working code generator.
 
 The *query results* contain one line per row returned by the program. Each column can be
 separated by any amount of space characters. Strings must be written in double quotes,
@@ -235,6 +240,9 @@ For example::
 Note that not all registers have to be specified. In other words, if the program uses a register, and it is not
 included in the *expected register values*, that will not result in an error.
 
+Note that DBMF files with a SQL statement instead of a DBM program will usually omit the registers
+section of the file (since the registers will depend on the generated code).
+
 This is an example of a complete DBMF file, corresponding to running ``SELECT * FROM courses`` on file
 ``1table-1page.cdb`` described above::
 
@@ -264,4 +272,22 @@ This is an example of a complete DBMF file, corresponding to running ``SELECT * 
    
    R_0 integer 2
    R_1 integer
+   
+And this is an example of an equivalent DBMF file where a SQL statement is specified instead of a DBM
+program::
+
+   USE 1table-1page.cdb
+   
+   %%
+   
+   SELECT * FROM courses;
+   
+   %%
+   
+   21000  "Programming Languages"   75    89
+   23500  "Databases"               NULL  42
+   27500  "Operating Systems"       NULL  89
+
+
+
 
