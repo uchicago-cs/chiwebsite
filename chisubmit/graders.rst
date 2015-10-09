@@ -8,15 +8,12 @@ This page contains instructions on how to use chisubmit specifically for graders
 Initial setup
 -------------
 
-Before you perform any of the instructions discussed in this page, make sure you've followed
-the steps described in :ref:`chisubmit_common`. Besides those steps, you will also have to
-run the following command::
+Before you perform any of the instructions discussed in this page, create an empty directory
+to do your grading in (we will refer to this directory as your *grading directory*).
+Inside that directory, run the following command::
 
-   chisubmit grader get-git-credentials --staging
+   chisubmit init
    
-Your instructor will tell you whether you are using a GitHub or GitLab staging server. When
-asked for your "git username" and "git password", enter your GitHub or GitLab username and
-password accordingly.
 
 Pulling repositories to grade
 -----------------------------
@@ -29,14 +26,11 @@ a branch called ``p1-grading``).
 
 To pull the repositories assigned to you, run the following::
 
-        chisubmit grader create-local-grading-repos GRADER_ID ASSIGNMENT_ID
+        chisubmit grader create-local-grading-repos ASSIGNMENT_ID
         
-Where:
+Where ``ASSIGNMENT_ID`` is the assignment identifier.
 
-* ``GRADER_ID`` is your chisubmit username. This will usually just be your university username.
-* ``ASSIGNMENT_ID`` is the assignment identifier.
-
-The repositories will now be in ``~/.chisubmit/repositories/COURSE_ID/ASSIGNMENT_ID/``
+The repositories will now be in ``repositories/COURSE_ID/ASSIGNMENT_ID/`` inside your grading directory.
 
 If your course uses extensions, you should repeat this step after each extended deadline. Your
 instructor may also notify you that you've been assigned additional repositories; you will
@@ -49,6 +43,8 @@ Grading the code
 Add comments directly on the code. Use the following format::
 
         /*** GRADER COMMENT: You forgot to initialize variable 'foo' */
+        
+        ### GRADER COMMENT: You forgot to initialize variable 'foo'
 
 Or::
 
@@ -58,6 +54,13 @@ Or::
          *  - It offends the order of created things
          *  - It is an aberration unto the Lord
          */
+         
+        ### GRADER COMMENT 
+        # The following code is wrong for a variety of reasons. Let me tell you why:
+        #  - It hurts my eyes
+        #  - It offends the order of created things
+        #  - It is an aberration unto the Lord
+         
 
 Any time a penalty is assessed, make sure to include it in the comment::
 
@@ -67,6 +70,12 @@ Any time a penalty is assessed, make sure to include it in the comment::
          * ...
          *
          */
+         
+        ### GRADER COMMENT 
+        ### PENALTY: -10 points
+        #
+        # ...
+        #
 
 If the assignment has a rubric file, there will be a file called ``ASSIGNMENT_ID.rubric.txt`` at the
 root of the repository. It will look something like this::
@@ -110,6 +119,22 @@ For example::
    Penalties:
        Submitted code in Word document: -30
        Uses library we specifically asked you not to use: -5
+       
+
+If you need to apply global bonuses (typically an adjustment to the final grade to account
+for something; e.g., if the student worked alone), you can add the following to the rubric::
+
+   Bonuses:
+       BONUS_1_DESCRIPTION: BONUS_1_AMOUNT
+       BONUS_2_DESCRIPTION: BONUS_2_AMOUNT
+       ...
+       BONUS_N_DESCRIPTION: BONUS_N_AMOUNT
+              
+For example::
+
+   Bonuses:
+       Worked alone: 10       
+              
 
 This is an example of a completed rubric::
 
@@ -132,8 +157,11 @@ This is an example of a completed rubric::
 
    Penalties:
        Code comments are written in Old English: -5
+       
+   Bonuses:
+       Worked alone: 10       
       
-   Total Points: 77.5 / 100
+   Total Points: 87.5 / 100
    
    Comments: >
        Well done!
@@ -152,13 +180,13 @@ on the commit.
 
 If your course is using rubrics, validate the rubrics with this command::
 
-        chisubmit grader validate-rubrics GRADER_ID ASSIGNMENT_ID 
+        chisubmit grader validate-rubrics ASSIGNMENT_ID 
         
 Use the ``--only TEAM_ID`` option to validate a single rubric.
 
 Finally, push your work to the staging server::
 
-        chisubmit grader push-grading-branches $CNETID $PROJECT 
+        chisubmit grader push-grading-branches ASSIGNMENT_ID 
         
 Take into account that you do not need to wait until all your repositories are graded before
 running these commands. If you have not yet graded a repository, running the above
