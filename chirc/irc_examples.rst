@@ -1,3 +1,5 @@
+.. _chirc-irc-examples:
+
 Example IRC Communications
 ==========================
 
@@ -17,7 +19,7 @@ Logging into an IRC server
 
 When an IRC client connects to an IRC server, it must first *register*
 its connection. This is done by sending two messages: ``NICK`` and
-``USER`` (messages 1 and 2 in Figure [fig:connect]). ``NICK`` specifies
+``USER`` (messages 1 and 2 in the figure above). ``NICK`` specifies
 the user’s nick (``amy`` in this case), and ``USER`` provides additional
 information about the user. More specifically, ``USER`` specifies the
 user’s *username* (``amy``) and the user’s *full name* (``Amy Pond``)
@@ -47,10 +49,11 @@ This reply has the following components:
 
 -  ``:Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu``:
    The second parameter. The content of this parameter is specified in
-   `[RFC2812 5] <http://tools.ietf.org/html/rfc2812#section-5>`__:
+   `[RFC2812 §5] <http://tools.ietf.org/html/rfc2812#section-5>`__::
 
-   001 RPL\ :sub:`W`\ ELCOME “Welcome to the Internet Relay Network
-   <nick>!<user>@<host>”
+          001    RPL_WELCOME
+                 "Welcome to the Internet Relay Network
+                  <nick>!<user>@<host>"
 
    Notice how the specification of replies omits the first parameter,
    which is always the recipient of the reply. So, the specification
@@ -63,13 +66,14 @@ This reply has the following components:
    the client’s hostname (if the server cannot resolve the client’s
    hostname, the IP address is used).
 
+The following figure shows a variant of the communication described above:
+
 .. figure:: duplicatenick.png
    :alt: Connecting to an IRC server when the chosen nick is taken.
 
    Connecting to an IRC server when the chosen nick is taken.
 
-Figure [fig:duplicatenick] shows a variant of the communication
-described above. If a user tries to register with a nick that is already
+If a user tries to register with a nick that is already
 taken, the server will send back a ``ERR_NICKNAMEINUSE`` reply (code
 ``433``). Notice how the parameters in this reply are slightly
 different:
@@ -88,8 +92,7 @@ different:
 
 So, notice how there is no uniform set of parameters sent back in all
 replies (other than the first parameter, which is always the recipient
-nick). When implementing a reply, you must consult `[RFC2812
-5] <http://tools.ietf.org/html/rfc2812#section-5>`__ to determine
+nick). When implementing a reply, you must consult `[RFC2812 §5] <http://tools.ietf.org/html/rfc2812#section-5>`__ to determine
 exactly what you should be sending back in the reply.
 
 Messaging between users
@@ -106,7 +109,7 @@ of Project 1b will focus on implementing messaging between users,
 whereas Project 1c will focus on adding support for channels.
 
 To send a message to a specific nick, a user must send a ``PRIVMSG`` to
-the server. Figure [fig:privmsg] shows two users, with nicks ``amy`` and
+the server. The figure above shows two users, with nicks ``amy`` and
 ``rory``, exchanging three messages. In message 1, user ``amy`` sends a
 message to ``rory``. The parameters for ``PRIVMSG`` are very simple: the
 first parameter is the nick of the user the message is intended for, and
@@ -142,7 +145,7 @@ Users connected to an IRC server can join existing channels by using the
 only parameter is the name of the channel the user wants to join), but
 it results in several replies being sent not just to the user joining
 the channel, but also to all the users currently in the channel.
-Figure [fig:channel\ :sub:`j`\ oin] shows what happens when user ``amy``
+The figure above shows what happens when user ``amy``
 joins channel ``#tardis``, where two users (``doctor`` and ``river``)
 are already present.
 
@@ -173,10 +176,10 @@ Once a user has joined a channel, sending a message to the channel is
 essentially the same as sending a message to an individual user. The
 difference is that the server will relay the message to all the users in
 the channel, instead of just a single user.
-Figure [fig:channel\ :sub:`p`\ rivmsg] shows two messages being sent to
+The figure above shows two messages being sent to
 channel ``#tardis``. First, user ``doctor`` sends a ``PRIVMSG`` message,
-specifying the channel as the target (and not a nick, as we saw in
-Figure [fig:privmsg]). The server then relays this message to ``river``
+specifying the channel as the target (and not a nick, as we saw in "Messaging between users").
+The server then relays this message to ``river``
 and ``amy``, prefixing the message with ``doctor``\ ’s full client
 identifier (messages 1, 2a, and 2b). Similarly, ``amy`` sends a message
 to the channel, which is relayed to ``doctor`` and ``river``, prefixed
@@ -190,7 +193,7 @@ user wishing to leave sends a ``PART`` message, and this message is
 relayed to everyone in the channel so they are aware that the user has
 left. The server also internally removes that client from the channel,
 which means he will no longer receive any messages directed to that
-channel. Figure [fig:channel\ :sub:`p`\ art] shows an example of what
+channel. The figure above shows an example of what
 this would look like. Notice how the ``PART`` message includes two
 parameters: the channel the users wants to leave, and a “parting
 message” (which is relayed as part of the ``PART`` message to all users

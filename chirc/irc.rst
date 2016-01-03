@@ -1,3 +1,5 @@
+.. _chirc-irc:
+
 Internet Relay Chat
 ===================
 
@@ -14,9 +16,7 @@ open source software community.
 
    Basic IRC architecture
 
-[fig:architecture1]
-
-The basic architecture of IRC, shown in Figure [fig:architecture1], is
+The basic architecture of IRC, shown in the figure above, is
 fairly straightforward. In the simplest case, there is a single *IRC
 server* to which multiple *IRC clients* can connect to. An IRC client
 connects to the server with a specific identity. Most notably, each
@@ -33,8 +33,6 @@ every user in the channel.
    :alt: Multi-server IRC architecture
 
    Multi-server IRC architecture
-
-[fig:architecture2]
 
 IRC also supports the formation of *server networks*, where multiple
 servers form a tree of connections to support more clients and provide
@@ -79,8 +77,8 @@ You are not expected to read all of these documents. More specifically:
 
 -  In Project 1b you will implement a subset of
    `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. We suggest you
-   read `[RFC2812 1] <http://tools.ietf.org/html/rfc2812#section-1>`__
-   and `[RFC2812 2] <http://tools.ietf.org/html/rfc2812#section-2>`__.
+   read `[RFC2812 §1] <http://tools.ietf.org/html/rfc2812#section-1>`__
+   and `[RFC2812 §2] <http://tools.ietf.org/html/rfc2812#section-2>`__.
    For the remainder of the RFC, you should only read the sections
    relevant to the parts of the IRC protocol you will be implementing.
 
@@ -117,7 +115,7 @@ Message format
 
 IRC clients and servers communicate by sending plain ASCII *messages* to
 each other over TCP. The format of these messages is described in
-`[RFC2812 2.3] <http://tools.ietf.org/html/rfc2812#section-2.3>`__, and
+`[RFC2812 §2.3] <http://tools.ietf.org/html/rfc2812#section-2.3>`__, and
 can be summarized thusly:
 
 -  The IRC protocol is a *text-based* protocol, meaning that messages
@@ -142,17 +140,28 @@ can be summarized thusly:
 -  A message contains at least two parts: the command and the command
    parameters. There may be at most 15 parameters. The command and the
    parameters are all separated by a single ASCII space character. The
-   following are examples of valid IRC messages:
+   following are examples of valid IRC messages::
 
-   NICK amy WHOIS doctor MODE amy +o JOIN #tardis QUIT
+      NICK amy 
+      
+      WHOIS doctor 
+      
+      MODE amy +o 
+      
+      JOIN #tardis 
+      
+      QUIT
 
 -  When the last parameter is prefixed with a colon character, the value
    of that parameter will be the remainder of the message (including
    space characters). The following are examples of valid IRC messages
-   with a “long parameter”:
+   with a “long parameter”::
 
-   PRIVMSG rory :Hey Rory... PRIVMSG #cmsc23300 :Hello everybody QUIT
-   :Done for the day, leaving
+      PRIVMSG rory :Hey Rory... 
+      
+      PRIVMSG #cmsc23300 :Hello everybody 
+      
+      QUIT :Done for the day, leaving
 
 -  Some messages also include a *prefix* before the command and the
    command parameters. The presence of a prefix is indicated with a
@@ -163,11 +172,11 @@ can be summarized thusly:
    that message originally. We will explain the use of prefixes in more
    detail in the next section.
 
-   The following are examples of valid IRC messages with prefixes:
+   The following are examples of valid IRC messages with prefixes::
 
-   :borja!borja@polaris.cs.uchicago.edu PRIVMSG #cmsc23300 :Hello
-   everybody :doctor!doctor@baz.example.org QUIT :Done for the day,
-   leaving
+      :borja!borja@polaris.cs.uchicago.edu PRIVMSG #cmsc23300 :Hello everybody
+      
+      :doctor!doctor@baz.example.org QUIT :Done for the day, leaving
 
 Replies
 -------
@@ -184,16 +193,16 @@ A reply is a message with the following characteristics:
 -  It always includes a prefix.
 
 -  The command will be a three-digit code. The full list of possible
-   replies is specified in `[RFC2812
-   5] <http://tools.ietf.org/html/rfc2812#section-5>`__.
+   replies is specified in `[RFC2812 §5] <http://tools.ietf.org/html/rfc2812#section-5>`__.
 
 -  The first parameter is always the target of the reply, typically a
    nick.
 
-The following are examples of valid IRC replies:
+The following are examples of valid IRC replies::
 
-:irc.example.com 001 borja :Welcome to the Internet Relay Network
-borja!borja@polaris.cs.uchicago.edu :irc.example.com 433 \* borja
-:Nickname is already in use. :irc.example.org 332 borja #cmsc23300 :A
-channel for CMSC 23300 students
+   :irc.example.com 001 borja :Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu 
+   
+   :irc.example.com 433 * borja :Nickname is already in use. 
+   
+   :irc.example.org 332 borja #cmsc23300 :A channel for CMSC 23300 students
 

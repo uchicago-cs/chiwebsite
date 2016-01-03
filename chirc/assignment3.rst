@@ -1,3 +1,5 @@
+.. _chirc-assignment3:
+
 Assignment 3: Channels and Modes
 ================================
 
@@ -11,11 +13,13 @@ implementation. Nonetheless, once you’ve implemented channels (``JOIN``,
 ``PART``, and sending messages to channels), implementing modes and the
 remaining messages are all fairly independent of each other.
 
-``JOIN`` 15 points
-------------------
+``JOIN``
+--------
 
-Implement the ``JOIN`` command, as described in `[RFC2812
-3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, with the
+**Points: 15 points**
+
+
+Implement the ``JOIN`` command, as described in `[RFC2812 §3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, with the
 following exceptions:
 
 -  The command must accept a single parameter: a channel name.
@@ -28,20 +32,18 @@ Take into account the following:
    (you will implement the ``TOPIC`` message later). Otherwise, that
    reply is skipped.
 
--  Although not stated explicitly in `[RFC2812
-   3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, the
-   ``RPL_NAMREPLY`` reply must be followed by a ``RPL_ENDOFNAMES`` (as
-   shown in Figure [fig:channel\ :sub:`j`\ oin]). Basically, you are
+-  Although not stated explicitly in `[RFC2812 §3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, the
+   ``RPL_NAMREPLY`` reply must be followed by a ``RPL_ENDOFNAMES``. Basically, you are
    sending the same replies generated when a ``NAMES`` message (with
    this channel as a parameter) is received.
 
 -  The first automated tests for ``JOIN`` will check that the
    ``RPL_NAMREPLY`` and ``RPL_ENDOFNAMES`` replies are sent, but won’t
    validate their contents. So, you can get away with just sending the
-   following replies (substituting *``nick``* with the recipient nick):
+   following replies (substituting ``nick`` with the recipient nick)::
 
-   :hostname 353 *nick* = #foobar :foobar1 foobar2 foobar3 :hostname 366
-   *nick* #foobar :End of NAMES list
+      :hostname 353 nick = #foobar :foobar1 foobar2 foobar3
+      :hostname 366 nick #foobar :End of NAMES list
 
    Once you implement the ``NAMES`` message, you can simply substitute
    this with a call to the same code that handles the ``NAMES`` message.
@@ -49,8 +51,11 @@ Take into account the following:
    will show your channels as having the three users in your hardcoded
    ``NAMES`` reply (``foobar1``, ``foobar2``, and ``foobar3``)
 
-``PRIVMSG`` and ``NOTICE`` to channels 15 points
-------------------------------------------------
+``PRIVMSG`` and ``NOTICE`` to channels
+--------------------------------------
+
+**Points: 15 points**
+
 
 Extend your implementation of ``PRIVMSG`` and ``NOTICE`` from Project 1b
 to support sending messages to a channel.
@@ -58,7 +63,7 @@ to support sending messages to a channel.
 Until you implement modes, you will not need to support any additional
 replies in ``PRIVMSG``. However, take into account the following:
 
--  Despite its name the ``ERR_NOSUCHNICK`` is also the appropriate reply
+-  Despite its name, the ``ERR_NOSUCHNICK`` is also the appropriate reply
    when a non-existent channel is specified.
 
 -  Users cannot send ``PRIVMSG`` and ``NOTICE`` messages to channels
@@ -69,11 +74,13 @@ replies in ``PRIVMSG``. However, take into account the following:
    message will be denied if the user has insufficient privileges to
    speak on a channel.
 
-``PART`` 10 points
-------------------
+``PART``
+--------
 
-Implement the ``PART`` command, as described in `[RFC2812
-3.2.2] <http://tools.ietf.org/html/rfc2812#section-3.2.2>`__, with the
+**Points: 10 points**
+
+
+Implement the ``PART`` command, as described in `[RFC2812 §3.2.2] <http://tools.ietf.org/html/rfc2812#section-3.2.2>`__, with the
 following exceptions:
 
 -  The command must accept either one parameter (a channel name) or two
@@ -87,11 +94,13 @@ Take into account the following:
 -  Once all users in a channel have left that channel, the channel must
    be destroyed.
 
-``TOPIC`` 10 points
--------------------
+``TOPIC``
+---------
 
-Implement the ``TOPIC`` command, as described in `[RFC2812
-3.2.4] <http://tools.ietf.org/html/rfc2812#section-3.2.4>`__, with the
+**Points: 10 points**
+
+
+Implement the ``TOPIC`` command, as described in `[RFC2812 §3.2.4] <http://tools.ietf.org/html/rfc2812#section-3.2.4>`__, with the
 following exceptions:
 
 -  You only need to support the ``ERR_NOTONCHANNEL``, ``RPL_NOTOPIC``,
@@ -100,13 +109,15 @@ following exceptions:
 -  You will not need to support the ``ERR_CHANOPRIVSNEEDED`` reply until
    you implement modes.
 
-User and channel modes 25 points
---------------------------------
+User and channel modes
+----------------------
+
+**Points: 25 points**
+
 
 In IRC, users can have certain *modes* assigned to them. Modes are
 identified by a single letter, and they are binary: a user either has a
-mode, or he doesn’t. The possible user modes are described in `[RFC2812
-3.1.5] <http://tools.ietf.org/html/rfc2812#section-3.1.5>`__, and we
+mode, or he doesn’t. The possible user modes are described in `[RFC2812 §3.1.5] <http://tools.ietf.org/html/rfc2812#section-3.1.5>`__, and we
 will be implementing only the following modes:
 
 - ``a`` -- The *away* mode. Users with this mode are considered to be “away
@@ -119,8 +130,7 @@ will be implementing only the following modes:
 
 The above two modes are global modes: they have effect across the entire
 server. Users can also have channel-specific modes (or *member status*
-modes, see `[RFC2811
-4.1] <http://tools.ietf.org/html/rfc2811#section-4.1>`__). We will be
+modes, see `[RFC2811 §4.1] <http://tools.ietf.org/html/rfc2811#section-4.1>`__). We will be
 implementing the following member status modes:
 
 - ``o`` -- The *channel operator* mode. Users with this mode on a channel
@@ -129,8 +139,7 @@ implementing the following member status modes:
 - ``v`` -- The *voice* mode. Users with this mode are able to send messages
   to moderated channels (described below).
 
-Finally, channels themselves can also have modes (see `[RFC2811
-4] <http://tools.ietf.org/html/rfc2811#section-4>`__). We will be
+Finally, channels themselves can also have modes (see `[RFC2811 §4] <http://tools.ietf.org/html/rfc2811#section-4>`__). We will be
 implementing the following modes:
 
 - ``m`` -- The *moderated* mode. When a channel has this mode, only certain
@@ -142,8 +151,7 @@ implementing the following modes:
 These modes are managed with the ``OPER``, ``MODE``, and ``AWAY``
 commands. For now, we will focus on the first two.
 
-You must implement the ``OPER`` message as described in `[RFC2812
-3.1.4] <http://tools.ietf.org/html/rfc2812#section-3.1.4>`__, with the
+You must implement the ``OPER`` message as described in `[RFC2812 §3.1.4] <http://tools.ietf.org/html/rfc2812#section-3.1.4>`__, with the
 following exceptions:
 
 -  You must only support the ``RPL_YOUREOPER`` and
@@ -154,10 +162,8 @@ ignore its content; the password expected by the ``OPER`` command is the
 one specified in the ``-o`` command-line parameter to the ``chirc``
 executable.
 
-You must implement the ``MODE`` message as described in `[RFC2812
-3.1.5] <http://tools.ietf.org/html/rfc2812#section-3.1.5>`__ (for user
-modes) and `[RFC2812
-3.2.3] <http://tools.ietf.org/html/rfc2812#section-3.2.3>`__ (for member
+You must implement the ``MODE`` message as described in `[RFC2812 §3.1.5] <http://tools.ietf.org/html/rfc2812#section-3.1.5>`__ (for user
+modes) and `[RFC2812 §3.2.3] <http://tools.ietf.org/html/rfc2812#section-3.2.3>`__ (for member
 status and channel modes), with the following exceptions:
 
 -  For user modes:
@@ -171,13 +177,13 @@ status and channel modes), with the following exceptions:
 
    -  If there are no errors, the reply to the ``MODE`` message will be
       a relay of the message, prefixed by the user’s nick and with the
-      mode string in a long parameter. So, if a user sends this message:
+      mode string in a long parameter. So, if a user sends this message::
 
-      MODE jrandom -o
+         MODE jrandom -o
 
-      The reply should be:
+      The reply should be::
 
-      :jrandom MODE jrandom :-o
+         :jrandom MODE jrandom :-o
 
 -  For channel modes:
 
@@ -240,17 +246,21 @@ You must observe the following rules when dealing with modes:
    member status upon joining a channel (the user will simply have,
    implicitly, the same privileges as a channel operator).
 
-``AWAY`` 5 points
------------------
+``AWAY``
+--------
 
-Implement the ``AWAY`` command, as described in `[RFC2812
-4.1] <http://tools.ietf.org/html/rfc2812#section-4.1>`__.
+**Points: 5 points**
 
-``NAMES`` 5 points
-------------------
 
-Implement the ``NAMES`` command, as described in `[RFC2812
-3.2.5] <http://tools.ietf.org/html/rfc2812#section-3.2.5>`__, with the
+Implement the ``AWAY`` command, as described in `[RFC2812 §4.1] <http://tools.ietf.org/html/rfc2812#section-4.1>`__.
+
+``NAMES``
+---------
+
+**Points: 5 points**
+
+
+Implement the ``NAMES`` command, as described in `[RFC2812 §3.2.5] <http://tools.ietf.org/html/rfc2812#section-3.2.5>`__, with the
 following exceptions:
 
 -  We are not supporting invisible, private, or secret channels, so you
@@ -282,11 +292,13 @@ Take into account the following:
    ``RPL_NAMREPLY`` reply. Similarly, nicks with “voice” privileges must
    have their nick prefixed by ``+``.
 
-``LIST`` 5 points
------------------
+``LIST``
+--------
 
-Implement the ``LIST`` command, as described in `[RFC2812
-3.2.6] <http://tools.ietf.org/html/rfc2812#section-3.2.6>`__, with the
+**Points: 5 points**
+
+
+Implement the ``LIST`` command, as described in `[RFC2812 §3.2.6] <http://tools.ietf.org/html/rfc2812#section-3.2.6>`__, with the
 following exceptions:
 
 -  You only need to support ``LIST`` messages with no parameters (list
@@ -305,11 +317,13 @@ Take into account the following:
    invisible users, the number of visible users equals the total number
    of users in the channel).
 
-``WHO`` 5 points
-----------------
+``WHO``
+-------
 
-Implement the ``WHO`` command, as described in `[RFC2812
-3.6.1] <http://tools.ietf.org/html/rfc2812#section-3.6.1>`__, with the
+**Points: 5 points**
+
+
+Implement the ``WHO`` command, as described in `[RFC2812 §3.6.1] <http://tools.ietf.org/html/rfc2812#section-3.6.1>`__, with the
 following exceptions:
 
 -  If a mask is specified, you only need to support the case where the
@@ -352,8 +366,10 @@ Take into account the following:
    included (regardless of what channel modes that user may have in the
    users he belongs to).
 
-Updating commands from Project 1b 5 points
-------------------------------------------
+Updating commands from Project 1b
+---------------------------------
+
+**Points: 5 points**
 
 Update the implementation of the following commands:
 
