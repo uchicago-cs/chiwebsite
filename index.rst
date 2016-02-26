@@ -56,6 +56,21 @@
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
+                <h3 class="panel-title"><a href="chirouter/index.html">chirouter</a></h3>
+              </div>
+              <div class="panel-body">
+                <p>...</p>
+                
+                <p><a href="chirouter/index.html">Learn more...</a></p>
+              </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+              <div class="panel-heading">
                 <h3 class="panel-title"><a href="chistributed/index.html">chistributed</a></h3>
               </div>
               <div class="panel-body">
@@ -67,9 +82,6 @@
               </div>
             </div>
         </div>
-    </div>
-    
-    <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
               <div class="panel-heading">
@@ -94,6 +106,7 @@
    chidb/index.rst
    chirc/index.rst
    chitcp/index.rst
+   chirouter/index.rst
    chistributed/index.rst
    chisubmit/index.rst
 
