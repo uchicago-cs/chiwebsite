@@ -59,7 +59,9 @@
                 <h3 class="panel-title"><a href="chirouter/index.html">chirouter</a></h3>
               </div>
               <div class="panel-body">
-                <p>...</p>
+                <p>In chirouter, students implement an IP router capable of routing IP traffic between multiple
+                networks, requiring them to implement parts of the ARP and ICMP protocols, as well as understand
+                the structure of Ethernet frames and IP datagrams.</p>
                 
                 <p><a href="chirouter/index.html">Learn more...</a></p>
               </div>
