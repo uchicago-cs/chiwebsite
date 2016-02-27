@@ -29,13 +29,12 @@ The chirouter documentation is divided into the following sections:
 Acknowledgements
 ----------------
 
- This project is based on the `Simple Router assignment <https://github.com/mininet/mininet/wiki/Simple-Router>`_ 
- included in the Mininet project which, in turn, is based on a 
- `programming assignment developed at Stanford <http://www.scs.stanford.edu/09au-cs144/lab/router.html>`_.
- 
- While most of the code, as well as the project specification, for chirouter has been written from scratch, some
- of the original Stanford code is still present in some places and, whenever
- possible, we have tried to provide the exact attribution for such code.
- Any omissions are not intentional and will be gladly corrected if
- you contact us at borja@cs.uchicago.edu.
- 
+This project is based on the `Simple Router assignment <https://github.com/mininet/mininet/wiki/Simple-Router>`_ 
+included in the Mininet project which, in turn, is based on a 
+`programming assignment developed at Stanford <http://www.scs.stanford.edu/09au-cs144/lab/router.html>`_.
+
+While most of the code, as well as the project specification, for chirouter has been written from scratch, some
+of the original Stanford code is still present in some places and, whenever
+possible, we have tried to provide the exact attribution for such code.
+Any omissions are not intentional and will be gladly corrected if
+you contact us at borja@cs.uchicago.edu.
