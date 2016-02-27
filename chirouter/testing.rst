@@ -8,6 +8,12 @@ from the mininet command-line interface. However, we provide a suggested order o
 implementation that will allow you to verify that certain components of the router
 are working correctly before moving on to other components.
 
+Sample Topology
+---------------
+
+.. figure:: topology.png
+   :alt: Sample Topology
+
 
 Responding to ARP requests
 --------------------------
@@ -85,90 +91,100 @@ set to the right number of hops.
 Sending ARP requests and processing ARP replies
 -----------------------------------------------
 
+::
 
-
-mininet> client1 ping -c 4 server1
-PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
-64 bytes from 192.168.1.2: icmp_seq=3 ttl=63 time=18.7 ms
-64 bytes from 192.168.1.2: icmp_seq=4 ttl=63 time=49.0 ms
-
---- 192.168.1.2 ping statistics ---
-4 packets transmitted, 2 received, 50% packet loss, time 3019ms
-rtt min/avg/max/mdev = 18.739/33.883/49.028/15.145 ms
+   mininet> client1 ping -c 4 server1
+   PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+   64 bytes from 192.168.1.2: icmp_seq=3 ttl=63 time=18.7 ms
+   64 bytes from 192.168.1.2: icmp_seq=4 ttl=63 time=49.0 ms
+   
+   --- 192.168.1.2 ping statistics ---
+   4 packets transmitted, 2 received, 50% packet loss, time 3019ms
+   rtt min/avg/max/mdev = 18.739/33.883/49.028/15.145 ms
 
 
 IP forwarding
 -------------
 
+::
 
-
-mininet> client1 ping -c 4 8.8.8.8
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-From 10.0.0.1 icmp_seq=1 Destination Net Unreachable
-From 10.0.0.1 icmp_seq=2 Destination Net Unreachable
-From 10.0.0.1 icmp_seq=3 Destination Net Unreachable
-From 10.0.0.1 icmp_seq=4 Destination Net Unreachable
-
---- 8.8.8.8 ping statistics ---
-4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 3004ms
+   mininet> client1 ping -c 4 8.8.8.8
+   PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+   From 10.0.0.1 icmp_seq=1 Destination Net Unreachable
+   From 10.0.0.1 icmp_seq=2 Destination Net Unreachable
+   From 10.0.0.1 icmp_seq=3 Destination Net Unreachable
+   From 10.0.0.1 icmp_seq=4 Destination Net Unreachable
+   
+   --- 8.8.8.8 ping statistics ---
+   4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 3004ms
 
 
 
 Handling ARP pending requests
 -----------------------------
 
+::
 
-mininet> client1 ping -c 4 server1
-PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
-64 bytes from 192.168.1.2: icmp_seq=1 ttl=63 time=21.7 ms
-64 bytes from 192.168.1.2: icmp_seq=2 ttl=63 time=48.2 ms
-64 bytes from 192.168.1.2: icmp_seq=3 ttl=63 time=29.2 ms
-64 bytes from 192.168.1.2: icmp_seq=4 ttl=63 time=10.3 ms
-
---- 192.168.1.2 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3005ms
-rtt min/avg/max/mdev = 10.353/27.408/48.246/13.791 ms
-
-mininet> client1 ping -c 4 server2
-PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
-64 bytes from 172.16.0.2: icmp_seq=1 ttl=63 time=55.3 ms
-64 bytes from 172.16.0.2: icmp_seq=2 ttl=63 time=33.8 ms
-64 bytes from 172.16.0.2: icmp_seq=3 ttl=63 time=19.5 ms
-64 bytes from 172.16.0.2: icmp_seq=4 ttl=63 time=49.6 ms
+   mininet> client1 ping -c 4 server1
+   PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+   64 bytes from 192.168.1.2: icmp_seq=1 ttl=63 time=21.7 ms
+   64 bytes from 192.168.1.2: icmp_seq=2 ttl=63 time=48.2 ms
+   64 bytes from 192.168.1.2: icmp_seq=3 ttl=63 time=29.2 ms
+   64 bytes from 192.168.1.2: icmp_seq=4 ttl=63 time=10.3 ms
+   
+   --- 192.168.1.2 ping statistics ---
+   4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+   rtt min/avg/max/mdev = 10.353/27.408/48.246/13.791 ms
 
 
-mininet> client1 wget -q -O - http://192.168.1.2/
-<html>
-<head><title> This is server1</title></head>
-<body>
-Congratulations! <br/>
-Your router successfully routes your packets to and from server1.<br/>
-</body>
-</html>
+::
 
-mininet> client1 wget -q -O - http://172.16.0.2/
-<html>
-<head><title> This is server2</title></head>
-<body>
-Congratulations! <br/>
-Your router successfully routes your packets to and from server2.<br/>
-</body>
-</html>
+   mininet> client1 ping -c 4 server2
+   PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
+   64 bytes from 172.16.0.2: icmp_seq=1 ttl=63 time=55.3 ms
+   64 bytes from 172.16.0.2: icmp_seq=2 ttl=63 time=33.8 ms
+   64 bytes from 172.16.0.2: icmp_seq=3 ttl=63 time=19.5 ms
+   64 bytes from 172.16.0.2: icmp_seq=4 ttl=63 time=49.6 ms
+
+
+:: 
+
+   mininet> client1 wget -q -O - http://192.168.1.2/
+   <html>
+   <head><title> This is server1</title></head>
+   <body>
+   Congratulations! <br/>
+   Your router successfully routes your packets to and from server1.<br/>
+   </body>
+   </html>
+
+::
+
+   mininet> client1 wget -q -O - http://172.16.0.2/
+   <html>
+   <head><title> This is server2</title></head>
+   <body>
+   Congratulations! <br/>
+   Your router successfully routes your packets to and from server2.<br/>
+   </body>
+   </html>
 
 
 
 Timing out pending ARP requests
 -------------------------------
 
-mininet> client1 ping -c 4 192.168.1.3
-PING 192.168.1.3 (192.168.1.3) 56(84) bytes of data.
-From 10.0.0.1 icmp_seq=1 Destination Host Unreachable
-From 10.0.0.1 icmp_seq=2 Destination Host Unreachable
-From 10.0.0.1 icmp_seq=3 Destination Host Unreachable
-From 10.0.0.1 icmp_seq=4 Destination Host Unreachable
+::
 
---- 192.168.1.3 ping statistics ---
-4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 2999ms
+   mininet> client1 ping -c 4 192.168.1.3
+   PING 192.168.1.3 (192.168.1.3) 56(84) bytes of data.
+   From 10.0.0.1 icmp_seq=1 Destination Host Unreachable
+   From 10.0.0.1 icmp_seq=2 Destination Host Unreachable
+   From 10.0.0.1 icmp_seq=3 Destination Host Unreachable
+   From 10.0.0.1 icmp_seq=4 Destination Host Unreachable
+   
+   --- 192.168.1.3 ping statistics ---
+   4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 2999ms
 
 
 
