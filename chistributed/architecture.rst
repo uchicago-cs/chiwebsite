@@ -235,7 +235,7 @@ When a new node is started, the broker will first send that node a ``hello`` mes
 
 The node must reply with a ``helloResponse`` message with the following fields:
 
-* ``type``, equal to ``hello``.
+* ``type``, equal to ``helloResponse``.
 * ``source``, set to the node's name.
 
 Sending a ``helloResponse`` to the broker indicates that the node is ready to receive more messages. The broker
