@@ -35,18 +35,17 @@ toolchain works, you do need the following tools installed on your machine:
 
 -  ``libtool``
 
--  Check Unit Test Framework (http://check.sourceforge.net/).
-
 These tools are typically installed by default on most UNIX systems, and also
 available as packages.
 
 ``protobuf`` and ``protobuf-c``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-chiTCP requires at least ``protobuf`` 2.6.1 and ``protobuf-c`` 1.0.2. If these
+chiTCP requires ``protobuf`` 2.6.1 and ``protobuf-c`` 1.x (it may work with
+``protobuf`` 3.x, but we have not tested it with that version). If these
 versions are not available as packages on your operating system, you will need
 to install them from source. You can find the appropriate tarballs at
-http://code.google.com/p/protobuf/ and http://code.google.com/p/protobuf-c/.
+https://github.com/google/protobuf and https://github.com/protobuf-c/protobuf-c.
 
 On most UNIX systems, you should be able to install ``protobuf`` by running the
 following:
@@ -64,9 +63,9 @@ And ``protobuf-c`` by running the following:
 
 ::
 
-   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.0.2/protobuf-c-1.0.2.tar.gz
-   tar xvzf protobuf-c-1.0.2.tar.gz 
-   cd protobuf-c-1.0.2/
+   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.2.1/protobuf-c-1.2.1.tar.gz
+   tar xvzf protobuf-c-1.2.1.tar.gz 
+   cd protobuf-c-1.2.1/
    ./configure --prefix=/usr
    make
    sudo make install
@@ -86,6 +85,27 @@ specify when installing) to the ``LD_LIBRARY_PATH`` environment variable:
 ::
 
     export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib
+
+
+Criterion Unit Testing Framework
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+chiTCP uses the `Criterion unit testing framework <https://github.com/Snaipe/Criterion>`_
+to run its unit tests. It can be installed by running the following:
+
+::
+
+    wget https://github.com/Snaipe/Criterion/releases/download/v2.3.0-1/criterion-v2.3.0-1.tar.bz2
+    tar xvjf criterion-v2.3.0-1.tar.bz2 
+    mkdir build
+    cd build/
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    cmake --build .
+    sudo make install
+
+Note that Criterion requires `CMake <https://cmake.org/>`_ to build. CMake is available
+as an installable package for most Linux distributions.
+    
 
 
 Building
@@ -139,7 +159,7 @@ Running
 
 To run the chiTCP daemon, just run the following::
 
-       ./chitcpd -v
+       ./chitcpd -vv
 
 You should see the following output::
 
