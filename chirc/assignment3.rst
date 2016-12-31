@@ -386,3 +386,6 @@ Update the implementation of the following commands:
    respectively. The order of all the replies will be:
    ``RPL_WHOISUSER``, ``RPL_WHOISCHANNELS``, ``RPL_WHOISSERVER``,
    ``RPL_AWAY``, ``RPL_WHOISOPERATOR``, ``RPL_ENDOFWHOIS``.
+
+-  ``LUSERS``: The replies need to be updated to show the correct number 
+   of IRCops and the number of channels.
