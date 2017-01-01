@@ -15,16 +15,16 @@ near perfect score on the tests, it will earn you a zero on the design grade.
 
 So, you should start implementing your solution with the requirements of
 the rest of the project in mind. More specifically, your solution to
-Project 1a should meet the following requirements:
+this assignment should meet the following requirements:
 
--  «12.5 points» You must send the ``RPL_WELCOME`` *only* after the
+-  (A) You must send the ``RPL_WELCOME`` *only* after the
    ``NICK`` and ``USER`` messages have been received.
 
--  «25 points» You must take into account that you may get more or less
+-  (B) You must take into account that you may get more or less
    than one full message when you read from a socket. You may not solve
    this problem by reading one character at a time from the socket.
 
--  «12.5 points» Your solution must parse the nick and username from the
+-  (C) Your solution must parse the nick and username from the
    ``NICK`` and ``USER`` messages, and compose the correct
    ``RPL_WELCOME`` reply.
 
@@ -32,7 +32,7 @@ Although not required for this assignment, you should take into account
 that the remaining two parts of the project will involve adding support
 for additional messages and replies. Any time you spend writing a message parser and
 constructor (that works with more than just ``NICK`` and ``USER``) will
-be time well spent. However, if your solution to Project 1a takes some
+be time well spent. However, if your solution to this assignment takes some
 shortcuts by assuming that you will only be dealing with the ``NICK``
 and ``USER`` messages and the ``RPL_WELCOME`` reply, you will not be
 penalized for it.

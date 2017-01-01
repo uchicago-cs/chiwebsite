@@ -105,8 +105,8 @@ Messaging between users
 
 Once several users are connected, it is possible for them to send
 messages to each other, even in the absence of channels. In fact, most
-of Project 1b will focus on implementing messaging between users,
-whereas Project 1c will focus on adding support for channels.
+of the second assignment focuses on implementing messaging between users,
+whereas the third assignment will focus on adding support for channels.
 
 To send a message to a specific nick, a user must send a ``PRIVMSG`` to
 the server. The figure above shows two users, with nicks ``amy`` and
@@ -165,7 +165,7 @@ by certain users; we’ll discuss this in detail later). Messages 4a and
 which tell ``amy`` what users are currently present in the channel.
 Notice how the ``doctor`` user has an at-sign before his nick; this
 indicates that ``doctor`` is a *channel operator* for channel
-``#tardis``. As we’ll see in Project 1c, users can have *modes* that
+``#tardis``. As we’ll see in the third assignment, users can have *modes* that
 give them special privileges in the server or on individual channels.
 For example, a channel operator is typically the only type of user that
 can change the channel’s topic.

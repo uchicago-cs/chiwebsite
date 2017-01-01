@@ -75,20 +75,20 @@ You are not expected to read all of these documents. More specifically:
    want to give it a cursory read at first, and revisit it as you become
    more familiar with the finer points of the IRC protocol.
 
--  In Project 1b you will implement a subset of
+-  In the second assignment you will implement a subset of
    `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. We suggest you
    read `[RFC2812 §1] <http://tools.ietf.org/html/rfc2812#section-1>`__
    and `[RFC2812 §2] <http://tools.ietf.org/html/rfc2812#section-2>`__.
    For the remainder of the RFC, you should only read the sections
    relevant to the parts of the IRC protocol you will be implementing.
 
--  In Project 1c you will implement a subset of the functionality
+-  In the third assignment you will implement a subset of the functionality
    described in `[RFC2811] <http://tools.ietf.org/html/rfc2811>`__,
    which will require implementing additional parts of
    `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. We suggest you
    hold off on reading
    `[RFC2811] <http://tools.ietf.org/html/rfc2811>`__ until we reach
-   Project 1c; if you do want to read the introductory sections, take
+   the third assignment; if you do want to read the introductory sections, take
    into account that we will only be supporting “standard channels” in
    the “#” namespace, and that we will not be supporting server
    networks.

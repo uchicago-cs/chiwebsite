@@ -88,7 +88,7 @@ are listed below:
 
       TEST_ARGS="-C WHO" make tests
 
-      TEST_ARGS="-C UPDATE_1B" make tests      
+      TEST_ARGS="-C UPDATE_ASSIGNMENT2" make tests      
       
 Running individual tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -159,7 +159,7 @@ Note: The above command will only produce meaninful output after you've run ``ma
 
 A full implementation of chirc would produce a summary like this::
 
-   Project 1a
+   Assignment 1
    =========================================================================
    Category                            Passed / Total       Score  / Points    
    -------------------------------------------------------------------------
@@ -168,7 +168,7 @@ A full implementation of chirc would produce a summary like this::
                                                     TOTAL = 50.00  / 50        
    =========================================================================
    
-   Project 1b
+   Assignment 2
    =========================================================================
    Category                            Passed / Total       Score  / Points    
    -------------------------------------------------------------------------
@@ -184,7 +184,7 @@ A full implementation of chirc would produce a summary like this::
                                                     TOTAL = 100.00 / 100       
    =========================================================================
    
-   Project 1c
+   Assignment 3
    =========================================================================
    Category                            Passed / Total       Score  / Points    
    -------------------------------------------------------------------------
@@ -197,12 +197,14 @@ A full implementation of chirc would produce a summary like this::
    NAMES                               11     / 11          5.00   / 5.00      
    LIST                                5      / 5           5.00   / 5.00      
    WHO                                 6      / 6           5.00   / 5.00      
-   UPDATE_1B                           5      / 5           5.00   / 5.00      
+   Update Assignment 2                 5      / 5           5.00   / 5.00      
    -------------------------------------------------------------------------
                                                     TOTAL = 100.00 / 100       
    =========================================================================
 
-
+NOTE: The points assigned to each category may not be the ones shown above.
+These points are configurable by the instructor, who may decide to allocate
+points in different ways.
 
 Manually logging into your IRC server
 -------------------------------------

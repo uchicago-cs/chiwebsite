@@ -22,15 +22,13 @@ other.
 Connection Registration
 -----------------------
 
-**Points: 35 points**
-
 Implement connection registration, as described in `[RFC2812 §3.1] <http://tools.ietf.org/html/rfc2812#section-3.1>`__, 
 with the following exceptions:
 
 -  You must implement the ``NICK``, ``USER``, and ``QUIT`` messages. You
    must *not* implement the ``PASS``, ``SERVICE``, or ``SQUIT``
    messages. You do not need to implement the ``OPER`` and ``MODE``
-   messages yet (you will implement them in Project 1c).
+   messages yet (you will implement them in the next assignment).
 
 -  In the ``NICK`` message, you are only expected implement the
    ``ERR_NICKNAMEINUSE`` reply.
@@ -86,8 +84,6 @@ Take into account the following:
 ``PRIVMSG`` and ``NOTICE``
 --------------------------
 
-**Points: 30 points**
-
 Implement messaging between users, as described in `[RFC2812 §3.3] <http://tools.ietf.org/html/rfc2812#section-3.3>`__, with the
 following exceptions:
 
@@ -107,9 +103,6 @@ Take into account the following:
 
 ``PING`` and ``PONG``
 ---------------------
-
-**Points: 2.5 points**
-
 
 Implement the ``PING`` and ``PONG`` commands, as described in `[RFC2812 §3.7.2] <http://tools.ietf.org/html/rfc2812#section-3.7.2>`__ 
 and `[RFC2812 §3.7.3] <http://tools.ietf.org/html/rfc2812#section-3.7.3>`__,
@@ -131,9 +124,6 @@ Take into account the following:
 ``MOTD``
 --------
 
-**Points: 5 points**
-
-
 Implement the ``MOTD`` command, as described in `[RFC2812 §3.4.1] <http://tools.ietf.org/html/rfc2812#section-3.4.1>`__, 
 with the following exceptions:
 
@@ -148,9 +138,6 @@ Take into account the following:
 
 ``LUSERS``
 ----------
-
-**Points: 10 points**
-
 
 Implement the ``LUSERS`` command, as described in `[RFC2812 §3.4.2] <http://tools.ietf.org/html/rfc2812#section-3.4.2>`__, 
 with the following exceptions:
@@ -185,9 +172,6 @@ Take into account the following:
 ``WHOIS``
 ---------
 
-**Points: 10 points**
-
-
 Implement the ``WHOIS`` command, as described in `[RFC2812 §3.6.2] <http://tools.ietf.org/html/rfc2812#section-3.6.2>`__, with the
 following exceptions:
 
@@ -206,22 +190,17 @@ following exceptions:
 Take into account the following:
 
 -  You will be implementing ``RPL_WHOISOPERATOR``,
-   ``RPL_WHOISCHANNELS``, and ``RPL_AWAY`` in Project 1c.
+   ``RPL_WHOISCHANNELS``, and ``RPL_AWAY`` in the next assignment.
 
 ``ERR_UNKNOWNCOMMAND``
 ----------------------
 
-**Points: 2.5 points**
-
-
-If your server receives any message not described here (or in Project
-1c), you must return a ``ERR_UNKNOWNCOMMAND`` reply.
+If your server receives any message not described here (or in the next assignment), 
+you must return a ``ERR_UNKNOWNCOMMAND`` reply.
 
 
 Robustness
 ----------
-
-**Points: 5 points**
 
 Your code must pass the "Robustness" suite of tests (see :ref:`chirc-testing` for instructions
 on how to run the tests). These tests check that your code

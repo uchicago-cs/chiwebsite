@@ -48,7 +48,7 @@ Running
 -------
 
 You need to run the executable with at least the ``-o``
-option, although this option will not be relevant until Project 1c. For
+option, although this option will not be relevant until the third assignment. For
 example::
 
    ./chirc -o foobar

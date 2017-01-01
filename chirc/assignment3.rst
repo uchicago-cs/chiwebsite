@@ -8,16 +8,13 @@ channels and modes. You will now have to deal with the fact that
 messages may be relayed to multiple users, sometimes across multiple
 channels.
 
-The parts of this project are presented in suggested order of
+The parts of this assignment are presented in suggested order of
 implementation. Nonetheless, once you’ve implemented channels (``JOIN``,
 ``PART``, and sending messages to channels), implementing modes and the
 remaining messages are all fairly independent of each other.
 
 ``JOIN``
 --------
-
-**Points: 15 points**
-
 
 Implement the ``JOIN`` command, as described in `[RFC2812 §3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, with the
 following exceptions:
@@ -54,10 +51,7 @@ Take into account the following:
 ``PRIVMSG`` and ``NOTICE`` to channels
 --------------------------------------
 
-**Points: 15 points**
-
-
-Extend your implementation of ``PRIVMSG`` and ``NOTICE`` from Project 1b
+Extend your implementation of ``PRIVMSG`` and ``NOTICE`` from the previous assignment
 to support sending messages to a channel.
 
 Until you implement modes, you will not need to support any additional
@@ -77,9 +71,6 @@ replies in ``PRIVMSG``. However, take into account the following:
 ``PART``
 --------
 
-**Points: 10 points**
-
-
 Implement the ``PART`` command, as described in `[RFC2812 §3.2.2] <http://tools.ietf.org/html/rfc2812#section-3.2.2>`__, with the
 following exceptions:
 
@@ -97,9 +88,6 @@ Take into account the following:
 ``TOPIC``
 ---------
 
-**Points: 10 points**
-
-
 Implement the ``TOPIC`` command, as described in `[RFC2812 §3.2.4] <http://tools.ietf.org/html/rfc2812#section-3.2.4>`__, with the
 following exceptions:
 
@@ -111,9 +99,6 @@ following exceptions:
 
 User and channel modes
 ----------------------
-
-**Points: 25 points**
-
 
 In IRC, users can have certain *modes* assigned to them. Modes are
 identified by a single letter, and they are binary: a user either has a
@@ -249,16 +234,10 @@ You must observe the following rules when dealing with modes:
 ``AWAY``
 --------
 
-**Points: 5 points**
-
-
 Implement the ``AWAY`` command, as described in `[RFC2812 §4.1] <http://tools.ietf.org/html/rfc2812#section-4.1>`__.
 
 ``NAMES``
 ---------
-
-**Points: 5 points**
-
 
 Implement the ``NAMES`` command, as described in `[RFC2812 §3.2.5] <http://tools.ietf.org/html/rfc2812#section-3.2.5>`__, with the
 following exceptions:
@@ -295,9 +274,6 @@ Take into account the following:
 ``LIST``
 --------
 
-**Points: 5 points**
-
-
 Implement the ``LIST`` command, as described in `[RFC2812 §3.2.6] <http://tools.ietf.org/html/rfc2812#section-3.2.6>`__, with the
 following exceptions:
 
@@ -319,9 +295,6 @@ Take into account the following:
 
 ``WHO``
 -------
-
-**Points: 5 points**
-
 
 Implement the ``WHO`` command, as described in `[RFC2812 §3.6.1] <http://tools.ietf.org/html/rfc2812#section-3.6.1>`__, with the
 following exceptions:
@@ -366,10 +339,8 @@ Take into account the following:
    included (regardless of what channel modes that user may have in the
    users he belongs to).
 
-Updating commands from Project 1b
----------------------------------
-
-**Points: 5 points**
+Updating commands from previous assignment
+------------------------------------------
 
 Update the implementation of the following commands:
 
