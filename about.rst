@@ -40,7 +40,7 @@ faculty have also contributed to the UChicago χ-Projects over the years:
 * chirouter
 
   * Geoff Ramseyer (Class of 2017)
-  * The reference solution of chirouter is based on code written by Geoff Ramseyer and Austin Byers (Class of 2016)
+  * The reference solution of chirouter is based on code written by Geoff Ramseyer and Austin Byers (S.B.'16, S.M.'16)
 
 * chidb
 
