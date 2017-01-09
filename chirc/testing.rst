@@ -222,7 +222,7 @@ run your server like this::
    
 And log into it like this::
 
-   telnet localhost 6667
+   telnet localhost 7776
    
 This provides a direct interface to the IRC protocol. So, for example, to register
 as a user, you would have to type the following into the telnet client::
