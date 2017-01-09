@@ -308,7 +308,7 @@ The TCP buffers
 
     -  When an ``APPLICATION_RECV`` event happens, you do not need to
        modify the receive buffer in any way, but you do need to check whether
-       the size of the send window should be adjusted.
+       the size of the receive window should be adjusted.
 
 The withheld packet queue
     .. code-block:: c
