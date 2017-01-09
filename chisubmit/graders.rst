@@ -26,7 +26,7 @@ a branch called ``p1-grading``).
 
 To pull the repositories assigned to you, run the following::
 
-        chisubmit grader create-local-grading-repos ASSIGNMENT_ID
+        chisubmit grader pull-grading ASSIGNMENT_ID
         
 Where ``ASSIGNMENT_ID`` is the assignment identifier.
 
@@ -184,9 +184,12 @@ If your course is using rubrics, validate the rubrics with this command::
         
 Use the ``--only TEAM_ID`` option to validate a single rubric.
 
+Note: The rubric file will not be added to Git by default. You will have to ``git add`` it
+to make sure it is included.
+
 Finally, push your work to the staging server::
 
-        chisubmit grader push-grading-branches ASSIGNMENT_ID 
+        chisubmit grader push-grading ASSIGNMENT_ID 
         
 Take into account that you do not need to wait until all your repositories are graded before
 running these commands. If you have not yet graded a repository, running the above

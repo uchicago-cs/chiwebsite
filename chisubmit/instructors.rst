@@ -38,6 +38,24 @@ For example::
 
    chisubmit instructor assignment add p1 "Project 1" "2015-01-12 20:00"
 
+Modifying attributes of an assignment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Assignments have several attributes you can modify using the following command::
+
+   chisubmit instructor assignment set-attribute ASSIGNMENT_ID ATTRIBUTE_NAME ATTRIBUTE_VALUE
+   
+Where ``ATTRIBUTE_NAME`` is one of the following:
+
+* ``min_students``: The minimum number of students required to form a team to register for
+  this assignment (Default: ``1``, i.e., an individual assignment)
+* ``max_students``: The maximum number of students required to form a team to register for
+  this assignment (Default: ``1``, i.e., an individual assignment)
+* ``deadline``: The deadline. Must be of the form ``YYYY-MM-DD HH:MM``
+* ``grace_period``: The deadline grace period (the period of time after the deadline when
+  assignments will continue to be accepted, but without consuming an extension). The value
+  must be of the form ``HH:MM:SS``.
+
 
 Listing assignments
 ~~~~~~~~~~~~~~~~~~~
@@ -73,7 +91,7 @@ The command can also be run with the ``--verbose`` flag to also print the names 
 students who have not yet registered for the assignment as well as the teams that have not yet
 submitted the assignment. For example::
 
-   $ chisubmit instructor assignment stats p1
+   $ chisubmit --verbose instructor assignment stats p1
    Assignment 'Project 1'
    =====================================
    
@@ -166,7 +184,11 @@ This command also accepts the following parameters:
 Grading
 -------
 
-chisubmit can be used to perform the entire grading workflow over Git. The basic workflow is:
+chisubmit can be used to perform the entire grading workflow over Git. Please note that this requires
+the creation of an additional *staging server*. If your chisubmit admin has not set this up for your
+course, you will not be able to manage grading with chisubmit.
+
+The basic workflow is:
 
 #. Students submit their assignments
 #. Instructor pushes a copy of submitted assignments to a *staging server*. This is a git server
@@ -183,26 +205,25 @@ making it easier to collect the scores assigned by the graders.
 Creating the rubric
 ~~~~~~~~~~~~~~~~~~~
 
-chisubmit assumes that a rubric is divided into one or more "section" which is worth a number of points.
-This mechanism is currently fairly inflexible (it is hard to modify and remove sections of the rubric), 
-so we recommend you don't create the rubric until you know for sure what the sections of the rubric will
-be. Once you do, just run this command for each section::
+chisubmit assumes that a rubric is divided into one or more "components" which is worth a number of points.
+This mechanism is currently fairly inflexible (it is hard to modify and remove components of the rubric), 
+so we recommend you don't create the rubric until you know for sure what the components of the rubric will
+be. Once you do, just run this command for each component::
 
-   chisubmit instructor assignment add-grade-component ASSIGNMENT_ID SECTION_ID "SECTION_NAME" POINTS
+   chisubmit instructor assignment add-rubric-component ASSIGNMENT_ID "COMPONENT_NAME" POINTS
    
 Where:
 
 * ``ASSIGNMENT_ID`` is the assignment identifier.
-* ``SECTION_ID`` is an identifier for the section. Only alphanumeric characters are allowed, with no spaces.
-* ``SECTION_NAME`` is a descriptive name for the section.
-* ``POINTS`` is the number of points this section is worth.
+* ``COMPONENT_NAME`` is a descriptive name for the component.
+* ``POINTS`` is the number of points this component is worth.
 
 For example::
 
-   chisubmit instructor assignment add-grade-component p1 tests "Tests" 50 
-   chisubmit instructor assignment add-grade-component p1 conn "Implementing foo()" 20 
-   chisubmit instructor assignment add-grade-component p1 bar "Implementing bar()" 20
-   chisubmit instructor assignment add-grade-component p1 style "Code Style" 10
+   chisubmit instructor assignment add-rubric-component p1 tests "Tests" 50 
+   chisubmit instructor assignment add-rubric-component p1 conn "Implementing foo()" 20 
+   chisubmit instructor assignment add-rubric-component p1 bar "Implementing bar()" 20
+   chisubmit instructor assignment add-rubric-component p1 style "Code Style" 10
 
 Please note that the points are not required to add up to 100. 
 
@@ -211,19 +232,38 @@ After the submission deadline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once the deadline for an assignment passes, the instructor has to perform a series of steps
-before the graders can start grading. These steps will create local *grading repos* on
-the instructor's machine, and each repo will get a new branch called ``ASSIGNMENT_ID-grading``
+before the graders can start grading. In a class with multiple instructor, only one instructor
+should follow these steps (and we will refer to this instructor as the "master instructor").
+
+The first step is to create local *grading repos* on the master instructor's machine.
+Each repo will be a clone of a submitted repo, but with a new branch called ``ASSIGNMENT_ID-grading``
 (where ``ASSIGNMENT_ID`` is the assignment being graded; e.g., assignment ``p1`` would have
 a branch called ``p1-grading``). All grading takes place on this branch. No other branch
 in the teams' repositories should be modified.
 
-If your course uses extensions, the following steps have to be repeated after each "extended" deadline, 
-as they will only create the grading repos for the teams that are ready for grading. 
+These grading repos will be configured with two Git remotes: 
+
+* ``origin``: Pointing to the student repository
+* ``staging``: Pointing to a clone of that repository on the staging server.
+
+The graders (and other non-master instructors) will only have access to the staging server.
+The master instructor is the only one that has access to both, and thus is responsible
+for creating the initial clones of the submitted repositories, as well as pushing the
+final grading back to the students.
 
 To create the grading repos and the grading branches, run the following::
 
-        chisubmit instructor grading create-grading-repos ASSIGNMENT_ID
-        chisubmit instructor grading create-grading-branches ASSIGNMENT_ID
+   chisubmit instructor grading create-grading-repos --master ASSIGNMENT_ID
+   
+The repositories will be created in ``repositories/COURSE_ID/ASSIGNMENT_ID/`` (in the
+directory where you ran ``chisubmit init``).   
+   
+To push them to the staging server, run the following::
+
+   chisubmit instructor grading push-grading ASSIGNMENT_ID
+
+If your course uses extensions, the following steps have to be repeated after each "extended" deadline, 
+as they will only create the grading repos for the teams that are ready for grading. 
 
 Next, assign graders to the submissions::
 
@@ -233,53 +273,94 @@ Use ``--avoid-assignment ASSIGNMENT_ID`` to avoid assigning the same teams that 
 in a previous assignment. Use ``--from-assignment ASSIGNMENT_ID`` to assign the same teams to the same graders 
 (whenever possible).
 
+By default, ``assign-grader`` will divide up all the submitted repos equally amongst the graders. If a different
+allocation is preferable, you can create a file with the following format::
+
+   grader1: 10
+   grader2: 5
+   grader3: remainder
+   grader4: remainder
+   grader5: remainder
+   
+This will assign 10 repos to ``grader1``, 5 repos to ``grader2``, and split the remaining equally between
+``grader3``, ``grader4``, and ``grader5``. To use this file, run the command as follows::
+
+   chisubmit instructor grading assign-graders ASSIGNMENT_ID --grader-file GRADER_FILE
+
+You can modify individual grading assignments (i.e., who is assigned to grade what repo)
+using the following command::
+
+   chisubmit instructor grading assign-grader ASSIGNMENT_ID TEAM_ID GRADER_ID
+
 You can see the graders assigned to each assignment with this command::
 
         chisubmit instructor grading list-grader-assignments ASSIGNMENT_ID
 
-If you are using rubrics, run the following to create the rubric files and to commit them to the grading branches::
 
-        chisubmit instructor grading add-rubrics --commit $ASSIGNMENT_ID
+Reviewing grading in progress
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Skip the `--commit` option if you don't want the rubrics to be committed to the grading repos 
-(this can be useful to test whether the rubrics are being correctly generated).
+The master instructor can pull the graders' work from the staging server by running the following::
 
-Finally, push the grading repos to the staging server::
+   chisubmit instructor grading pull-grading ASSIGNMENT_ID
+   
+If other instructors want to review the grading, they first need to run this::
 
-        chisubmit instructor grading push-grading-branches --to-staging ASSIGNMENT_ID
+   chisubmit instructor grading create-grading-repos ASSIGNMENT_ID
+   
+This will create local grading repos in their machine, but with access limited only to the
+staging server (notice how we did not include the ``--master`` option). Once they have
+done this, they can use the ``pull-grading`` command any time they want to pull the graders'
+latest work.
+
+After running ``pull-grading``, an instructor (master or non-master) can also run the following 
+command to get a report of what repos have been graded::
+
+    chisubmit instructor grading show-grading-status --by-grader ASSIGNMENT_ID
+    
+Usually, it is useful to see this report broken down by grader, but you can omit the ``--by-grader``
+option if you want to see all the repos listed together.
+
+Any changes to the grading can be pushed back to the staging server by running this::
+
+    chisubmit instructor grading push-grading ASSIGNMENT_ID
+   
+**Note**: Do not use ``git push`` manually if you are the master instructor, as this may
+result in you pushing the grading to the students before you intended to. If you are
+the master instructor and want to use ``git pull`` and ``git push`` manually, 
+make sure you are using the ``staging`` remote.
 
 After the graders have finished grading
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once the graders are done grading, pull their work from the staging server::
+Once the graders are done grading, the master instructor should pull their work from the 
+staging server as described above::
 
-        chisubmit instructor grading pull-grading-branches --from-staging ASSIGNMENT_ID
+    chisubmit instructor grading pull-grading ASSIGNMENT_ID
+    
+The grading can then be pushed back to the students by running the following::
+
+    chisubmit instructor grading push-grading --to-students ASSIGNMENT_ID
 
 If you are using rubrics, use the following command to collect the scores from the rubrics::
 
-        chisubmit instructor grading collect-rubrics $ASSIGNMENT_ID
+    chisubmit instructor grading collect-rubrics $ASSIGNMENT_ID
 
-Run with ``--dry-run`` if you just want to check what the grades are, without actually loading 
-them into the chisubmit database.
+And the following to produce a CSV file with all the grades::
 
-Check whether all the submissions have been graded::
+    chisubmit instructor grading list-grades > grades.csv
 
-        chisubmit instructor grading show-grading-status ASSIGNMENT_ID --by-grader
-
-Finally, push the graded repositories to the students::
-
-        chisubmit instructor grading push-grading-branches --to-students ASSIGNMENT_ID
         
 Regrading
 ~~~~~~~~~
 
 If a team requests a regrading, simply ask the grader assigned to that team to regrade the
-work and to push an updated version of the repository to the staging server. Once this is done,
-just run the following commands to collect and publish the new version::
+work and to push an updated version of the repository to the staging server (alternatively,
+any instructor can do this as well). Once this is done, the master instructor just needs
+to run the following::
 
-        chisubmit instructor grading pull-grading-branches --from-staging ASSIGNMENT_ID --only TEAM_ID
-        chisubmit instructor grading collect-rubrics $ASSIGNMENT_ID
-        chisubmit instructor grading push-grading-branches --to-students ASSIGNMENT_ID --only TEAM_ID
+        chisubmit instructor grading pull-grading ASSIGNMENT_ID --only TEAM_ID
+        chisubmit instructor grading push-grading --to-students ASSIGNMENT_ID --only TEAM_ID
         
 
  
