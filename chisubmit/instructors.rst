@@ -220,10 +220,10 @@ Where:
 
 For example::
 
-   chisubmit instructor assignment add-rubric-component p1 tests "Tests" 50 
-   chisubmit instructor assignment add-rubric-component p1 conn "Implementing foo()" 20 
-   chisubmit instructor assignment add-rubric-component p1 bar "Implementing bar()" 20
-   chisubmit instructor assignment add-rubric-component p1 style "Code Style" 10
+   chisubmit instructor assignment add-rubric-component p1 "Tests" 50 
+   chisubmit instructor assignment add-rubric-component p1 "Implementing foo()" 20 
+   chisubmit instructor assignment add-rubric-component p1 "Implementing bar()" 20
+   chisubmit instructor assignment add-rubric-component p1 "Code Style" 10
 
 Please note that the points are not required to add up to 100. 
 
