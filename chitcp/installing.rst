@@ -163,18 +163,21 @@ To run the chiTCP daemon, just run the following::
 
 You should see the following output::
 
-   [2014-02-02 11:36:07]   INFO lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket. TCP socket: 23300
+   [18:44:54.772865111]    INFO       lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket.borja. TCP socket: 23300
 
 Take into account that you won't be able to do much with ``chitcpd`` until you've implemented 
 the ``tcp.c`` file. We do, however, provide a number of mechanisms for you to test your implementation.
 These are described in :ref:`chitcp-testing`
 
-By default, ``chitcpd`` listens on TCP port 23300 and creates a UNIX socket on ``/tmp/chitcpd.socket``. If you
-are running ``chitcpd`` on a shared machine, these default values will likely conflict with other users running
-on that same machine. To specify an alternate port/UNIX socket, you need to set the following environment 
-variables on every terminal in which you are running chitcp programs (including ``chitcpd`` and any application 
+By default, ``chitcpd`` listens on TCP port 23300. If you are running ``chitcpd`` on a shared machine, 
+this default value will likely conflict with other users running
+on that same machine. To specify an alternate port, you need to set the following environment 
+variable on *every* terminal in which you are running chitcp programs (including ``chitcpd`` and any application 
 that uses the chisocket library)::
 
     export CHITCPD_PORT=30287  # Substitute for a different number
-    export CHITCPD_SOCK=/tmp/chitcpd.socket.$USER
 
+``chitcpd`` also creates a UNIX socket on ``/tmp/chitcpd.socket.USER`` (where ``USER`` is your UNIX username). 
+It is unlikely that this will conflict with other users but, if you need to specify an alternate location
+and name for this UNIX socket, just set the ``CHITCPD_SOCK`` environment variable to the absolute path
+of the UNIX socket (and remember to do this on every terminal in which you are running chitcp programs)

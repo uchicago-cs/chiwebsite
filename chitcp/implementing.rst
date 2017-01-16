@@ -18,7 +18,7 @@ Implementing RFC 793
 
 In this project, you are going to implement a substantial portion of
 `[RFC793] <http://tools.ietf.org/html/rfc793>`__. In particular, you will be
-focusing on `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__
+focusing on `[RFC793 § 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__
 (Event Processing), which provides a detailed description of how TCP should
 behave (whereas the preceding sections focus more on describing use cases,
 header specifications, example communications, etc.). The second paragraph of
@@ -48,7 +48,7 @@ So, we can think of TCP as a state machine where:
    variables and the send/receive buffers.
 
 The events defined in
-`[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__ are:
+`[RFC793 § 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__ are:
 
 -  ``OPEN``: chiTCP will generate this event when the application layer calls
    ``chisocket_connect``.
@@ -85,7 +85,7 @@ to you to write the code that will handle each event in each state.
 Of course, a TCP implementation would have to consider every possible
 combination of states and events. However, many of these are actually invalid
 combinations. For example,
-`[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__ specifies that
+`[RFC793 § 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__ specifies that
 that if the ``SEND`` event happens in the following states:
 
 ::
@@ -139,6 +139,10 @@ your implementation should take the following into account:
 
 -  You do not need to support simultaneous opens (i.e., the transition from
    ``SYN_SENT`` to ``SYN_RCVD``).
+   
+Whenever something is unclear in RFC 793, please make sure you also take a look
+at `[RFC1122 § 4.2] <https://tools.ietf.org/html/rfc1122#page-82>`__, which clarifies a number
+of aspects of RFC 793, and even provides a few corrections.
 
 
 Implementing the ``tcp.c`` file
@@ -310,14 +314,6 @@ The TCP buffers
        modify the receive buffer in any way, but you do need to check whether
        the size of the send window should be adjusted.
 
-The withheld packet queue
-    .. code-block:: c
-
-        list_t withheld_packets; 
-        pthread_mutex_t lock_withheld_packets;
-
-    This list is used internally to simulate delayed packets. You do
-    not need to use or modify this queue in any way.
 
 The ``tcp_packet_t`` struct
 ---------------------------
@@ -444,6 +440,11 @@ In both functions, the first parameter is used to specify the log level:
 
 -  ``WARNING``: Used to indicate unexpected situation which, while not
    technically an error, could cause one.
+   
+-  ``MINIMAL``: Compact information about important events in a socket,
+   as well as one-line summaries of received/sent packets. This log
+   level is described in more detail in :ref:`chitcp-testing`, and you
+   should not use it yourself.   
 
 -  ``INFO``: Used to print general information about the state of the program.
 
@@ -458,8 +459,10 @@ The level of logging is controlled by the ``-v`` argument when running
 
 -  No ``-v`` argument: Print only ``CRITICAL`` and ``ERROR`` messages.
 
--  ``-v``: Also print ``WARNING`` and ``INFO`` messages.
+-  ``-v``: Also print ``WARNING`` and ``MINIMAL`` messages.
 
--  ``-vv``: Also print ``DEBUG`` messages.
+-  ``-vv``: Also print ``INFO`` messages.
 
--  ``-vvv``: Also print ``TRACE`` messages.
+-  ``-vvv``: Also print ``DEBUG`` messages.
+
+-  ``-vvvv``: Also print ``TRACE`` messages.

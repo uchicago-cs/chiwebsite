@@ -12,53 +12,59 @@ out of order.
 
 This assignment is divided into two parts:
 
-- Retransmissions (60 points)
-- Out-of-order delivery (40 points)
+- Retransmissions
+- Out-of-order delivery
 
 Retransmissions
 ---------------
 
-Every time a SYN, data, or FIN segment is sent, you must start a retranmission
-timer. If an ACK for that segment is received before the timer expires, then
-you must cancel the timeout. If an ACK doesn't arrive, the timer should timeout
-and you should resend the segment (and reset the timer).
+You must add a per-socket *retransmission timer* (implemented with a single
+thread) that is managed in the manner described in `[RFC6298 § 5] <https://tools.ietf.org/html/rfc6298#section-5>`__.
+The RTO (Retransmission TimeOut) should be computed as specified in  `[RFC6298 § 2-4] <https://tools.ietf.org/html/rfc6298#section-2>`__.
+
+Please note the following:
+
+- We will assume a clock granularity of 1 millisecond (the same granularity used in Linux).
+  Given how chiTCP is implemented, the clock granularity is somewhat meaningless
+  (it refers to how often the TCP timers are updated internally, which is
+  not the approached followed in chiTCP; in an operating system kernel,
+  an interrupt would happen every millisecond to update the values of
+  certain TCP timers). However, we need to plug in a granularity in some of
+  the formulas in the RFC, so we might as well use the one in Linux.
+- You must implement go-back-N so, in `[RFC6298 § 5.4] <https://tools.ietf.org/html/rfc6298#section-5>`__,
+  you should retransmit the earliest segment that has not been acknowledged,
+  *and* all subsequent unacknowledged segments.
+- You do not need to implement sections 5.5 through 5.7
 
 We suggest you follow this approach:
 
 - Add a *retransmission queue* to the ``tcp_data_t``. Every time a packet is sent,
   add the packet to the restransmission queue, along with any metadata necessary
-  to manage the retransmission (such as the time when the packet was sent, and the
-  time when it will time out).
+  to manage the retransmission (such as the time when the packet was sent). You may
+  also add other fields to ``tcp_data_t``.
   
-- When a packet is sent, spawn a *timeout thread* that will generate a ``TIMEOUT``
-  event for that socket when the timer expires. chiTCP 
-  provides a ``chitcpd_timeout`` function (see :ref:`chitcp-implementing`) that
-  will generate this event.
+- Spawn the retransmission timer thread in ``tcp_data_init`` (in tcp.c).
+  You should implement your thread function so that it can be in at least two states:
+  stopped or running. Please note that this can be done without killing or cancelling 
+  the thread itself. Instead, it should be possible for you to signal the thread,
+  so that it can reevaluate whether it needs to change its state. 
   
-  Take into account that, although it is possible to optimize the generation of
-  timeouts by cancelling or extending timeouts whenever new data is sent (since the acknowlegement
-  of that data will implicitly acknowledge all past data), you are not required
-  to do so in this assignment. You can simply have a timeout for each individual
-  packet that is sent.
-  
-- If a packet is ACK'd before the timeout, remove the packet from the retransmission
-  queue and cancel its timeout.
+  When the threads times out (i.e., when it runs for RTO seconds without anything
+  happening that would cancel the timer), you must generate a ``TIMEOUT`` event
+  by calling ``chitcpd_timeout``. The handling of the timeout should happen
+  in your TCP state handlers; *do not implement the retransmission logic
+  in your retransmission timer thread*. The purpose of this thread is purely
+  to act as a timer.
   
 - Whenever a ``TIMEOUT`` event happens, go through the retransmission queue to check
-  what packets (if any) have timed out and need to be re-sent. The provided code
+  what packets need to be re-sent (and remove those that have been acknowledged). The provided code
   already includes an (empty) ``if (event == TIMEOUT)`` branch in the handler
   functions where you need to process the ``TIMEOUT`` event.
 
-  As a first approach to your solution, you can resend *only* the package that
-  timed out. For full credit, you must implement the go-back-N retransmission scheme: 
-  if sequence number N times out, you must resend all the data after sequence number N
-  (which requires updating the retransmission queue and timeouts if additional
-  packets are being resent).
-
-- You should implement the "classic" RTT estimation formula described in
-  `[RFC793 3.7] <http://tools.ietf.org/html/rfc793#section-3.7>`__. However, we
-  recommend you start your implementation by setting the RTT to a fixed and
-  arbitrarily high value (e.g., one second).
+- When a packet is acknowledged, don't forget to remove it from the retranmission queue.
+  Since a TCP packet could acknowledge multiple packets at once, you must make
+  sure to traverse the retransmission queue in case there are multiple packets
+  that should be removed.
   
 - All the above points focus on the peer that sends a packet which is dropped.
   In the other peer, you must remember to only acknowledge the latest sequence

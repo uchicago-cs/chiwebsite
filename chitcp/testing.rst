@@ -241,11 +241,12 @@ tests, you could run the following::
 Echo server and client
 ----------------------
 
-When the automated tests fail, it can be hard to see exactly what went wrong,
-even when using the ``LOG`` option. When you start developing your TCP
-implementation, we suggest you use the ``echo-server`` and ``echo-client``
-sample programs found in the ``samples`` directory. You can build these samples
-by running::
+The automated tests will barrel through all the steps involved in each
+particular test, which can make it hard to observe what happens at each
+point. When you start developing your TCP implementation, we suggest you 
+use the ``echo-server`` and ``echo-client`` sample programs found in the 
+``samples`` directory if you need to run through your code
+step by step. You can build these samples by running::
 
     make samples
 
@@ -260,7 +261,7 @@ library. This means that you **must** run ``chitcpd`` on the same machine you're
 ``echo-server`` and ``echo-client``. Otherwise, the chisocket library will not work.
 
 When testing with these applications, we suggest you run ``chitcpd`` with option
-``-vv``. This will print detailed output about what your TCP implementation is
+``-vvv``. This will print detailed output about what your TCP implementation is
 doing, including changes in the TCP variables. Additionally, you can run
 ``echo-server`` and ``echo-client`` with a ``-s`` option that will allow you to
 "step through" the stages of the TCP connection. For example, if you run
@@ -448,13 +449,27 @@ opener will get Socket 0). Although you may see different values for the Initial
 the relative progression of the TCP variables should be the same. Similarly, the order of the 
 state transitions may be slightly different than shown above.
 
+
+Producing a pcap file
+---------------------
+
+Similarly to how the tests produce a pcap file that can be opened with Wireshark,
+you can also tell ``chitcpd`` to log all its packets to a pcap file. Simply run
+``chitcpd`` with a ``-c CAPFILE`` option. For example::
+
+   ./chitcpd -c packets.cap
+
     
 Wireshark dissector
 -------------------
 
 We provide a Wireshark dissector, in the ``wireshark_dissector`` directory,
 that you can use to easily see what is *actually* sent through the network 
-during a chiTCP connection.
+during a chiTCP connection. Please note that, if you need to look at the
+packets sent during a given test or communication, producing a pcap
+file is generally enough. However, if you need to go further down the
+debugging rabbit hole, and see *exactly* what is being sent on the network,
+you can use this dissector to actually look at the chiTCP traffic.
 
 To install the dissector, follow these steps:
 
