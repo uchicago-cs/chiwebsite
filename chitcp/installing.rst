@@ -128,7 +128,7 @@ Next, run the following:
     ./configure
 
 This will verify whether your machine has all the necessary libraries to build
-chiTCP. More specifically, you will see errors if Check, ``protobuf``, or
+chiTCP. More specifically, you will see errors if Criterion, ``protobuf``, or
 ``protobuf-c`` are not installed.
 
 You only need to run ``./configure`` once. Once it has run successfully, you
