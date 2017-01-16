@@ -493,7 +493,7 @@ To install the dissector, follow these steps:
      http://wiki.wireshark.org/CaptureSetup/CapturePrivileges
 
 Using the dissector
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
 
 Since, as far as Wireshark is concerned, the ChiTCP packet is application-level
 data, we need to use a specific port so Wireshark will know what TCP packets
