@@ -9,53 +9,244 @@ test your implementation.
 Automated tests
 ---------------
 
-You can run the chiTCP automated tests by running this::
+You can build the automated tests like this::
 
-    make check
+    make tcptests
 
-You can control the level of logging when running the checks by passing a
-``LOG`` option to ``make``. For example, to print all ``DEBUG`` messages, run
-this::
+Note that this will not run the tests; it will build a ``test-tcp`` executable
+in the ``tests/`` directory which you can use to run the tests. Also, take
+into account that, if you modify your chiTCP implementation, **you must
+rebuild the tests** (i.e., it is not enough to run just ``make``). Otherwise, 
+the test executable will not be linked to the latest version of your chiTCP implementation.
 
-    make check LOG=DEBUG
+The test suite has multiple tests, divided into several categories. You
+can see a list of all the tests by running the following::
 
-You do *not* need to run ``chitcpd`` for the tests to run. The tests automatically
-launch a chiTCP daemon during the tests.
+   tests/test-tcp -l
 
-Running tests selectively
--------------------------
+You can run all the tests by running the following::
 
-The entire test suite can take a long time to run, specially when you start working
-on the project, since most of the tests will time out. You can run individual groups
-of tests like this:
+   tests/test-tcp
+   
+Optionally, you can include the ``--verbose`` option to see the progress
+of each test.   
+   
+However, you should not do this until your project is nearly complete: most of
+the tests will fail by timing out and, given the high timeouts necessary for
+some of the tests, the above command can take a long time to run on an
+incomplete project. Instead, you should run the tests individually or
+by category.
+
+Running and debugging individual tests
+--------------------------------------
+
+To run a single test, simply run the following::
+
+   tests/test-tcp --filter "TEST_CATEGORY/TEST_NAME"
+
+Where ``TEST_CATEGORY`` is the category of the test, and ``TEST_NAME`` is the name
+of the test (you can see both of these by running ``tests/test-tcp -l``). For example,
+this will run the first connection establishment test::
+
+   tests/test-tcp --filter "conn_init/3way_states"
+
+If the test is succesful, you will see the following::
+
+   [====] Synthesis: Tested: 1 | Passing: 1 | Failing: 0 | Crashing: 0
+   
+If the test fails an assertion, a message will be printed out. For example::
+
+   [----] tests/test_tcp_conn_init.c:43: Assertion failed: Invalid transition: SYN_SENT -> CLOSED
+   
+In some tests, you may also see the following::
+
+   [FAIL] conn_init::3way_states: Timed out. (0.50s)
+   
+This means that the test did not finish running by some specified timeout (in this case, 0.5 seconds).
+This usually means your code has gotten stuck somewhere, and is not sending a packet that the
+tests were expecting.
+
+When a test fails or times out, you will need to dig deeper to see what your code is
+doing during the test. We provide several mechanisms for you to do so.
+
+Minimal logging
+~~~~~~~~~~~~~~~
+
+Parsing through all the detailed logging at the ``DEBUG`` and ``TRACE`` levels can be overwhelming,
+and it can be hard to sift through so much information. You should first try using chiTCP's 
+``MINIMAL`` logging level (the messages at this level are generated directly by chiTCP; you should
+never call ``chilog`` with this logging level). The ``MINIMAL`` logging level will log any changes 
+of state in a socket, as well as any packets received and sent by a socket (including important information
+about the packet, like its sequence number, the size of the payload, etc.). The format is compact
+and intended to be easy to read.
+
+To run a test with MINIMAL logging, simply include ``LOG=MINIMAL`` before ``tests/test-tcp``. For example::
+
+   LOG=MINIMAL ./tests/test-tcp --filter "conn_init/3way_states"
+   
+The output of this test (if successful) would look like this::
+
+   [09:55:41.736394340]     tcp-socket-0 [S0] SENT 127.0.0.1.49152 > 127.0.0.1.7: Flags [S], seq 243, win 4096, length 0
+   [09:55:41.736794051]     tcp-socket-0 [S0] CLOSED -> SYN_SENT
+   [09:55:41.736867528]  network-layer-0 [S1] RCVD 127.0.0.1.49152 > 127.0.0.1.7: Flags [S], seq 243, win 4096, length 0
+   [09:55:41.736902750]   socket-layer-1 [S1] Passive socket has spawned active socket S2
+   [09:55:41.737130155]     tcp-socket-2 [S2] SENT 127.0.0.1.7 > 127.0.0.1.49152: Flags [S.], seq 11, ack 244, win 4096, length 0
+   [09:55:41.737174854]     tcp-socket-2 [S2] LISTEN -> SYN_RCVD
+   [09:55:41.737200234]  network-layer-0 [S0] RCVD 127.0.0.1.7 > 127.0.0.1.49152: Flags [S.], seq 11, ack 244, win 4096, length 0
+   [09:55:41.737748500]     tcp-socket-0 [S0] SENT 127.0.0.1.49152 > 127.0.0.1.7: Flags [.], seq 244, ack 12, win 4096, length 0
+   [09:55:41.737779939]     tcp-socket-0 [S0] SYN_SENT -> ESTABLISHED
+   [09:55:41.737806251]  network-layer-0 [S2] RCVD 127.0.0.1.49152 > 127.0.0.1.7: Flags [.], seq 244, ack 12, win 4096, length 0
+   [09:55:41.738532355]     tcp-socket-2 [S2] SYN_RCVD -> ESTABLISHED
+   [09:55:41.740581751]      lt-test-tcp ~~~~~~~~~ chiTCP is shutting down ~~~~~~~~~
+   [09:55:41.740649209]   socket-layer-0 [S0] ESTABLISHED -> CLOSED
+   [09:55:41.740846044]   socket-layer-1 [S2] ESTABLISHED -> CLOSED
+   [09:55:41.741517438]      lt-test-tcp =========  chiTCP has shut down   =========
+
+You should ignore the column containing ``tcp-socket-0``, ``network-layer-0``, etc. Instead focus on the ``[S0]``, ``[S1]``, etc.
+which tells you what socket is producing this log message. The log message can be either ``SENT`` (the socket sent a packet),
+``RCVD`` (the socket received a packet), a state transition (two states separated by ``->``, or a message indicating that
+a passive socket has spawned an active socket.
+
+Whe a packet is sent or received, the log message will include the source IP and port, the destination IP and port, the
+flags in the TCP header (``S``: SYN, ``F``: FIN, ``.``: ACK), the sequence number, the acknowledgement number,
+the advertised window size, and the payload length. Please note that the sequence numbers are likely to be different
+that shown in the above output, depending on how you set IRS and ISS.
+
+We also provide a script that will colorize this output for extra readability. Just pipe the output of
+the test to ``tests/colorize-minimal.sh``::
+
+   LOG=MINIMAL ./tests/test-tcp --filter "conn_init/3way_states" | tests/colorize-minimal.sh
+   
+You should see something like this:
+
+.. image:: minimal-color1.png
+
+In the tests that involve dropping packets, the ``colorize-minimal.sh`` script will highlight dropped
+packets and timeouts in red. For example, if we run this::
+
+   LOG=MINIMAL ./tests/test-tcp --filter "unreliable_data_transfer/drop_single_packet" | tests/colorize-minimal.sh
+   
+The output will look like this:
+
+.. image:: minimal-color2.png
+
+The ``DROP_RCVD`` message indicates that chiTCP simulated a dropped packet, and ``TIMEOUT`` indicates that
+a TCP timeout has happened.   
+   
+Other logging levels
+~~~~~~~~~~~~~~~~~~~~
+
+To have a test print log messages from other log levels, simply set the ``LOG`` variable to the appropriate
+level. For example::
+
+   LOG=DEBUG ./tests/test-tcp --filter "conn_init/3way_states"
+   
+Producing a pcap file
+~~~~~~~~~~~~~~~~~~~~~
+
+Instead of reading through the log output, it can be useful to analyze the packets that were actually
+sent during the test. chiTCP can produce a "pcap" file that can be opened with Wireshark. This can
+help you verify whether all the values in the TCP packets are set to the correct values, since 
+Wireshark will "dissect" your TCP packets just like it would any TCP packet (and will highlight any
+issues).
+
+To produce a pcap file, simply include ``PCAP=FILENAME`` before ``tests/test-tcp``, replacing
+``FILENAME`` with a name for the pcap file. For example, if we ran the following test,
+which has packets arrive out of order::
+
+   PCAP=out_of_order.pcap ./tests/test-tcp --filter "unreliable_data_transfer/out_of_order_1"
+   
+And then open ``out_of_order.pcap`` in Wireshark, we can see that it correctly detects
+that one of the packets arrived out of order:
+
+.. image:: out_of_order_wireshark.png
+
+Using gdb to debug a test
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To run gdb with a single test, you will need to run the test you want to debug in one terminal,
+and gdb in a separate terminal. First, run the test like this::
+
+   ./tests/test-tcp --debug=gdb --debug-transport=tcp:PORT --filter "TEST"
+
+Replace ``TEST`` with the test you want to debug, and substitute ``PORT`` with a random port number. 
+By default, the tests will use ``1234`` but, if you are on a machine with multiple users, other users 
+may be trying to use that port.
+
+Then, on another terminal, run this::
+
+   libtool --mode execute gdb tests/test-tcp
+
+On the GDB prompt, run this::
+
+   target remote localhost:PORT
+   
+Substituting ``PORT`` with the same port you used earlier.
+
+Now, just use gdb as usual (note that you have to use the ``continue`` command instead
+of the ``run`` command to ge the test running)
+
+Running Valgrind on a test
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To run Valgrind on a single test, run the following::
+
+   libtool --mode execute valgrind ./tests/test-tcp --filter "TEST"
+   
+Replace ``TEST`` with the test you want to run.
+
+
+Running the tests on machines with multiple users
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The tests internally run the chiTCP daemon which, just like the
+regular ``chitcpd`` executable, will need a TCP port and a UNIX socket.
+If you are on a machine with multiple users, then more than more
+user may try to use the default port (23300). As with ``chitcpd``,
+make sure you run the following on any terminal where you run the
+tests:: 
+
+   export CHITCPD_PORT=30287  # Substitute for a different number
+   export CHITCPD_SOCK=/tmp/chitcpd.socket.$USER
+
+Running categories of tests
+---------------------------
+
+To run entire categories of tests, simply run the following:
 
 * TCP connection establishment::
 
-    CK_RUN_CASE="3-way handshake" make check
+    ./tests/test-tcp --filter "conn_init/*"
   
 * TCP connection termination::
 
-    CK_RUN_CASE="Connection termination" make check
+    ./tests/test-tcp --filter "conn_term/*"
 
 * TCP data transfer::
 
-    CK_RUN_CASE="Client sends, Server receives" make check
-    CK_RUN_CASE="Echo" make check
+    ./tests/test-tcp --filter "data_transfer/*"
 
 * TCP over an unreliable network::
 
-    CK_RUN_CASE="Dropped packets" make check
-    CK_RUN_CASE="Out of order packets" make check
+    ./tests/test-tcp --filter "unreliable_conn_init/*"
+    ./tests/test-tcp --filter "unreliable_conn_term/*"
+    ./tests/test-tcp --filter "unreliable_data_transfer/*"
+    
+The ``--filter`` option uses regular expressions, so you can further constrain the tests
+that will be run. For example, to only run the "echo" tests from the data transfer
+tests, you could run the following::
 
-
+    ./tests/test-tcp --filter "data_transfer/echo*"
+    
 Echo server and client
 ----------------------
 
-When the automated tests fail, it can be hard to see exactly what went wrong,
-even when using the ``LOG`` option. When you start developing your TCP
-implementation, we suggest you use the ``echo-server`` and ``echo-client``
-sample programs found in the ``samples`` directory. You can build these samples
-by running::
+The automated tests will barrel through all the steps involved in each
+particular test, which can make it hard to observe what happens at each
+point. When you start developing your TCP implementation, we suggest you 
+use the ``echo-server`` and ``echo-client`` sample programs found in the 
+``samples`` directory if you need to run through your code
+step by step. You can build these samples by running::
 
     make samples
 
@@ -70,7 +261,7 @@ library. This means that you **must** run ``chitcpd`` on the same machine you're
 ``echo-server`` and ``echo-client``. Otherwise, the chisocket library will not work.
 
 When testing with these applications, we suggest you run ``chitcpd`` with option
-``-vv``. This will print detailed output about what your TCP implementation is
+``-vvv``. This will print detailed output about what your TCP implementation is
 doing, including changes in the TCP variables. Additionally, you can run
 ``echo-server`` and ``echo-client`` with a ``-s`` option that will allow you to
 "step through" the stages of the TCP connection. For example, if you run
@@ -258,13 +449,27 @@ opener will get Socket 0). Although you may see different values for the Initial
 the relative progression of the TCP variables should be the same. Similarly, the order of the 
 state transitions may be slightly different than shown above.
 
+
+Producing a pcap file
+---------------------
+
+Similarly to how the tests produce a pcap file that can be opened with Wireshark,
+you can also tell ``chitcpd`` to log all its packets to a pcap file. Simply run
+``chitcpd`` with a ``-c CAPFILE`` option. For example::
+
+   ./chitcpd -c packets.cap
+
     
 Wireshark dissector
 -------------------
 
 We provide a Wireshark dissector, in the ``wireshark_dissector`` directory,
 that you can use to easily see what is *actually* sent through the network 
-during a chiTCP connection.
+during a chiTCP connection. Please note that, if you need to look at the
+packets sent during a given test or communication, producing a pcap
+file is generally enough. However, if you need to go further down the
+debugging rabbit hole, and see *exactly* what is being sent on the network,
+you can use this dissector to actually look at the chiTCP traffic.
 
 To install the dissector, follow these steps:
 

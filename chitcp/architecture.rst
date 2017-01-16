@@ -40,15 +40,10 @@ library performing the standard socket operations (connect, send, recv, etc.)
 through the chiTCP daemon, instead of accessing the operating system’s TCP/IP
 stack directly.
 
-.. _chitcp-fig-architecture:
-
-.. figure:: architecture.png
+.. image:: architecture.png
    :alt: The chiTCP architecture
 
-   The chiTCP architecture
-
-
-Figure :ref:`chitcp-fig-architecture` summarizes the chiTCP architecture. Applications that
+The figure above summarizes the chiTCP architecture. Applications that
 want to use chiTCP call the socket functions in the chisocket library, which
 communicates with the chiTCP daemon. This daemon includes three important
 components:
@@ -58,7 +53,7 @@ components:
    implementation.
 
 -  **The TCP Implementation** (file ``tcp.c``, described in more detail in
-   Section [sec:tcpc]): This is the part of the code you will be working on.
+   the :ref:`Implementation Guide <chitcp-implementing>`). This is the part of the code you will be working on.
 
 -  **The chiTCP Network Layer**: This part of the daemon is responsible for
    getting your TCP packet from one chiTCP daemon to another, the same way
@@ -69,19 +64,12 @@ The chiTCP Network Layer is actually just regular TCP (i.e., the operating
 system’s TCP, *not* the one you are implementing). So, when chiTCP needs to get
 one of your TCP packets to another host, it does so by establishing a (real)
 TCP connection to that other host’s chiTCP daemon on port 23300.
-Figure :ref:`chitcp-fig-layers` shows the packet encapsulation that happens in chiTCP .
+THe diagram below shows the packet encapsulation that happens in chiTCP .
 Notice how, from chiTCP’s perspective, (real) TCP is essentially the *Network*
 layer of the protocol stack, while your implementation of TCP is the
 *Transport* layer. If we looked at this from a standard TCP/IP perspective,
 your TCP would simply be the payload of a (real) TCP packet.
 
-
-.. _chitcp-fig-layers:
-
-.. figure:: layers.png
-   :alt: The chiTCP architecture
-
-   The chiTCP layers.
+.. image:: layers.png
    
-   (*) chiTCP inserts a special header between the two TCP headers that contains 
-   chiTCP-specific information.
+(*) chiTCP inserts a special header between the two TCP headers that contains chiTCP-specific information.

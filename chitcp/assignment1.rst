@@ -5,11 +5,11 @@ Assignment 1: TCP over a Reliable Network
 
 This assignment is divided into three main tasks:
 
--  3-way handshake (40 points)
--  Data transfer (40 points)
--  Connection tear-down (20 points)
+-  3-way handshake
+-  Data transfer
+-  Connection tear-down
 
-In this assignment, you are allowed to assume that the networks is
+In this assignment, you are allowed to assume that the network is
 completely *reliable*. This means that any TCP segment you send is
 guaranteed to arrive without delay (chiTCP will ensure this under 
 the hood). So, you do not have to worry about retransmissions or
@@ -113,8 +113,4 @@ while you're still waiting for that data to be ACK'd.
 
 The ``tcp_data_t`` struct already includes a boolean ``closing`` field, but you
 are allowed to add additional fields to ``tcp_data_t`` if necessary.
-
-
- 
-
  

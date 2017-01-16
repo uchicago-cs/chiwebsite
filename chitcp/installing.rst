@@ -35,18 +35,17 @@ toolchain works, you do need the following tools installed on your machine:
 
 -  ``libtool``
 
--  Check Unit Test Framework (http://check.sourceforge.net/).
-
 These tools are typically installed by default on most UNIX systems, and also
 available as packages.
 
 ``protobuf`` and ``protobuf-c``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-chiTCP requires at least ``protobuf`` 2.6.1 and ``protobuf-c`` 1.0.2. If these
+chiTCP requires ``protobuf`` 2.6.1 and ``protobuf-c`` 1.x (it may work with
+``protobuf`` 3.x, but we have not tested it with that version). If these
 versions are not available as packages on your operating system, you will need
 to install them from source. You can find the appropriate tarballs at
-http://code.google.com/p/protobuf/ and http://code.google.com/p/protobuf-c/.
+https://github.com/google/protobuf and https://github.com/protobuf-c/protobuf-c.
 
 On most UNIX systems, you should be able to install ``protobuf`` by running the
 following:
@@ -64,9 +63,9 @@ And ``protobuf-c`` by running the following:
 
 ::
 
-   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.0.2/protobuf-c-1.0.2.tar.gz
-   tar xvzf protobuf-c-1.0.2.tar.gz 
-   cd protobuf-c-1.0.2/
+   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.2.1/protobuf-c-1.2.1.tar.gz
+   tar xvzf protobuf-c-1.2.1.tar.gz 
+   cd protobuf-c-1.2.1/
    ./configure --prefix=/usr
    make
    sudo make install
@@ -86,6 +85,27 @@ specify when installing) to the ``LD_LIBRARY_PATH`` environment variable:
 ::
 
     export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib
+
+
+Criterion Unit Testing Framework
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+chiTCP uses the `Criterion unit testing framework <https://github.com/Snaipe/Criterion>`_
+to run its unit tests. It can be installed by running the following:
+
+::
+
+    wget https://github.com/Snaipe/Criterion/releases/download/v2.3.0-1/criterion-v2.3.0-1.tar.bz2
+    tar xvjf criterion-v2.3.0-1.tar.bz2 
+    mkdir build
+    cd build/
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    cmake --build .
+    sudo make install
+
+Note that Criterion requires `CMake <https://cmake.org/>`_ to build. CMake is available
+as an installable package for most Linux distributions.
+    
 
 
 Building
@@ -139,22 +159,25 @@ Running
 
 To run the chiTCP daemon, just run the following::
 
-       ./chitcpd -v
+       ./chitcpd -vv
 
 You should see the following output::
 
-   [2014-02-02 11:36:07]   INFO lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket. TCP socket: 23300
+   [18:44:54.772865111]    INFO       lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket.borja. TCP socket: 23300
 
 Take into account that you won't be able to do much with ``chitcpd`` until you've implemented 
 the ``tcp.c`` file. We do, however, provide a number of mechanisms for you to test your implementation.
 These are described in :ref:`chitcp-testing`
 
-By default, ``chitcpd`` listens on TCP port 23300 and creates a UNIX socket on ``/tmp/chitcpd.socket``. If you
-are running ``chitcpd`` on a shared machine, these default values will likely conflict with other users running
-on that same machine. To specify an alternate port/UNIX socket, you need to set the following environment 
-variables on every terminal in which you are running chitcp programs (including ``chitcpd`` and any application 
+By default, ``chitcpd`` listens on TCP port 23300. If you are running ``chitcpd`` on a shared machine, 
+this default value will likely conflict with other users running
+on that same machine. To specify an alternate port, you need to set the following environment 
+variable on *every* terminal in which you are running chitcp programs (including ``chitcpd`` and any application 
 that uses the chisocket library)::
 
     export CHITCPD_PORT=30287  # Substitute for a different number
-    export CHITCPD_SOCK=/tmp/chitcpd.socket.$USER
 
+``chitcpd`` also creates a UNIX socket on ``/tmp/chitcpd.socket.USER`` (where ``USER`` is your UNIX username). 
+It is unlikely that this will conflict with other users but, if you need to specify an alternate location
+and name for this UNIX socket, just set the ``CHITCPD_SOCK`` environment variable to the absolute path
+of the UNIX socket (and remember to do this on every terminal in which you are running chitcp programs)
