@@ -97,6 +97,7 @@ to run its unit tests. It can be installed by running the following:
 
     wget https://github.com/Snaipe/Criterion/releases/download/v2.3.0-1/criterion-v2.3.0-1.tar.bz2
     tar xvjf criterion-v2.3.0-1.tar.bz2 
+    cd criterion-v2.3.0-1
     mkdir build
     cd build/
     cmake -DCMAKE_INSTALL_PREFIX=/usr ..
