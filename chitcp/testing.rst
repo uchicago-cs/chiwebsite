@@ -11,7 +11,7 @@ Automated tests
 
 You can build the automated tests like this::
 
-    make tcptests
+    make tcp-tests
 
 Note that this will not run the tests; it will build a ``test-tcp`` executable
 in the ``tests/`` directory which you can use to run the tests. Also, take
