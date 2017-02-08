@@ -34,7 +34,7 @@ Please note the following:
 - You must implement go-back-N so, in `[RFC6298 § 5.4] <https://tools.ietf.org/html/rfc6298#section-5>`__,
   you should retransmit the earliest segment that has not been acknowledged,
   *and* all subsequent unacknowledged segments.
-- You do not need to implement sections 5.5 through 5.7
+- You do not need to implement section 5.7
 
 We suggest you follow this approach:
 
