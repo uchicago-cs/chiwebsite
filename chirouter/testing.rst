@@ -70,14 +70,17 @@ this::
 
    mininet> client1 ping -c 4 10.0.0.1
    PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
-   84 bytes from 10.0.0.1: icmp_seq=1 ttl=255 time=17.5 ms
-   84 bytes from 10.0.0.1: icmp_seq=2 ttl=255 time=34.5 ms
-   84 bytes from 10.0.0.1: icmp_seq=3 ttl=255 time=51.4 ms
-   84 bytes from 10.0.0.1: icmp_seq=4 ttl=255 time=18.8 ms
+   64 bytes from 10.0.0.1: icmp_seq=1 ttl=255 time=17.5 ms
+   64 bytes from 10.0.0.1: icmp_seq=2 ttl=255 time=34.5 ms
+   64 bytes from 10.0.0.1: icmp_seq=3 ttl=255 time=51.4 ms
+   64 bytes from 10.0.0.1: icmp_seq=4 ttl=255 time=18.8 ms
    
    --- 10.0.0.1 ping statistics ---
    4 packets transmitted, 4 received, 0% packet loss, time 3004ms
    rtt min/avg/max/mdev = 17.565/30.609/51.498/13.782 ms
+
+**Note**: If for this ping command (or any other ping commands listed on this page),
+you get ``84 bytes from`` instead of ``64 bytes from``, that is still considered correct.
 
 To test whether you're generating ICMP Host Unreachable messages correctly, ping one
 of the router's *other* IP addresses::
@@ -233,7 +236,7 @@ You should also be able to reach the web servers that are running on those serve
 
 And you should be able to traceroute the servers::
 
-   mininet> client1 traceroute server1
+   mininet> client1 traceroute -n server1
    traceroute to 192.168.1.2 (192.168.1.2), 30 hops max, 60 byte packets
     1  10.0.0.1 (10.0.0.1)  105.121 ms  108.790 ms  172.695 ms
     2  192.168.1.2 (192.168.1.2)  242.927 ms  306.856 ms  306.985 ms
@@ -241,6 +244,15 @@ And you should be able to traceroute the servers::
 To ensure that your implementation is correct, and that it doesn't happen to work
 because your router had cached an earlier reply, you should run each of the above
 with a freshly started router.
+
+If you get sporadic timeouts in the traceroute output, try running traceroute
+as follows::
+
+    client1 traceroute -w 10 -z 100 -n server1
+
+This will introduce 100ms delay between probes, and will wait 10s for replies.
+While you may want to determine why your code requires higher timeouts,
+running traceroute with the above parameters is also acceptable.
 
 
 Timing out pending ARP requests

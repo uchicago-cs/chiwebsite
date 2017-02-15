@@ -5,9 +5,9 @@ Assignment: Implementing an IP router
 
 This assignment is divided into three main tasks:
 
--  ICMP (35 points)
--  ARP (45 points)
--  IP forwarding (20 points)
+-  ICMP
+-  ARP
+-  IP forwarding
 
 These three tasks cannot be done entirely in sequence, since there are some dependencies
 between them. The :ref:`chirouter-testing` page provides a suggested implementation order
@@ -132,7 +132,7 @@ you must send an ICMP Time Exceeded reply.
 
 However, take into account that you must only send the ICMP Time Exceeded reply if the IP
 datagram can be forwarded and you have been able to obtain a MAC address for it. If not,
-sending a Network Unreachable or Host Unreachable reply takes precedence. In other words,
+sending a Network Unreachable, Host Unreachable, or Port Unreachable reply takes precedence. In other words,
 you should not unconditionally return a Time Exceeded reply if you receive *any* IP
 datagram with a TTL of 1.
 
