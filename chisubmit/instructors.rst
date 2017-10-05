@@ -129,7 +129,7 @@ Team details
 
 To show information about a team, including the status of all the assignments the team is registered for, run this::
 
-   chisubmit instructor team show
+   chisubmit instructor team show TEAM_ID
 
 This will produce output like this::
 
@@ -160,22 +160,24 @@ This will produce output like this::
 Pulling team repos
 ~~~~~~~~~~~~~~~~~~
 
-To pull all the repos from all the teams registered for an assignment, run the following::
+To pull all the repos from all the teams in the course, run the following::
 
-   chisubmit instructor team pull-repos ASSIGNMENT_ID DIRECTORY
+   chisubmit instructor team pull-repos DIRECTORY
 
-Where:
-
-* ``ASSIGNMENT_ID`` is the assignment identifier.
-* ``DIRECTORY`` is the directory to pull the repos to.
+Where ``DIRECTORY`` is the directory to pull the repos to.
 
 This command can be run multiple times on the same directory. If the repository has already been pulled,
 the latest commits will be pulled from the repository.
 
+You can also pull only the repos for the teams registered for a specific assignment::
+
+   chisubmit instructor team pull-repos --assignment ASSIGNMENT_ID DIRECTORY
+
 This command also accepts the following parameters:
 
 * ``--only TEAM_ID``: Only pulls the repository for team ``TEAM_ID``
-* ``--only-ready-for-grading``: Only pulls the repositories that are ready for grading. A repository is
+* ``--only-ready-for-grading``: Only pulls the repositories that are ready for grading (note: this requires
+  specifying an assignment with ``--assignment``. A repository is
   considered ready for grading if a submission has been made, and the deadline for the assignment has passed.
   If your course uses extensions, the "ready for grading" repositories will come in waves, and it is advisable
   to run this command after each extended deadline.
@@ -205,31 +207,48 @@ making it easier to collect the scores assigned by the graders.
 Creating the rubric
 ~~~~~~~~~~~~~~~~~~~
 
-chisubmit assumes that a rubric is divided into one or more "components" which is worth a number of points.
-This mechanism is currently fairly inflexible (it is hard to modify and remove components of the rubric), 
-so we recommend you don't create the rubric until you know for sure what the components of the rubric will
-be. Once you do, just run this command for each component::
+chisubmit assumes that a rubric is divided into one or more "components", each of which is worth a number of points.
+To add a new rubric to an assignment, you must first create a text file with the following format::
 
-   chisubmit instructor assignment add-rubric-component ASSIGNMENT_ID "COMPONENT_NAME" POINTS
+   Points:
+       - The PA1 Tests:
+           Points Possible: 50
+           Points Obtained: 
+   
+       - The PA1 Design:
+           Points Possible: 50
+           Points Obtained: 
+           
+   Total Points: 0 / 100 
+
+This format is similar to what the graders will be filling out (see the :ref:`chisubmit_graders` section
+for more details). In the above file, the rubric has two components: ``The PA1 Tests`` and ``The PA1 Design``,
+and we leave the ``Points Obtained`` blank. The ``Total Points`` field must always be of the form ``0 / TOTAL``
+(please note that the points are not required to add up to 100). 
+
+To load the rubric for an assignment, run the following::
+
+   instructor assignment add-rubric ASSIGNMENT_ID RUBRIC_FILE
    
 Where:
 
 * ``ASSIGNMENT_ID`` is the assignment identifier.
-* ``COMPONENT_NAME`` is a descriptive name for the component.
-* ``POINTS`` is the number of points this component is worth.
+* ``RUBRIC_FILE`` is the rubric file
 
-For example::
+To ensure the rubric was loaded correctly, run the following command::
 
-   chisubmit instructor assignment add-rubric-component p1 "Tests" 50 
-   chisubmit instructor assignment add-rubric-component p1 "Implementing foo()" 20 
-   chisubmit instructor assignment add-rubric-component p1 "Implementing bar()" 20
-   chisubmit instructor assignment add-rubric-component p1 "Code Style" 10
+   instructor assignment add-rubric ASSIGNMENT_ID
 
-Please note that the points are not required to add up to 100. 
+This will display the rubric exactly as it will be shown to the graders and to the students.
+
+If you realize you need to update the rubric, you can run the ``add-rubric`` command again, but please
+note that it will completely replace the previous rubric. This is not an issue if grading has not yet
+begun, but can cause inconsistencies if graders have already started grading with a previous rubric. 
 
 
-After the submission deadline
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Creating grading repos
+~~~~~~~~~~~~~~~~~~~~~~
 
 Once the deadline for an assignment passes, the instructor has to perform a series of steps
 before the graders can start grading. In a class with multiple instructor, only one instructor
@@ -265,15 +284,44 @@ To push them to the staging server, run the following::
 If your course uses extensions, the following steps have to be repeated after each "extended" deadline, 
 as they will only create the grading repos for the teams that are ready for grading. 
 
-Next, assign graders to the submissions::
+.. note::
 
-        chisubmit instructor grading assign-graders ASSIGNMENT_ID
+   Once the grading repos have been created by the master instructor, the repos
+   will be flagged as "ready for grading", which means students will no longer
+   be allowed to cancel their submissions. Please read the "Submitting an assignment" section
+   in :ref:`chisubmit_students` for a lengthier discussion of what this implies.
+   
+   In practice, it is advisable to allow some time (if possible) between the deadline
+   and the creation of the grading repos, in case any students realize they
+   want to cancel a submission, which chisubmit will allow them to do themselves
+   as long as the grading repos have not yet been created. Once the grading repos 
+   are created, cancelling a submission requires manual intervention from
+   the instructor, because a grader could've started grading that submission.
+   The exact steps for cancelling a submission are described later in this page.
+
+Assigning graders to repos
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Next, you will need to assign graders to each repo. chisubmit provides a mechanism to randomly
+assign graders to repos, with a few parameters to guide that random assignment.
+
+First of all, if there is a conflict of interest between a grader and a student (e.g., friends,
+roommates, etc.), it is possible to make a record of that conflict so the grader is never assigned 
+to grade that student's work. To mark a conflict of interest, just run this command::
+
+   chisubmit instructor grading add-conflict GRADER_ID STUDENT_ID
+   
+Where ``GRADER_ID`` and ``STUDENT_ID`` are the usernames of the grader and the student, respectively.
+
+To assign graders to the submissions, run the following::
+
+   chisubmit instructor grading assign-graders ASSIGNMENT_ID
 
 Use ``--avoid-assignment ASSIGNMENT_ID`` to avoid assigning the same teams that were assigned to the graders 
 in a previous assignment. Use ``--from-assignment ASSIGNMENT_ID`` to assign the same teams to the same graders 
 (whenever possible).
 
-By default, ``assign-grader`` will divide up all the submitted repos equally amongst the graders. If a different
+By default, ``assign-grader`` will divide up all the submitted repos equally amongst all the graders. If a different
 allocation is preferable, you can create a file with the following format::
 
    grader1: 10
@@ -287,6 +335,9 @@ This will assign 10 repos to ``grader1``, 5 repos to ``grader2``, and split the 
 
    chisubmit instructor grading assign-graders ASSIGNMENT_ID --grader-file GRADER_FILE
 
+You can use the ``--dry-run`` option to see what assignments would be made, but without
+actually saving them.
+
 You can modify individual grading assignments (i.e., who is assigned to grade what repo)
 using the following command::
 
@@ -294,7 +345,7 @@ using the following command::
 
 You can see the graders assigned to each assignment with this command::
 
-        chisubmit instructor grading list-grader-assignments ASSIGNMENT_ID
+   chisubmit instructor grading list-grader-assignments ASSIGNMENT_ID
 
 
 Reviewing grading in progress
@@ -319,7 +370,10 @@ command to get a report of what repos have been graded::
     chisubmit instructor grading show-grading-status --by-grader ASSIGNMENT_ID
     
 Usually, it is useful to see this report broken down by grader, but you can omit the ``--by-grader``
-option if you want to see all the repos listed together.
+option if you want to see all the repos listed together. You can also use the
+``--include-diff-urls`` option to include, for each repo, a URL that will show
+a diff between the submitted version of the work and the graded version (this
+is useful when reviewing the graders' work)
 
 Any changes to the grading can be pushed back to the staging server by running this::
 
@@ -329,6 +383,7 @@ Any changes to the grading can be pushed back to the staging server by running t
 result in you pushing the grading to the students before you intended to. If you are
 the master instructor and want to use ``git pull`` and ``git push`` manually, 
 make sure you are using the ``staging`` remote.
+
 
 After the graders have finished grading
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -350,17 +405,114 @@ And the following to produce a CSV file with all the grades::
 
     chisubmit instructor grading list-grades > grades.csv
 
-        
-Regrading
-~~~~~~~~~
 
-If a team requests a regrading, simply ask the grader assigned to that team to regrade the
+Common requests
+---------------
+        
+Manually registering a student or team
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To manually register a student for an assignment run the following command::
+
+   chisubmit instructor assignment register ASSIGNMENT_ID --student STUDENT_ID
+   
+Where:
+
+* ``ASSIGNMENT_ID`` is the assignment identifier.
+* ``STUDENT_ID`` is the student's username.
+
+To manually register a team, run the same command but with multiple ``--student`` options.
+For example::
+
+   chisubmit instructor assignment register pa1 --student borja --student amr
+
+This will register a team with two students (``borja`` and ``amr``) for assignment ``pa1``.
+        
+Manual submission of an assignment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sometimes, it will be necessary for an instructor to manually submit an
+assignment, either because the student is unable to do so, or because the
+instructor needs to override the deadline (and manually specify how many
+extensions to use).
+
+To do this, run the following command::
+
+   chisubmit instructor assignment submit TEAM_ID ASSIGNMENT_ID COMMIT_SHA EXTENSIONS
+   
+Where:
+
+* ``TEAM_ID`` is the team's identifier (or the student username for individual assignments)
+* ``ASSIGNMENT_ID`` is the assignment identifier.
+* ``COMMIT_SHA`` is the SHA of the commit to submit.
+* ``EXTENSIONS`` is the number of extensions this submission should consume, regardless of
+  when the submission is made.
+  
+This command will also work for resubmissions: it can be run multiple times, but chisubmit
+may reject the resubmission if the previous submission is already being graded.
+         
+        
+Regrading assignments
+~~~~~~~~~~~~~~~~~~~~~
+
+If a student or team requests a regrade, simply ask the grader assigned to that team to regrade the
 work and to push an updated version of the repository to the staging server (alternatively,
 any instructor can do this as well). Once this is done, the master instructor just needs
 to run the following::
 
         chisubmit instructor grading pull-grading ASSIGNMENT_ID --only TEAM_ID
         chisubmit instructor grading push-grading --to-students ASSIGNMENT_ID --only TEAM_ID
+
         
+Cancelling a submission
+~~~~~~~~~~~~~~~~~~~~~~~
+
+If a student tries to cancel a submission *after* the grading repos have been created, chisubmit
+will tell them to contact an instructor. When this happens, the master instructor should run 
+the following command::
+
+   chisubmit instructor assignment cancel-submit TEAM_ID ASSIGNMENT_ID
+
+Where:
+
+* ``TEAM_ID`` is the team's identifier (or the student username for individual assignments)
+* ``ASSIGNMENT_ID`` is the assignment identifier.
+
+Then, go into the following directory::
+
+   repositories/COURSE_ID/ASSIGNMENT_ID/TEAM_ID
+   
+Where ``COURSE_ID``, ``ASSIGNMENT_ID``, and ``TEAM_ID`` should be replaced by the appropriate values.
+   
+And run the following::
+
+   AID=<assignment identifier>
+   git checkout master
+   git branch -D $AID-grading
+   git push staging :$AID-grading
+   
+Where ``<assignment identifier>`` should be replaced with the assignment identifier.
+
+This will remove the grading branch from both the local grading repos and the staging server
+that the graders have access to.
+
+Once the student or team makes another submission, the ``create-grading-repos`` command
+will create a new grading branch.
+
+Please note that the ``cancel-submit`` command may print out the following warning::
+
+   This submission has already been assigned a grader (GRADER_ID)
+   Make sure the grader has been notified to discard this submission.
+   You must also remove the existing grading branch from the staging server.
+        
+In this case, make sure to contact the grader with username ``GRADER_ID`` to alert
+them about this. Here is a suggested message template::
+
+   TEAM_ID's submission, which was originally assigned to you, has
+   been cancelled. If you have already fetched the ASSIGNMENT_ID repositories, please
+   delete that directory. Once TEAM_ID makes an updated submission,
+   it may be assigned to you again (but don't be alarmed if it isn't).
+
+
 
  

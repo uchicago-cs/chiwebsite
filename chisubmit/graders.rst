@@ -81,19 +81,19 @@ If the assignment has a rubric file, there will be a file called ``ASSIGNMENT_ID
 root of the repository. It will look something like this::
 
    Points:
-       Tests:
+       - Tests:
            Points Possible: 50
            Points Obtained: 
    
-       Implementing foo():
+       - Implementing foo():
            Points Possible: 20
            Points Obtained: 
    
-       Implementing bar():
+       - Implementing bar():
            Points Possible: 20
            Points Obtained: 
    
-       Code Style:
+       - Code Style:
            Points Possible: 10
            Points Obtained: 
       
@@ -135,23 +135,25 @@ For example::
    Bonuses:
        Worked alone: 10       
               
+Note: the above is just an *example*. In general, you should only apply the penalties and bonuses
+specified by the course instructor(s).              
 
 This is an example of a completed rubric::
 
    Points:
-       Tests:
+       - Tests:
            Points Possible: 50
            Points Obtained: 45
    
-       Implementing foo():
+       - Implementing foo():
            Points Possible: 20
            Points Obtained: 10
    
-       Implementing bar():
+       - Implementing bar():
            Points Possible: 20
            Points Obtained: 20
    
-       Code Style:
+       - Code Style:
            Points Possible: 10
            Points Obtained: 7.5
 

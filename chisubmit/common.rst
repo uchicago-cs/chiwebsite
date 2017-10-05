@@ -11,7 +11,7 @@ In that directory, run the following::
 
    chisubmit init
    
-When prompted for your “chisubmit username” and “chisubmit password”, just use your CNetID and password. 
+When prompted for your "chisubmit username" and "chisubmit password", just use your CNetID and password. 
 Once you have entered your username and password, you will be shown a list of courses you belong to in 
 chisubmit. If the course you are using chisubmit in does not appear in that list, your registration 
 information may not have been added to chisubmit.

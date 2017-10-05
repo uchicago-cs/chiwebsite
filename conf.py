@@ -177,6 +177,9 @@ html_context = {
                 "pages_without_nav": ["about"]
                 }
 
+def setup(app):
+    app.add_stylesheet("chiweb.css")
+
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 

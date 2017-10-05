@@ -18,14 +18,15 @@ Registering for an assignment
 -----------------------------
 
 Before you can make a submission for an assignment, you will need to register for that
-assignment. Furthermore, your git repository will typically not be created until you
-register for your first assignment.
+assignment. Furthermore, in some classes, your git repository may not be created until you
+register for your first assignment (on the other hands, some classes may pre-create
+individual repositories for each student).
 
 To register for an assignment, your instructor will provide an *assignment identifier*,
 which we will refer to as ``ASSIGNMENT_ID``. You can
 also see the list of upcoming assignments (and their identifiers) by running this::
 
-   chisubmit student assignment list
+    chisubmit student assignment list
 
 If you are registering individually for an assignment, you just need to run this::
 
@@ -162,20 +163,8 @@ run the following::
 Where ``GIT_URL`` should be replaced with the ``Repository URL`` printed by ``chisubmit student team repo-check``.       
 
 
-Uploading seed code
--------------------
-
-.. note::
-
-   **Note**: The procedure described in this section relies on the ``git subtree`` subcommand. This command was 
-   added in Git 1.7.11 and, unfortunately, many operating systems (most notably some recent versions of Ubuntu)
-   have earlier versions of Git (or versions of Git where subtree is included but disabled by default).
-   
-   If this subcommand is not available on your version of Git, try installing a newer version if possible. 
-   Note that it is also possible to enable ``subtree`` on earlier versions of Git, but it requires 
-   `some legwork <http://engineeredweb.com/blog/how-to-install-git-subtree/>`_). You can also download 
-   the Git source code and manually `install only the subtree subcommand <https://github.com/git/git/blob/master/contrib/subtree/INSTALL>`_ .
-
+Setting up an upstream repository
+---------------------------------
 
 Some assignments involve starting from some initial seed code provided by the instructors. 
 The preferred method of adding this seed code to your repository is by having the instructor
@@ -186,15 +175,34 @@ happen in the upstream repository.
 Do not follow these instructions unless told to by your instructor. There are many other ways of 
 supplying seed code, and your instructor may provide alternate instructions.
 
-To follow these instructions, your instructor will supply you with the URL of the upstream repository,
-which we will refer to as ``UPSTREAM_URL``, and a prefix, which we will refer to as ``PREFIX``.
+Method 1: A single upstream repository
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To bring the seed code into your repository, you need to run the following::
+If your course has a single upstream repository, it is typically enough to run the following::
+
+    git remote add -f upstream UPSTREAM_URL
+
+Where ``UPSTREAM_URL`` is the URL of the upstream repository.
+
+To pull changes from the upstream repository, just run this::
+
+   git pull upstream master
+   
+Method 2: Multiple upstream repositories
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some classes may use multiple upstream repositories (e.g., one per project). In this case,
+we will use Git *subtrees* to pull files from the upstream repositories. Each upstream
+repository will have an ``UPSTREAM_URL``, and a prefix supplied by your instructor, 
+which we will refer to as ``PREFIX``.
+
+To connect your repository to one of the upstream repositories, you need to run the following::
 
     git remote add -f PREFIX-upstream UPSTREAM_URL
     git subtree add --prefix PREFIX PREFIX-upstream master --squash
 
-The seed code will be located in a directory with the same name as the prefix provided by your instructor.
+The code from this upstream repository will be located in a directory with the same name as the prefix provided 
+by your instructor.
 However, at this point, you have only added the code to your local repository. To push it to your git repository, 
 run the following::
 
@@ -220,7 +228,7 @@ To submit an assignment, simply run the following **BEFORE THE DEADLINE**::
 
     chisubmit student assignment submit ASSIGNMENT_ID
 
-Where ``<assignment-id>`` is the assignment identifier. Your instructor will tell you what
+Where ``ASSIGNMENT_ID`` is the assignment identifier. Your instructor will tell you what
 identifier to use, but you can also see the list of possible assignment ids by 
 running ``chisubmit student assignment list``.
 
@@ -314,16 +322,33 @@ changed in your repository since the previous commit; to see the complete state 
 repository (up to and including a given commit), just click on "Browse files" for that commit 
 in the list of commits. 
 
+
 Re-submitting
 ~~~~~~~~~~~~~
 
-You can resubmit as many times as you want **before the deadline**. If you make a submission 
-before the deadline, and then realize you want to use an extension, this requires a slightly 
-different process (described below).
+Re-submitting is possible, but can sometimes be tricky because, in some cases, the graders may have already
+started grading your previous submission! So, if you think you may want to resubmit an assignment,
+you have to remember this important rule:
+
+   **If the deadline for an assignment passes, and you have made a submission
+   for that assignment before the deadline, the graders will be able to start grading it!**
+   
+What happens internally is that, once the deadline passes, chisubmit looks at all the submissions
+that have been already made and flags them as "ready for grading". So, when a grader checks
+whether there is any grading assigned to them, your submission will show up on their end.
+   
+Don't worry: if you have extensions to use, there are ways of ensuring that you can re-submit even 
+after the deadline passes, but it requires being careful about what steps you take to do so.
+If you find yourself in that situation, make sure you read the following sections *very carefully*.
+
+For now, let's assume the simplest (and most common) scenario: resubmitting when you have
+no intention of using any extensions. In this case, things become very simple:
+you can resubmit as many times as you want *before the deadline*. Then, once the deadline
+passes, your last submission before the deadline will be the one that the graders will see.
 
 To re-submit before the deadline, just run the submission command like before::
 
-    chisubmit student assignment submit p1a
+    chisubmit student assignment submit ASSIGNMENT_ID
 
 chisubmit will know that you already made a submission, and will ask you to confirm that you 
 want to create a new submission::
@@ -386,18 +411,24 @@ that means an automatic zero on that assignment.*
 
 We also recommend that you plan to make your absolute final submission at least an hour before 
 the deadline, in case there are any issues when you try to submit. If an issue does come up, 
-and you post about it on Piazza with an hour to go, it is very likely that an instructor or a 
-TA will be able to assist you before the deadline. If you wait until three minutes before the 
-deadline to submit, and run into issues, that limits how much assistance we can provide.
+and you alert an instructor or TA about it with an hour to go, it is very likely that someone
+will be able to assist you before the deadline. If you wait until three minutes before the 
+deadline to submit, and run into issues, that limits how much assistance they can provide.
 
 
 Using extensions
 ~~~~~~~~~~~~~~~~
 
 If your course allows extensions on assignments, and you want to use an extensions, you do not 
-need to ask an instructor for permission and you do not need to notify us of you intention to do so. 
-When you submit, chisubmit will simply determine how many extensions you need to use. For example, 
-if you submit less than 24 hours after the deadline (meaning you only need to use one extensions), 
+need to ask an instructor for permission and you do not need to notify them of you intention to do so.
+All you need to do is wait until *after* the deadline to make your submission, and chisubmit will 
+automatically determine how many extensions you need to use. 
+
+**If you made a submission before the deadline, and then realize you want to use an extension, make
+sure you read "Re-submitting after the deadline" below.**
+
+If you made no submissions before the deadline, and then submit less than 24 hours after the deadline 
+(meaning you only need to use one extension), 
 chisubmit will include something like this when you run the submission command::
 
     Your team currently has 4 extensions
@@ -409,7 +440,7 @@ chisubmit will include something like this when you run the submission command::
 To check how many extensions you have left, just run the following::
 
     chisubmit student course show-extensions
-
+    
 
 The deadline grace period
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -421,7 +452,9 @@ their code (e.g., issues with git). However, you should always aim to submit you
 the deadline, for the following reasons:
 
 - The length of the grace period is not disclosed.
-- chisubmit informs the instructors of which students have submitted during the grace period. If we see a team that submits during the grace period for multiple projects, we may begin applying point penalties to any future submissions you make during a grace period.
+- chisubmit informs the instructors of which students have submitted during the grace period. 
+  If an instructor sees a team that submits during the grace period for multiple projects, they
+  may begin applying point penalties to any future submissions you make during a grace period.
 
 When you submit during the grace period, chisubmit will print the following before you confirm your submission::
 
@@ -444,14 +477,13 @@ And the following once you confirm your submission::
     during the grace period, your instructor bring this to your attention.
 
 
-Re-submitting with an extension
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Re-submitting after the deadline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As we said earlier, you can re-submit as many times as you want **before the deadline**. 
-Why do we stress "before the deadline"? If you make a submission, and the deadline passes, 
-chisubmit flags your submission as being ready for grading, which means the graders might 
-start looking at your submission right away. This is why re-submitting after the deadline 
-is a bit trickier.
+As we said earlier, chisubmit flags your submission as being ready for grading once the
+deadline passes, which means the graders might start looking at your submission right away. 
+This is why re-submitting after the deadline is a bit trickier: the graders may have
+already started grading your code.
 
 If you made a submission before the deadline and realize (before the deadline) that you 
 want to use an extension after all, then you need to cancel your submission. That way, 
@@ -475,9 +507,14 @@ You should see something like this::
 Once you've done that, just re-submit *after* the deadline, and chisubmit will apply 
 the necessary extensions.
 
-On the other hand, if you made a submission before the deadline, and then try to either 
-re-submit or cancel the submission *after* the deadline, chisubmit will not allow you 
-to do this. You will need to ask an instructor to cancel your submission manually,
+The above command may even work *after* the deadline: if the graders haven't actually
+started grading your code, chisubmit will still allow you to cancel your submission,
+even if the deadline has passed. However, if you plan to resubmit after the deadline,
+you should always aim to cancel your submission before the deadline. 
+
+If you try to cancel it after the deadline, and the graders have started grading your code,
+chisubmit will not allow you to cancel your submission. 
+You will need to ask an instructor to cancel your submission manually,
 which may involve having to tell the graders to discard any grading they have already 
 done on your submission. This is very inconvenient to the graders, so please try to 
 avoid getting into this situation.
