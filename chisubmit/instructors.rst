@@ -228,7 +228,7 @@ and we leave the ``Points Obtained`` blank. The ``Total Points`` field must alwa
 
 To load the rubric for an assignment, run the following::
 
-   instructor assignment add-rubric ASSIGNMENT_ID RUBRIC_FILE
+   chisubmit instructor assignment add-rubric ASSIGNMENT_ID RUBRIC_FILE
    
 Where:
 
@@ -237,7 +237,7 @@ Where:
 
 To ensure the rubric was loaded correctly, run the following command::
 
-   instructor assignment add-rubric ASSIGNMENT_ID
+   chisubmit instructor assignment show-rubric ASSIGNMENT_ID
 
 This will display the rubric exactly as it will be shown to the graders and to the students.
 
