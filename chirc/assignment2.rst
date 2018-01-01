@@ -30,14 +30,18 @@ with the following exceptions:
    messages. You do not need to implement the ``OPER`` and ``MODE``
    messages yet (you will implement them in the next assignment).
 
--  In the ``NICK`` message, you are only expected implement the
-   ``ERR_NICKNAMEINUSE`` reply.
+-  In the ``NICK`` message, you must implement the ``ERR_NONICKNAMEGIVEN``
+   and ``ERR_NICKNAMEINUSE`` replies.
 
 -  You can ignore the ``<mode>`` and ``<unused>`` parameters of the
    ``USER`` message.
 
--  In the ``USER`` message, you are only expected to implement the
-   ``ERR_ALREADYREGISTRED`` reply.
+-  In the ``USER`` message, you must implement the ``ERR_ALREADYREGISTRED``,
+   and ``ERR_NEEDMOREPARAMS``. **Note**: You will need to support the
+   ``ERR_NEEDMOREPARAMS`` reply in several other messages. It will pay
+   off to write a function that validates the number of parameters in a message,
+   and returns an ``ERR_NEEDMOREPARAMS`` reply if the number of parameters
+   is insufficient.
 
 -  After a connection has been registered, the ``RPL_WELCOME`` reply
    must be followed by the ``RPL_YOURHOST``, ``RPL_CREATED``,
@@ -58,6 +62,14 @@ Take into account the following:
 -  The ``NICK`` and ``USER`` messages can be received in any order, and
    a connection is not *fully* registered until both messages have been
    received (and neither contain any errors)
+
+-  If you receive any message other than ``NICK`` or ``USER`` before the
+   connection registration is complete, you must send a ``ERR_NOTREGISTERED``
+   reply if that message contained a supported command (i.e., one of the
+   commands we are asking you to implement in this project).
+   Otherwise, you should just silently ignore that message. Take into account
+   that, once registration is complete, this behavior will change (see
+   ``ERR_UNKNOWNCOMMAND`` below)
 
 -  The ``NICK`` command can also be used *after* the connection
    registration to change a user’s nick.
@@ -89,7 +101,7 @@ following exceptions:
 
 -  The only supported ``<msgtarget>`` is nicknames.
 
--  You must only implement the ``ERR_NOSUCHNICK`` reply.
+-  You must implement the ``ERR_NORECIPIENT``, ``ERR_NOTEXTTOSEND``. and ``ERR_NOSUCHNICK`` replies.
 
 Take into account the following:
 
@@ -179,6 +191,12 @@ following exceptions:
    only a single ``<mask>``, and it must be a nick; ignore the
    ``<target>`` parameter)
 
+-  Ordinarily, the ``WHOIS`` command can be used without parameters, so
+   the RFC does not *not* require a ``ERR_NEEDMOREPARAMS`` reply in this case.
+   However, since we do not support ``WHOIS`` without parameters, if you
+   receive such a message you should silently ignore it (i.e., don't send any
+   reply back at all)
+
 -  You must only send back the following replies, in this order:
    ``RPL_WHOISUSER``, ``RPL_WHOISSERVER``, ``RPL_ENDOFWHOIS``.
 
@@ -195,8 +213,8 @@ Take into account the following:
 ``ERR_UNKNOWNCOMMAND``
 ----------------------
 
-If your server receives any message not described here (or in the next assignment), 
-you must return a ``ERR_UNKNOWNCOMMAND`` reply.
+If, after registering correctly, your server receives any message not described here 
+(or in the next assignment), you must return a ``ERR_UNKNOWNCOMMAND`` reply.
 
 
 Robustness

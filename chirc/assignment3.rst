@@ -21,7 +21,8 @@ following exceptions:
 
 -  The command must accept a single parameter: a channel name.
 
--  You must only support the ``RPL_TOPIC`` and ``RPL_NAMREPLY`` replies.
+-  You must only support the ``RPL_TOPIC``, ``RPL_NAMREPLY``,
+   and ``ERR_NEEDMOREPARAMS`` replies.
 
 Take into account the following:
 
@@ -77,8 +78,8 @@ following exceptions:
 -  The command must accept either one parameter (a channel name) or two
    parameters (a channel name and a parting message)
 
--  You must only support the ``ERR_NOTONCHANNEL`` and
-   ``ERR_NOSUCHCHANNEL`` replies.
+-  You must only support the ``ERR_NOTONCHANNEL``,
+   ``ERR_NOSUCHCHANNEL``, and ``ERR_NEEDMOREPARAMS`` replies.
 
 Take into account the following:
 
@@ -92,7 +93,7 @@ Implement the ``TOPIC`` command, as described in `[RFC2812 §3.2.4] <http://tool
 following exceptions:
 
 -  You only need to support the ``ERR_NOTONCHANNEL``, ``RPL_NOTOPIC``,
-   and ``RPL_TOPIC`` replies.
+   ``RPL_TOPIC``, and ``ERR_NEEDMOREPARAMS`` replies.
 
 -  You will not need to support the ``ERR_CHANOPRIVSNEEDED`` reply until
    you implement modes.
@@ -139,8 +140,8 @@ commands. For now, we will focus on the first two.
 You must implement the ``OPER`` message as described in `[RFC2812 §3.1.4] <http://tools.ietf.org/html/rfc2812#section-3.1.4>`__, with the
 following exceptions:
 
--  You must only support the ``RPL_YOUREOPER`` and
-   ``ERR_PASSWDMISMATCH``.
+-  You must only support the ``RPL_YOUREOPER``, ``ERR_PASSWDMISMATCH``,
+   and ``ERR_NEEDMOREPARAMS``.
 
 Take into account that you should expect a ``<user>`` parameter but will
 ignore its content; the password expected by the ``OPER`` command is the
