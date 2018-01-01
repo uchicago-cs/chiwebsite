@@ -57,7 +57,7 @@ We suggest you follow this approach:
   to act as a timer.
   
 - Whenever a ``TIMEOUT`` event happens, go through the retransmission queue to check
-  what packets need to be re-sent (and remove those that have been acknowledged). The provided code
+  what packets need to be re-sent. The provided code
   already includes an (empty) ``if (event == TIMEOUT)`` branch in the handler
   functions where you need to process the ``TIMEOUT`` event.
 
