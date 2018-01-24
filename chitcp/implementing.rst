@@ -124,6 +124,9 @@ your implementation should take the following into account:
    the TCP header. This also means you do not need to support the ``SND.UP``,
    ``RCV.UP``, or ``SEG.UP`` variables.
 
+-  You do not need to support the ``SND.WL1`` and ``SND.WL2`` variables and
+   can ignore any checks that involve those variables.
+
 -  You do not need to support TCP’s "security/compartment" features, which
    means you can assume that ``SEG.PRC`` and ``TCB.PRC`` always have valid and
    correct values.
@@ -348,13 +351,12 @@ more easily work with TCP packets. More specifically:
    macros to access the ``SEG.``\ \* variables defined in `[RFC793 3.2]
    <http://tools.ietf.org/html/rfc793#section-3.2>`__. Take into account that these macros *do* convert the values from network-order to host-order.
 
--  Finally, although this header file provides a ``chitcp_tcp_packet_create``
-   function, you should not use this function directly. Instead, use
-   ``chitcpd_tcp_packet_create`` (note the ``chitcpd`` prefix, not ``chitcp``)
-   defined in ``src/chitcpd/serverinfo.h``, which is a wrapper around
-   ``chitcp_tcp_packet_create`` (besides creating a packet, it will also
-   correctly initialize the source and destination ports to match those of the
-   socket).
+-  Whenever you need to create a new TCP packet, *always* use the 
+   ``chitcpd_tcp_packet_create`` function defined in ``serverinfo.h``. This
+   will initialize certain fields in the TCP header that depend on the
+   socket associated with that TCP packet (e.g., the source/destination ports).
+   **CAREFUL**: There is a similarly-named function in ``packet.h`` called
+   ``chitcp_tcp_packet_create``; you should *not* use that function.
 
 The ``chitcpd_update_tcp_state`` function
 -----------------------------------------
