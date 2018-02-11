@@ -116,15 +116,17 @@ IP Forwarding
 When your routers receive an IP datagram that is *not* directed to one of its IP addresses,
 you must check whether the IP datagram can be forwarded. You must check the routing table
 and see whether the destination IP address of the IP datagram matches any of the
-networks in the routing table. In this project, we will assume that all the networks
-have non-overlaping address ranges (e.g., it is not possible for the routing table
-to contain 192.168.0.0/16 and 192.168.100.0/24; note that this is perfectly legitimate
-in a router). This means that there will either be a single matching network, or none at all.
+networks in the routing table. If there are multiple matching entries, you must use
+`longest prefix match <https://en.wikipedia.org/wiki/Longest_prefix_match>`_ to select
+just one. 
 
 If there is no match in the routing table, then you must send an ICMP Network Unreachable
 reply to the host that sent that IP datagram.
 
-If there is a match, and you are able to obtain the MAC address for that IP address (see
+If there is a match, you must take into account whether the matching entry specifies
+a gateway or not. For gateway routes, you must obtain the MAC address of the gateway router,
+and for non-gateway routes you must obtain the MAC address of the destination IP address.
+If you are able to obtain that MAC address using ARP (see
 ARP section above), then you must decrement the TTL of the IP datagram by one, recompute
 the IP header checksum, and send the IP datagram on the appropriate interface. If the TTL
 of the datagram is 1 (which means decrementing it by one will make the TTL equal to zero),

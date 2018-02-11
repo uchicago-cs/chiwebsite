@@ -35,87 +35,86 @@ Once you have the chirouter code, you can build it simply by running Make::
 This will generate an executable called ``chirouter`` that accepts the following
 parameters:
 
-* ``-r RTABLE``: The routing table for the router
-* ``-s POX_HOST``: The host running the POX controller (default: localhost)
-* ``-p POX_PORT``: The port the POX controller is listening on
+* ``-p PORT``: [Optional] Port that chirouter will listen on (mininet and POX will use this port
+  to send the router its configuration information). Defaults to 23300.
 * ``-v``, ``-vv``, or ``-vvv``: To control the level of logging. This is described in 
   more detail in :ref:`chirouter-implementing`
 
 
-Running (the long version)
---------------------------
+Running
+-------
 
 To run chirouter, you must first run mininet and the POX controller, both of which are in charge
 of simulating the network where your router is located. Running mininet requires root access, but
-running the chirouter executable *does not*. 
+running the chirouter executable *does not*. So, there are two ways of running chirouter:
 
-If you are using a virtual machine, this means that you can use the virtual machine exclusively to
-run mininet and POX, and then develop and run chirouter in your usual environment. However, you will
-need to clone the chirouter repository on the virtual machine to have access to the mininet and POX
-commands there.
+Running chirouter and mininet on a machine with root access
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, start POX like this::
+If you have root access on the machine you are working on, you should start two terminals
+and, on the first one, run chirouter::
 
-   ./run_pox.sh topologies/basic/
+   ./chirouter -vv
+
+Note: The ``-vv`` parameter is not ordinarily necessary, but we will use it to verify that
+chirouter and mininet are running correctly.
+
+You should see the following::
+
+   [2018-02-09 10:41:13]   INFO Waiting for connection from controller...
    
-You should see something like this::
+In a separate terminal, run mininet and POX like this::
 
-   POX 0.2.0 (carp) / Copyright 2011-2013 James McCauley, et al.
-   [2016-02-26 10:40:06,017] DEBUG    core POX 0.2.0 (carp) going up...
-   [2016-02-26 10:40:06,019] DEBUG    core Running on CPython (2.7.10/Oct 14 2015 16:09:02)
-   [2016-02-26 10:40:06,021] DEBUG    core Platform is Linux-4.2.0-23-generic-x86_64-with-Ubuntu-15.10-wily
-   [2016-02-26 10:40:06,021] INFO     core POX 0.2.0 (carp) is up.
-   [2016-02-26 10:40:06,032] DEBUG    of_01 Listening on 0.0.0.0:6633
-
-Next, on a separate terminal, run mininet like this::
-
-   ./run_mininet.sh topologies/basic/
+   sudo ./run-mininet topologies/basic.json
    
-Note that the ``run_mininet.sh`` script will run a mininet command with ``sudo``, so you may be asked to 
-enter your password. If the command runs successfully, you should see a fair amount of output starting with this::
+``sudo`` will ask you to enter your password; once you do so, you should see the following output::
 
-   *** Creating network
    *** Creating network
    *** Adding controller
    *** Adding hosts:
    client1 client2 server1 server2 
    *** Adding switches:
-   router9999 switch12 
-   
-And ending with this::
-   
+   r1 s1001 s1002 s1003 
+   *** Adding links:
+   (client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002) 
+   *** Configuring hosts
+   client1 client2 server1 server2 
+   *** Starting controller
+   c0 
+   *** Starting 4 switches
+   r1 s1001 s1002 s1003 ...
    *** Starting CLI:
    mininet> 
 
-This is a command prompt where you will be able to run standard network commands. Each command
-must be prefaced with the name of the machine you want to run the command on. For example, this command
-runs ``ping`` on ``client1`` (and specifically pings ``server1``). Do not run this command yet, though.
+Note: You may notice that there is a separate ``run-pox`` script. You do not need to run this script!
+POX is launched automatically by mininet, so you only need to run the ``run-mininet`` script. 
+There are some cases where it does make sense to launch
+POX and mininet separately (and we describe those below)
 
-::
+Now, the terminal where you ran ``chirouter`` should show something like this::
 
-   client1 ping server1
+   [2018-02-09 10:42:57]   INFO Controller connected from 127.0.0.1:58398
+   [2018-02-09 10:42:58]   INFO Received 1 routers
+   [2018-02-09 10:42:58]   INFO --------------------------------------------------------------------------------
+   [2018-02-09 10:42:58]   INFO ROUTER r1
+   [2018-02-09 10:42:58]   INFO 
+   [2018-02-09 10:42:58]   INFO eth1 42:7C:1C:87:EE:5B 192.168.1.1
+   [2018-02-09 10:42:58]   INFO eth2 82:4B:72:73:F7:5F 172.16.0.1
+   [2018-02-09 10:42:58]   INFO eth3 0A:4B:3F:1B:E3:ED 10.0.0.1
+   [2018-02-09 10:42:58]   INFO 
+   [2018-02-09 10:42:58]   INFO Destination     Gateway         Mask            Iface           
+   [2018-02-09 10:42:58]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1            
+   [2018-02-09 10:42:58]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2            
+   [2018-02-09 10:42:58]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3            
+   [2018-02-09 10:42:58]   INFO --------------------------------------------------------------------------------
+
+Note: The MAC addresses will likely be different. Everything else should be the same.
+
+This means that chirouter has correctly received the network configuration from mininet.
+
+Go back to the mininet terminal, which should show a command prompt like this::
    
-Note: ``client1`` and ``server1`` are hosts in the simulated network topology we are using. This is
-described in more detail in :ref:`chirouter-testing`.   
-   
-Once you start mininet, you should verify that it has connected to the POX controller correctly. On the
-terminal that is running POX, you should see log messages like this::
-
-   [2016-02-26 10:47:42,651] INFO     of_01 [None 1] closed
-   [2016-02-26 10:47:42,786] INFO     of_01 [00-00-00-00-27-0f 2] connected
-   [2016-02-26 10:47:42,787] DEBUG    pox_controller Controlling [00-00-00-00-27-0f 2] (dpid: 9999)
-   [2016-02-26 10:47:42,787] INFO     pox_controller Creating new Controller
-   [2016-02-26 10:47:42,787] INFO     pox_controller Adding interface eth3 with IP 10.0.0.1
-   [2016-02-26 10:47:42,787] INFO     pox_controller Adding interface eth2 with IP 172.16.0.1
-   [2016-02-26 10:47:42,787] INFO     pox_controller Adding interface eth1 with IP 192.168.1.1
-   [2016-02-26 10:47:42,787] DEBUG    pox_controller Made new SRController on port 9999
-   [2016-02-26 10:47:42,787] DEBUG    pox_controller Starting connections
-   [2016-02-26 10:47:42,789] INFO     of_01 [00-00-00-00-00-0c 3] connected
-   [2016-02-26 10:47:42,789] DEBUG    pox_controller Controlling [00-00-00-00-00-0c 3] (dpid: 12)
-   [2016-02-26 10:47:42,789] DEBUG    pox_controller Made new SwitchController
- 
-Some of the messages may have slightly different values, but the "Adding interface" messages should
-be as above (although they could appear in different order).
+   mininet> 
    
 To verify that mininet is running correctly, you can run the following from the mininet prompt::
 
@@ -131,64 +130,83 @@ To verify that mininet is running correctly, you can run the following from the 
    rtt min/avg/max/mdev = 0.014/0.019/0.023/0.004 ms
 
 The above command just instructs ``client1`` to ping itself. Since your router isn't involved in delivering the
-ICMP messages, this will run fine even if you haven't implemented the router yet. On the other hand, the following command
-will result in no pings being delivered, because ``client1`` and ``server1`` are on different networks::
+ICMP messages, this will run fine even if you haven't implemented the router yet. On the other hand, the following
+command instructs ``client1`` to ping ``10.0.0.1`` (one of the router's interfaces). Since you have
+not yet implemented ICMP in your router, it will not reply to the pings::
 
-   mininet> client1 ping -c 4 server1
-   PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+   mininet> client1 ping -c 4 10.0.0.1
+   PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
    From 10.0.100.1 icmp_seq=1 Destination Host Unreachable
    From 10.0.100.1 icmp_seq=2 Destination Host Unreachable
    From 10.0.100.1 icmp_seq=3 Destination Host Unreachable
    From 10.0.100.1 icmp_seq=4 Destination Host Unreachable
    
-   --- 192.168.1.2 ping statistics ---
+   --- 10.0.0.1 ping statistics ---
    4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 3014ms
 
-Finally, you must run your router like this::
+However, if you look at the chirouter logs, you should see that it *is* receiving the ARP requests from ``client1``::
 
-   ./chirouter -p 9999 -r topologies/basic/rtable9999 -vv
+   [2018-02-09 10:48:39]  DEBUG Received Ethernet frame on interface eth3
+   [2018-02-09 10:48:39]  DEBUG    ######################################################################
+   [2018-02-09 10:48:39]  DEBUG <  Src: AA:60:D3:A1:F7:E8
+   [2018-02-09 10:48:39]  DEBUG <  Dst: FF:FF:FF:FF:FF:FF
+   [2018-02-09 10:48:39]  DEBUG <  Ethertype: 0806 (ARP)
+   [2018-02-09 10:48:39]  DEBUG <  Payload (28 bytes):
+   [2018-02-09 10:48:39]  DEBUG   0000  00 01 08 00 06 04 00 01 aa 60 d3 a1 f7 e8 0a 00  .........`......
+   [2018-02-09 10:48:39]  DEBUG   0010  64 01 00 00 00 00 00 00 0a 00 00 01              d...........
+   [2018-02-09 10:48:39]  DEBUG    ######################################################################
+
+As you develop your router, please note that it is important that you start chirouter and mininet in
+the same order: chirouter first, followed by mininet.
+
+
+Running chirouter and mininet on separate machines
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since mininet requires root access, it may sometimes be more convenient to run chirouter on your usual
+development machine (e.g., your laptop), and mininet on a machine with root access. In particular,
+it should be easy to run mininet inside a virtual machine running on the same machine where
+you are doing your chirouter development.
+
+To do this, you should clone your repository on the (non-root) machine, and run chirouter as follows::
+
+   ./chirouter -vv -p PORT
    
-If the router starts correctly, you should see the following::
-
-   [2016-02-27 11:59:56]   INFO Loaded routing table:
-   [2016-02-27 11:59:56]   INFO Destination     Gateway         Mask            Iface           
-   [2016-02-27 11:59:56]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1            
-   [2016-02-27 11:59:56]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2            
-   [2016-02-27 11:59:56]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3            
-   [2016-02-27 11:59:56]   INFO Connecting to POX on localhost:9999
-   [2016-02-27 11:59:56]   INFO Connected to POX.
-
-Now, try pinging your router from mininet::
-
-   mininet> client1 ping -c 4 10.0.0.1
-
-You should be able to see the ARP requests coming from ``client1``. For example::
-
-   [2016-02-27 12:02:59]  DEBUG Received Ethernet frame on interface eth3
-   [2016-02-27 12:02:59]  DEBUG    ######################################################################
-   [2016-02-27 12:02:59]  DEBUG <  Src: 0E:A8:9E:F3:EF:1F
-   [2016-02-27 12:02:59]  DEBUG <  Dst: FF:FF:FF:FF:FF:FF
-   [2016-02-27 12:02:59]  DEBUG <  Ethertype: 0806 (ARP)
-   [2016-02-27 12:02:59]  DEBUG <  Payload (29 bytes):
-   [2016-02-27 12:02:59]  DEBUG   0000  00 01 08 00 06 04 00 01 0e a8 9e f3 ef 1f 0a 00  ................
-   [2016-02-27 12:02:59]  DEBUG   0010  64 01 00 00 00 00 00 00 0a 00 00 01 00           d............
-   [2016-02-27 12:02:59]  DEBUG    ######################################################################
-
-Note: If an ARP request is followed by a warning about the Ethernet frame being shorter than expected, 
-you can safely ignore this warning.
-
-As you develop your router, you should be able to keep POX and mininet running, and just rebuilding and
-restarting your router each time you make a change (you can make the router exit by pressing Control-C).
-However, if your router stops received messages, you should first try to restart POX and mininet.
-
-Running (the short version)
----------------------------
-
-To run your router, run the following three commands in this order, and in three separate terminals::
-
-   ./run_pox.sh topologies/basic/
+Where ``PORT`` is the TCP port on which chirouter will listen for connections from mininet. If you
+omit this parameter, port 23300 will be used by default.   
    
-   ./run_mininet.sh topologies/basic/
+Next, on the root machine, it is enough to clone the upstream chirouter repository. In fact, none of your own
+code will run on the root machine; only the mininet/POX code (which you do not need to modify in any way)
+will run there.   
+   
+From the root machine, run mininet as follows::
 
-   ./chirouter -p 9999 -r topologies/basic/rtable9999 -vv
+   sudo ./run-mininet topologies/basic.json --chirouter HOST:PORT
+   
+Where ``HOST`` is the hostname or IP address of the machine running chirouter. If you are running mininet
+inside a virtual machine, there will typically be a special IP address to connect to the VM's host machine
+(which is where you're running chirouter). ``PORT`` is the port specified when running ``chirouter`` (or
+23300 if you did not specify a ``-p`` parameter when running ``chirouter``)
+
+You should now observe the same outputs as described earlier.
+
+
+Running mininet and POX separately
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It can sometimes be useful, for debugging purposes, to run mininet and POX separately (in general, 
+you should not do this unless your instructor asks you for the output of POX). To do so, you must run
+the following commands in separate terminals, and in this order::
+
+   ./chirouter -vv
+   
+::
+
+   ./run-pox topologies/basic.json
+   
+::
+
+   sudo ./run-mininet topologies/basic.json --pox 127.0.0.1:6633
+ 
+
 
