@@ -362,3 +362,125 @@ And access the web server on ``server`` from ``client100``::
    Your router successfully routes your packets to and from server.<br/>
    </body>
    </html>
+
+
+The Three Router Topology
+-------------------------
+
+The ``3router.json`` file specifies a topology with three routers:
+
+.. figure:: 3router.png
+   :alt: Three Router Topology
+
+The routing table for Router 1 is::
+
+    Destination     Gateway         Mask            Iface           
+    10.1.0.0        10.100.0.2      255.255.0.0     eth1            
+    10.2.0.0        10.100.0.2      255.255.0.0     eth1            
+    10.100.0.0      0.0.0.0         255.255.0.0     eth1            
+    10.3.0.0        10.200.0.2      255.255.0.0     eth2            
+    10.4.0.0        10.200.0.2      255.255.0.0     eth2            
+    10.200.0.0      0.0.0.0         255.255.0.0     eth2               
+
+The routing table for Router 2 is::
+
+    Destination     Gateway         Mask            Iface           
+    10.1.0.0        0.0.0.0         255.255.0.0     eth1            
+    10.2.0.0        0.0.0.0         255.255.0.0     eth2            
+    10.100.0.0      0.0.0.0         255.255.0.0     eth3            
+    10.0.0.0        10.100.0.1      255.0.0.0       eth3       
+
+And the routing table for Router 3 is::
+
+    Destination     Gateway         Mask            Iface           
+    10.3.0.0        0.0.0.0         255.255.0.0     eth1            
+    10.4.0.0        0.0.0.0         255.255.0.0     eth2            
+    10.200.0.0      0.0.0.0         255.255.0.0     eth3            
+    10.0.0.0        10.200.0.1      255.0.0.0       eth3     
+     
+If your implementation works with the 2-router topology, it is likely that it
+will also work with this 3-router topology. However, this topology serves
+as a final check that you didn't hardwire anything in your router in a way
+that just happens to work when there is only one or two routers.
+
+If implemented correctly, you should be able to ping from ``host1``
+to ``host100`` (this tests whether you've implemented Longest Prefix Match correctly)::
+
+    mininet> host1 ping -c 4 host100
+    PING 10.100.0.42 (10.100.0.42) 56(84) bytes of data.
+    64 bytes from 10.100.0.42: icmp_seq=1 ttl=63 time=167 ms
+    64 bytes from 10.100.0.42: icmp_seq=2 ttl=63 time=101 ms
+    64 bytes from 10.100.0.42: icmp_seq=3 ttl=63 time=87.0 ms
+    64 bytes from 10.100.0.42: icmp_seq=4 ttl=63 time=86.8 ms
+
+    --- 10.100.0.42 ping statistics ---
+    4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+    rtt min/avg/max/mdev = 86.804/110.837/167.881/33.479 ms
+
+Note: When running this test, you may encounter this warning in your chirouter logs::
+
+    [2018-02-23 10:19:05]   WARN Received a non-broadcast Ethernet frame with a destination address that doesn't match the interface
+
+The reason for this is that the "switches" in each network actually
+behave like hubs. This means that, when ``host100`` sends frames
+intended for Router 2's ``eth3`` interface, these will also be received by Router 1's ``eth1`` interface.
+You can safely ignore these warnings in this test, but you should not encounter them in
+other tests.
+
+Ping from ``host1`` to ``host4`` and viceversa::
+
+    mininet> host1 ping -c 4 host4
+    PING 10.4.0.42 (10.4.0.42) 56(84) bytes of data.
+    64 bytes from 10.4.0.42: icmp_seq=1 ttl=61 time=55.6 ms
+    64 bytes from 10.4.0.42: icmp_seq=2 ttl=61 time=34.9 ms
+    64 bytes from 10.4.0.42: icmp_seq=3 ttl=61 time=63.9 ms
+    64 bytes from 10.4.0.42: icmp_seq=4 ttl=61 time=44.2 ms
+
+    --- 10.4.0.42 ping statistics ---
+    4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+    rtt min/avg/max/mdev = 34.916/49.697/63.979/11.033 ms
+
+::
+
+    mininet> host4 ping -c 4 host1
+    nohup: appending output to 'nohup.out'
+    PING 10.1.0.42 (10.1.0.42) 56(84) bytes of data.
+    64 bytes from 10.1.0.42: icmp_seq=1 ttl=61 time=48.7 ms
+    64 bytes from 10.1.0.42: icmp_seq=2 ttl=61 time=41.7 ms
+    64 bytes from 10.1.0.42: icmp_seq=3 ttl=61 time=21.4 ms
+    64 bytes from 10.1.0.42: icmp_seq=4 ttl=61 time=51.8 ms
+
+    --- 10.1.0.42 ping statistics ---
+    4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+    rtt min/avg/max/mdev = 21.410/40.953/51.891/11.867 ms
+
+Traceroute from ``host1`` to ``host4`` (and viceversa)::
+
+    mininet> host1 traceroute host4
+    traceroute to 10.4.0.42 (10.4.0.42), 30 hops max, 60 byte packets
+     1  10.1.0.1 (10.1.0.1)  32.651 ms  35.776 ms  35.782 ms
+     2  10.100.0.1 (10.100.0.1)  71.554 ms  92.322 ms  107.198 ms
+     3  10.200.0.2 (10.200.0.2)  110.819 ms  112.896 ms  152.209 ms
+     4  10.4.0.42 (10.4.0.42)  152.219 ms  180.433 ms  178.299 ms
+
+::
+
+    mininet> host4 traceroute host1
+    traceroute to 10.1.0.42 (10.1.0.42), 30 hops max, 60 byte packets
+     1  10.4.0.1 (10.4.0.1)  22.879 ms  24.029 ms  24.031 ms
+     2  10.200.0.1 (10.200.0.1)  78.251 ms  40.859 ms  76.196 ms
+     3  10.100.0.2 (10.100.0.2)  82.827 ms  119.647 ms  129.343 ms
+     4  10.1.0.42 (10.1.0.42)  167.517 ms  240.325 ms  174.980 ms
+
+And access the web server on ``host4`` from ``host1``::
+
+    mininet> host1 wget -q -O - http://10.4.0.42/
+    <html>
+    <head><title> This is host4</title></head>
+    <body>
+    Congratulations! <br/>
+    Your router successfully routes your packets to and from host4.<br/>
+    </body>
+    </html>
+
+
