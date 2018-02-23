@@ -11,7 +11,7 @@ functionality before you can actually start routing IP datagrams:
 
 * Your code must process the raw Ethernet frames that arrive through the router's
   interfaces.
-* Because you will be working at the Ethenet level, you will need to use ARP to map
+* Because you will be working at the Ethernet level, you will need to use ARP to map
   Ethernet addresses to IP addresses.  
 * Your router will need to support a small subset of the ICMP protocol so
   you can use tools like ping and traceroute, and to notify hosts of certain errors

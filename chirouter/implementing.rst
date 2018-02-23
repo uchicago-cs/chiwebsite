@@ -13,11 +13,12 @@ can be found in the header files themselves.
 chirouter.h
 -----------
 
-This header file defines the main data structures of the router. All these
+This header file defines the main data structures of an individual router. All these
 data structures are accessible through the *router context* struct (``chirouter_ctx_t``)
 that is passed to most functions.
+
 Our code takes care of creating and populating this struct with all the 
-information relevant to the router:
+information relevant to each router:
 
 * An array of ``chirouter_interface_t`` structs, each representing an Ethernet
   interface in the router.
@@ -26,10 +27,6 @@ information relevant to the router:
   the destination network (specified by an IPv4 address and a subnet mask), the
   gateway for that entry, and the Ethernet interface for that entry (a pointer
   to a ``chirouter_interface_t`` struct). 
-  
-  Take into account that, in this project, you can ignore the gateway. i.e., you
-  can assume that there is a single router in the network, and that its interfaces
-  are directly connected to their destination networks.
 * An ARP cache, represented as an array of ``chirouter_arpcache_entry_t`` structs.
 * A list of pending ARP requests, representing ARP requests that have been sent
   but for which the router has not received a reply yet. This is explained in more
@@ -50,9 +47,14 @@ router.c
 Most of your work will take place in this file. In particular, you must implement the
 ``chirouter_process_ethernet_frame`` function. This function will get called every 
 time an Ethernet frame is received by
-the router. The router uses a single thread to process inbound Ethernet
-frames, so you can assume that ``chirouter_process_ethernet_frame`` is always
-called sequentially (there will never be concurrent calls to this function).
+a router. 
+
+Take into account that chirouter can manage multiple routers at once, 
+but does so in a single thread. i.e., it is guaranteed that this function 
+is always called sequentially, and that there will not be concurrent calls to this
+function. If two routers receive Ethernet frames "at the same time",
+they will be ordered arbitrarily and processed sequentially, not
+concurrently (and with each call receiving a different router context)
 
 Your implementation of the ``chirouter_process_ethernet_frame`` function must
 process the frame meeting the requirements described in :ref:`chirouter-assignment`.
@@ -87,12 +89,13 @@ ARP cache and list of pending ARP requests, which you can use in your implementa
 Take into account that these functions assume that the ``lock_arp`` mutex has already been
 locked before the functions are called.
  
-The ``chirouter_pox_send_frame`` function
------------------------------------------
+ 
+The ``chirouter_send_frame`` function
+-------------------------------------
 
 When an Ethernet frame arrives and is processed in ``chirouter_process_ethernet_frame`` you will,
 in many cases, have to *send* an Ethernet frame through one of the router's interfaces. 
-This is done using the ``chirouter_pox_send_frame`` function, defined in the ``pox.h`` header file. 
+This is done using the ``chirouter_send_frame`` function, defined in the ``chirouter.h`` header file. 
 
 
 ethernet.h, arp.h, icmp.h, and ipv4.h
