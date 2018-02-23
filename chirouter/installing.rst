@@ -37,6 +37,8 @@ parameters:
 
 * ``-p PORT``: [Optional] Port that chirouter will listen on (mininet and POX will use this port
   to send the router its configuration information). Defaults to 23300.
+* ``-c FILE``: [Optional] When specified, produces a capture file (in PCAPNG format) with all
+  the Ethernet frames sent/received by the routers. This file can be opened in Wireshark for analysis.
 * ``-v``, ``-vv``, or ``-vvv``: To control the level of logging. This is described in 
   more detail in :ref:`chirouter-implementing`
 
