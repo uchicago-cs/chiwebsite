@@ -93,7 +93,7 @@ Messages
 All messages in chistributed are encoded as a JSON object. For example::
 
    {"type": "set", 
-    "destination": ["proposer2"], 
+    "destination": "proposer2", 
     "id": 987568098927, 
     "key": "x", 
     "value": "42"}
@@ -104,7 +104,7 @@ we will see that ZeroMQ requires these messages to be further encapsulated in a 
 All messages have at least a ``type`` field to specify the type of message, with additional fields
 depending on the type of message. When a message is directed to a specific node (as opposed to
 a message directed to the broker itself), the message will also have a ``destination`` field
-specifying the node (or nodes) that the message is directed to.
+specifying the node that the message is directed to.
 
 We define three message types that always originate in the broker, and are directed to a
 specific node (specified with the ``destination`` field):
@@ -123,7 +123,7 @@ relayed to another node):
 * ``setResponse``: Sent in response to a ``set``.
   
 Your implementation can use additional message types. When the broker encounters a message with
-a ``type`` that is not listed above, it will simply deliver it to the node(s) specified in the
+a ``type`` that is not listed above, it will simply deliver it to the node specified in the
 ``destination`` field.
 
 
@@ -141,7 +141,7 @@ The ``set`` message has the following fields:
 For example::
 
    {"type": "set", 
-    "destination": ["proposer2"], 
+    "destination": "proposer2", 
     "id": 3215786, 
     "key": "x", 
     "value": "42"}
@@ -193,7 +193,7 @@ The ``get`` message has the following fields:
 For example::
 
    {"type": "get", 
-    "destination": ["master"], 
+    "destination": "master", 
     "id": 3215787, 
     "key": "x"}
 
@@ -250,10 +250,10 @@ You can define as many additional types of messages as you want. For example::
 
    {"type": "prepare", 
     "source": "proposer1",
-    "destination": ["acceptor1", "acceptor2", "acceptor3"], 
+    "destination": "acceptor1",
     "proposal_id": 3}
 
-The broker will simply deliver these messages to the nodes specified in the ``destination`` field.
+The broker will simply deliver these messages to the node specified in the ``destination`` field.
 
 You should, however, take the following into account:
 
