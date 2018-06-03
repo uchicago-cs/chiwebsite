@@ -91,23 +91,9 @@ Criterion Unit Testing Framework
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 chiTCP uses the `Criterion unit testing framework <https://github.com/Snaipe/Criterion>`_
-to run its unit tests. It can be installed by running the following:
-
-::
-
-    wget https://github.com/Snaipe/Criterion/releases/download/v2.3.0-1/criterion-v2.3.0-1.tar.bz2
-    tar xvjf criterion-v2.3.0-1.tar.bz2 
-    cd criterion-v2.3.0-1
-    mkdir build
-    cd build/
-    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-    cmake --build .
-    sudo make install
-
-Note that Criterion requires `CMake <https://cmake.org/>`_ to build. CMake is available
-as an installable package for most Linux distributions.
+to run its unit tests. Installation instructions can be found `here <https://github.com/Snaipe/Criterion/blob/bleeding/README.md>`_.
+Please note that you must install version 2.3.0-1 or later.
     
-
 
 Building
 --------
