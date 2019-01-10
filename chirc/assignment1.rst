@@ -10,8 +10,8 @@ perform a *single* user registration as shown in :ref:`chirc-irc-examples`.
 Take into account that a barely minimal server that meets these
 requirements, and passes most of the automated tests for this assignment, can be
 written in roughly 50 lines of C code (in fact, we will *give you* those
-50 lines of code). However, although this kludgy solution will get you a
-near perfect score on the tests, it will earn you a zero on the design grade.
+50 lines of code). However, although this kludgy solution will get you 
+some number of points on the tests, it will earn you a zero on the design grade.
 
 So, you should start implementing your solution with the requirements of
 the rest of the project in mind. More specifically, your solution to
