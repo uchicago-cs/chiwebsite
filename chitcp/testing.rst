@@ -9,24 +9,21 @@ test your implementation.
 Automated tests
 ---------------
 
-You can build the automated tests like this::
-
-    make tcp-tests
-
-Note that this will not run the tests; it will build a ``test-tcp`` executable
-in the ``tests/`` directory which you can use to run the tests. Also, take
-into account that, if you modify your chiTCP implementation, **you must
-rebuild the tests** (i.e., it is not enough to run just ``make``). Otherwise, 
-the test executable will not be linked to the latest version of your chiTCP implementation.
+The tests for chiTCP are built by following the instructions in
+:ref:`chitcp-building`. While this will build several test programs,
+you will only have to use the ``test-tcp`` executable. Make sure
+you re-build chiTCP any time you change your code, to make sure
+the ``test-tcp`` executable is testing the latest version of your
+code.
 
 The test suite has multiple tests, divided into several categories. You
 can see a list of all the tests by running the following::
 
-   tests/test-tcp -l
+   ./test-tcp -l
 
 You can run all the tests by running the following::
 
-   tests/test-tcp
+   ./test-tcp
    
 Optionally, you can include the ``--verbose`` option to see the progress
 of each test.   
@@ -42,13 +39,13 @@ Running and debugging individual tests
 
 To run a single test, simply run the following::
 
-   tests/test-tcp --filter "TEST_CATEGORY/TEST_NAME"
+   ./test-tcp --filter "TEST_CATEGORY/TEST_NAME"
 
 Where ``TEST_CATEGORY`` is the category of the test, and ``TEST_NAME`` is the name
 of the test (you can see both of these by running ``tests/test-tcp -l``). For example,
 this will run the first connection establishment test::
 
-   tests/test-tcp --filter "conn_init/3way_states"
+   ./test-tcp --filter "conn_init/3way_states"
 
 If the test is succesful, you will see the following::
 
@@ -80,9 +77,9 @@ of state in a socket, as well as any packets received and sent by a socket (incl
 about the packet, like its sequence number, the size of the payload, etc.). The format is compact
 and intended to be easy to read.
 
-To run a test with MINIMAL logging, simply include ``LOG=MINIMAL`` before ``tests/test-tcp``. For example::
+To run a test with MINIMAL logging, simply include ``LOG=MINIMAL`` before ``./test-tcp``. For example::
 
-   LOG=MINIMAL ./tests/test-tcp --filter "conn_init/3way_states"
+   LOG=MINIMAL ./test-tcp --filter "conn_init/3way_states"
    
 The output of this test (if successful) would look like this::
 
@@ -115,7 +112,7 @@ that shown in the above output, depending on how you set IRS and ISS.
 We also provide a script that will colorize this output for extra readability. Just pipe the output of
 the test to ``tests/colorize-minimal.sh``::
 
-   LOG=MINIMAL ./tests/test-tcp --filter "conn_init/3way_states" | tests/colorize-minimal.sh
+   LOG=MINIMAL ./test-tcp --filter "conn_init/3way_states" | ../tests/colorize-minimal.sh
    
 You should see something like this:
 
@@ -124,7 +121,7 @@ You should see something like this:
 In the tests that involve dropping packets, the ``colorize-minimal.sh`` script will highlight dropped
 packets and timeouts in red. For example, if we run this::
 
-   LOG=MINIMAL ./tests/test-tcp --filter "unreliable_data_transfer/drop_single_packet" | tests/colorize-minimal.sh
+   LOG=MINIMAL ./test-tcp --filter "unreliable_data_transfer/drop_single_packet" | ../tests/colorize-minimal.sh
    
 The output will look like this:
 
@@ -139,7 +136,7 @@ Other logging levels
 To have a test print log messages from other log levels, simply set the ``LOG`` variable to the appropriate
 level. For example::
 
-   LOG=DEBUG ./tests/test-tcp --filter "conn_init/3way_states"
+   LOG=DEBUG ./test-tcp --filter "conn_init/3way_states"
    
 Producing a pcap file
 ~~~~~~~~~~~~~~~~~~~~~
@@ -154,7 +151,7 @@ To produce a pcap file, simply include ``PCAP=FILENAME`` before ``tests/test-tcp
 ``FILENAME`` with a name for the pcap file. For example, if we ran the following test,
 which has packets arrive out of order::
 
-   PCAP=out_of_order.pcap ./tests/test-tcp --filter "unreliable_data_transfer/out_of_order_1"
+   PCAP=out_of_order.pcap ./test-tcp --filter "unreliable_data_transfer/out_of_order_1"
    
 And then open ``out_of_order.pcap`` in Wireshark, we can see that it correctly detects
 that one of the packets arrived out of order:
@@ -167,7 +164,7 @@ Using gdb to debug a test
 To run gdb with a single test, you will need to run the test you want to debug in one terminal,
 and gdb in a separate terminal. First, run the test like this::
 
-   ./tests/test-tcp --debug=gdb --debug-transport=tcp:PORT --filter "TEST"
+   ./test-tcp --debug=gdb --debug-transport=tcp:PORT --filter "TEST"
 
 Replace ``TEST`` with the test you want to debug, and substitute ``PORT`` with a random port number. 
 By default, the tests will use ``1234`` but, if you are on a machine with multiple users, other users 
@@ -175,7 +172,7 @@ may be trying to use that port.
 
 Then, on another terminal, run this::
 
-   libtool --mode execute gdb tests/test-tcp
+   gdb ./test-tcp
 
 On the GDB prompt, run this::
 
@@ -191,7 +188,7 @@ Running Valgrind on a test
 
 To run Valgrind on a single test, run the following::
 
-   libtool --mode execute valgrind ./tests/test-tcp --filter "TEST"
+   valgrind ./test-tcp --filter "TEST"
    
 Replace ``TEST`` with the test you want to run.
 
@@ -216,27 +213,28 @@ To run entire categories of tests, simply run the following:
 
 * TCP connection establishment::
 
-    ./tests/test-tcp --filter "conn_init/*"
+    ./test-tcp --filter "conn_init/*"
   
 * TCP connection termination::
 
-    ./tests/test-tcp --filter "conn_term/*"
+    ./test-tcp --filter "conn_term/*"
 
 * TCP data transfer::
 
-    ./tests/test-tcp --filter "data_transfer/*"
+    ./test-tcp --filter "data_transfer/*"
 
 * TCP over an unreliable network::
 
-    ./tests/test-tcp --filter "unreliable_conn_init/*"
-    ./tests/test-tcp --filter "unreliable_conn_term/*"
-    ./tests/test-tcp --filter "unreliable_data_transfer/*"
+    ./test-tcp --filter "unreliable_conn_init/*"
+    ./test-tcp --filter "unreliable_conn_term/*"
+    ./test-tcp --filter "unreliable_data_transfer/*"
+    ./test-tcp --filter "unreliable_out_of_order/*"
     
 The ``--filter`` option uses regular expressions, so you can further constrain the tests
 that will be run. For example, to only run the "echo" tests from the data transfer
 tests, you could run the following::
 
-    ./tests/test-tcp --filter "data_transfer/echo*"
+    ./test-tcp --filter "data_transfer/echo*"
     
 Echo server and client
 ----------------------
@@ -244,11 +242,9 @@ Echo server and client
 The automated tests will barrel through all the steps involved in each
 particular test, which can make it hard to observe what happens at each
 point. When you start developing your TCP implementation, we suggest you 
-use the ``echo-server`` and ``echo-client`` sample programs found in the 
-``samples`` directory if you need to run through your code
-step by step. You can build these samples by running::
-
-    make samples
+use the ``echo-server`` and ``echo-client`` sample programs if you need 
+to run through your code step by step (these sample programs will
+be built when you run ``make``).
 
 ``echo-server`` and ``echo-client`` are a basic implementation of an echo server
 and client. The echo server creates a passive socket on port 7 and, when a
@@ -414,14 +410,10 @@ The echo client and server can still be cumbersome for testing since they requir
 running three different programs (chitcpd, echo-server, and echo-client) and staying
 on top of how each of them behaves.
 
-So, we have an additional sample program that runs a server and client simultaneously.
+So, we have an additional sample program, ``simple-tester``, that runs a server and client simultaneously.
 The client connects to the server, sends a single message, and then both of them initiate
 a simultanous tear-down. This sample program is built along with the echo client/server
-samples by running this::
-   
-    make samples
-
-To run it, make sure ``chitcpd`` is running (with option ``-vv`` as suggested earlier) and
+samples. To run it, make sure ``chitcpd`` is running (with option ``-vv`` as suggested earlier) and
 then just run this from the ``samples`` directory::
 
     ./simple-tester

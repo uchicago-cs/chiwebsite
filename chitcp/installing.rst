@@ -22,21 +22,10 @@ Linux systems. At this point, we cannot guarantee that chiTCP will build and run
 smoothly on Mac systems.
 
 
-Autotools
-~~~~~~~~~
+CMake
+~~~~~
 
-Building the chiTCP code requires the GNU build system (commonly referred to as
-“Autotools”). Although you do not need to understand how the GNU build system
-toolchain works, you do need the following tools installed on your machine:
-
--  ``automake``
-
--  ``autoconf``
-
--  ``libtool``
-
-These tools are typically installed by default on most UNIX systems, and also
-available as packages.
+Building the chiTCP code requires the `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
 
 ``protobuf`` and ``protobuf-c``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,7 +82,8 @@ Criterion Unit Testing Framework
 chiTCP uses the `Criterion unit testing framework <https://github.com/Snaipe/Criterion>`_
 to run its unit tests. Installation instructions can be found `here <https://github.com/Snaipe/Criterion/blob/bleeding/README.md>`_.
 Please note that you must install version 2.3.0-1 or later.
-    
+
+.. _chitcp-building:
 
 Building
 --------
@@ -103,42 +93,25 @@ following from the root of the chiTCP code tree:
 
 ::
 
-    ./autogen.sh 
+    mkdir build
+    cmake ..
 
 This will verify whether you have the necessary tools to build chiTCP and will
-also generate a number of files.
+also generate a number of files required to build chiTCP. You should only
+need to rerun the above commands if you modify CMake's ``CMakeLists.txt``
+(which you should not need to do as part of this project).
 
-Next, run the following:
-
-::
-
-    ./configure
-
-This will verify whether your machine has all the necessary libraries to build
-chiTCP. More specifically, you will see errors if Criterion, ``protobuf``, or
-``protobuf-c`` are not installed.
-
-You only need to run ``./configure`` once. Once it has run successfully, you
-will be able to build the chiTCP code by running:
-
-::
-
-    make
+Once you have done this, simply run ``make`` inside the ``build`` directory
+to build chiTCP. This will generate the chiTCP daemon (``chitcpd``), some
+sample programs, as well as the test executables (all starting with ``test-``).
+Take into account that you must run these programs from inside the ``build``
+directory.
 
 By default, ``make`` will only print the names of the files it is building. To
 enable a more verbose output (including the exact commands that make is running
-during the build process), just run ``make`` like this:
+during the build process), just run ``make`` like this::
 
-::
-
-    make V=1
-
-This will generate two files:
-
--  ``chitcpd``: The chiTCP daemon (described in :ref:`chitcp-architecture`)
-
--  ``./.libs/libchitcp.so``: The ``libchitcp`` library. Any applications that
-   wants to use the chisocket library will need to link with this library.
+    make VERBOSE=1
 
 
 Running

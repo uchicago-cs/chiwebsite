@@ -4,7 +4,7 @@ Implementation Guide
 ====================
 
 As you'll see, you are provided with a *lot* of code. Fortunately, you will
-only have to interact with a small portion of it. Most of the provide code
+only have to interact with a small portion of it. Most of the provided code
 is scaffolding for the chiTCP architecture, which will allow you to focus
 on implementing the TCP protocol on a single file: the ``tcp.c`` file.
 
