@@ -82,6 +82,8 @@ are listed below:
 
       TEST_ARGS="-C AWAY" make tests
 
+      TEST_ARGS="-C OPER" make tests
+
       TEST_ARGS="-C NAMES" make tests
 
       TEST_ARGS="-C LIST" make tests
