@@ -94,6 +94,7 @@ following from the root of the chiTCP code tree:
 ::
 
     mkdir build
+    cd build
     cmake ..
 
 This will verify whether you have the necessary tools to build chiTCP and will
@@ -123,7 +124,7 @@ To run the chiTCP daemon, just run the following::
 
 You should see the following output::
 
-   [18:44:54.772865111]    INFO       lt-chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket.borja. TCP socket: 23300
+   [16:57:26.446948795]    INFO          chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket. TCP socket: 23300
 
 Take into account that you won't be able to do much with ``chitcpd`` until you've implemented 
 the ``tcp.c`` file. We do, however, provide a number of mechanisms for you to test your implementation.
