@@ -4,7 +4,7 @@ Implementation Guide
 ====================
 
 As you'll see, you are provided with a *lot* of code. Fortunately, you will
-only have to interact with a small portion of it. Most of the provide code
+only have to interact with a small portion of it. Most of the provided code
 is scaffolding for the chiTCP architecture, which will allow you to focus
 on implementing the TCP protocol on a single file: the ``tcp.c`` file.
 
@@ -32,7 +32,7 @@ this section sums up pretty nicely how a TCP implementation should behave:
       processing the TCP does in response to each of the events.  In many
       cases the processing required depends on the state of the connection.
 
-So, we can think of TCP as a state machine where:
+So, we can think of TCP as a `state machine <https://en.wikipedia.org/wiki/Finite-state_machine>`__ where:
 
 -  The states are CLOSED, LISTEN, SYN\_SENT, etc.
 
@@ -246,20 +246,39 @@ think of this struct as the "Transmission Control Block" for a given connection.
 The pending packet queue
     .. code-block:: c
 
-        list_t pending_packets;
+        tcp_packet_list_t *pending_packets;
         pthread_mutex_t lock_pending_packets;
         pthread_cond_t cv_pending_packets;
 
     As TCP packets arrive through the network, the chiTCP daemon places them
     in the pending packet queue of the appropriate socket (you do not need to
     inspect the origin and destination port of the TCP packet; this is taken
-    care of for you). The list contains pointers to ``tcp_packet_t`` structs
+    care of for you). The queue is implemented as a doubly-linked list where
+    the head of the list represents the front of the queue
+    and the tail of the list represents the back of the queue. The list nodes
+    contain pointers to ``tcp_packet_t`` structs
     (described below) in the heap. It is your responsibility to free this
     memory when you are done processing a packet.
 
-    The queue is implemented with the SimCList library, which is already
-    included in the chiTCP code, and the head of the queue can be retrieved
-    using SimCList’s ``list_fetch`` function. The ``lock_pending_packets``
+    The list is implemented using `utlist <https://troydhanson.github.io/uthash/utlist.html>`__, 
+    which is already included in the chiTCP code. While you can use the utlist macros
+    directly, we also provide some helper functions in `packet.h` to manipulate
+    lists of TCP packets. For example, extracting the packet from the head
+    of the list would be done like this:
+
+    .. code-block:: c
+
+        tcp_packet_t *packet = NULL
+        if(tcp_data->pending_packets)
+        {
+            /* tcp_data->pending_packets points to the head node of the list */
+            packet = tcp_data->pending_packets->packet;
+            
+            /* This removes the list node at the head of the list */
+            chitcp_packet_list_pop_head(&tcp_data->pending_packets);
+        }
+
+    The ``lock_pending_packets``
     mutex provides thread-safe access to the queue. The ``cv_pending_packets``
     condition variable is used to notify other parts of the chiTCP code that
     there are new packets in the queue; you should not wait or signal this
@@ -357,6 +376,41 @@ more easily work with TCP packets. More specifically:
    socket associated with that TCP packet (e.g., the source/destination ports).
    **CAREFUL**: There is a similarly-named function in ``packet.h`` called
    ``chitcp_tcp_packet_create``; you should *not* use that function.
+
+Example: Creating a packet without a payload
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following code creates a TCP packet with only the ACK flag set (and no other
+flags set), and with sequence number ``1000``, acknowledgement number ``530``, and
+window size ``4096``:
+
+.. code-block:: c
+
+    /* Allocate memory for the packet */
+    tcp_packet_t *packet = calloc(1, sizeof(tcp_packet_t));
+
+    /* Used to easily access header fields */
+    tcphdr_t *header;
+
+    /* chitcpd_tcp_packet_create will initialize certain fields of the
+     * header that you do not need to worry about, like the ports.
+     * 
+     * Note how we pass the 'entry' parameter that is passed to the
+     * TCP state handler functions (and which points to the socket entry
+     * for the connection this packet will be sent on)
+     * 
+     * Since there is no payload, we pass NULL as the payload parameter,
+     * and specify a payload length of zero */
+    chitcpd_tcp_packet_create(entry, packet, NULL, 0);
+    
+    /* Get pointer to header */
+    header = TCP_PACKET_HEADER(packet);
+    
+    /* Fill in header fields */
+    header->seq = chitcp_htonl(1000);
+    header->ack_seq = chitcp_htonl(530);
+    header->win = chitcp_htons(4096);
+    header->ack = 1
 
 The ``chitcpd_update_tcp_state`` function
 -----------------------------------------
