@@ -66,6 +66,52 @@ tests were expecting.
 When a test fails or times out, you will need to dig deeper to see what your code is
 doing during the test. We provide several mechanisms for you to do so.
 
+
+Running categories of tests
+---------------------------
+
+To run entire categories of tests, simply run the following:
+
+* TCP connection establishment::
+
+    ./test-tcp --filter "conn_init/*"
+  
+* TCP connection termination::
+
+    ./test-tcp --filter "conn_term/*"
+
+* TCP data transfer::
+
+    ./test-tcp --filter "data_transfer/*"
+
+* TCP over an unreliable network::
+
+    ./test-tcp --filter "unreliable_conn_init/*"
+    ./test-tcp --filter "unreliable_conn_term/*"
+    ./test-tcp --filter "unreliable_data_transfer/*"
+    ./test-tcp --filter "unreliable_out_of_order/*"
+
+The ``--filter`` option uses regular expressions, so you can further constrain the tests
+that will be run. For example, to only run the "echo" tests from the data transfer
+tests, you could run the following::
+
+    ./test-tcp --filter "data_transfer/echo*"
+
+
+Producing a grade report
+------------------------
+
+To produce a grade report (showing how many points were scored in each test),
+run ``make grade`` in the same directory where you built chiTCP. Make sure
+you do so *after* running the tests (``make grade`` will not run the tests
+for you; it will simply analyze the test results, which are saved to a 
+``results.json`` file by default, and determine your score based on that).
+
+Note: ``make grade`` will still work if you ran the tests just for a subset
+of the tests (e.g., by selecting just one category). In this case, any test
+that was not run will be reported as scoring zero points.
+
+
 Minimal logging
 ~~~~~~~~~~~~~~~
 
@@ -206,36 +252,7 @@ tests::
    export CHITCPD_PORT=30287  # Substitute for a different number
    export CHITCPD_SOCK=/tmp/chitcpd.socket.$USER
 
-Running categories of tests
----------------------------
 
-To run entire categories of tests, simply run the following:
-
-* TCP connection establishment::
-
-    ./test-tcp --filter "conn_init/*"
-  
-* TCP connection termination::
-
-    ./test-tcp --filter "conn_term/*"
-
-* TCP data transfer::
-
-    ./test-tcp --filter "data_transfer/*"
-
-* TCP over an unreliable network::
-
-    ./test-tcp --filter "unreliable_conn_init/*"
-    ./test-tcp --filter "unreliable_conn_term/*"
-    ./test-tcp --filter "unreliable_data_transfer/*"
-    ./test-tcp --filter "unreliable_out_of_order/*"
-    
-The ``--filter`` option uses regular expressions, so you can further constrain the tests
-that will be run. For example, to only run the "echo" tests from the data transfer
-tests, you could run the following::
-
-    ./test-tcp --filter "data_transfer/echo*"
-    
 Echo server and client
 ----------------------
 
