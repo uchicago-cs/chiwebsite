@@ -84,6 +84,10 @@ To run entire categories of tests, simply run the following:
 
     ./test-tcp --filter "data_transfer/*"
 
+* Timer API::
+
+    ./test-tcp --filter "multitimer/*"
+
 * TCP over an unreliable network::
 
     ./test-tcp --filter "unreliable_conn_init/*"
