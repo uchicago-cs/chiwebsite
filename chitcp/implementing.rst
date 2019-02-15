@@ -231,7 +231,9 @@ The parameters to the function are:
    -  ``PACKET_ARRIVAL``: A packet has arrived through the network and
       needs to be processed (RFC 793 calls this “SEGMENT ARRIVES”)
 
-   -  ``TIMEOUT``: A timeout (e.g., a retransmission timeout) has happened.
+   -  ``TIMEOUT_RTX``: A retransmission timeout has happened.
+
+   -  ``TIMEOUT_PST``: The persist timer has timed out.
 
 To implement the TCP protocol, you will need to implement the handler functions
 in ``tcp.c``. You should not need to modify any other file. However, you will
