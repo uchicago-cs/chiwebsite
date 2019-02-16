@@ -53,10 +53,13 @@ While implementing these functions, please note the following:
   variable), it should not exit until the multitimer is freed. In other words,
   you should never have to kill and re-create your timer thread.
 - You are allowed to add fields to the ``single_timer_t`` and ``multi_timer_t`` structs.
+  Do not remove or rename any of the fields already included in ``single_timer_t``.
 - You are allowed to add additional functions to the API, but please note that the functions
   included in the API should already be enough to implement retransmission timers and
   persist timers in TCP. In particular, take into account that "resetting" a timer is
   effectively just a cancel operation followed by setting the timer again.
+- You are not required to implement ``mt_chilog`` or ``mt_chilog_single_timer``, but
+  we encourage you to do so, as these functions will come in handy when debugging your code.
 
 
 Retransmissions
@@ -67,7 +70,7 @@ The RTO (Retransmission TimeOut) should be computed as specified in  `[RFC6298 ย
 
 Please note the following:
 
-- We will assume a clock granularity of 50 millisecond. Furthermore, while the RFC requires
+- We will assume a clock granularity of 50 milliseconds. Furthermore, while the RFC requires
   that the RTO always be at least one second, we will instead use a minimum RTO of 200 milliseconds.
 - You must implement go-back-N so, in `[RFC6298 ยง 5.4] <https://tools.ietf.org/html/rfc6298#section-5>`__,
   you should retransmit the earliest segment that has not been acknowledged,
@@ -109,7 +112,7 @@ We suggest you follow this approach:
   In this part of the assignment, you are allowed to silently drop any packets
   that you cannot immediately acknowledge. So, for example, in the above example,
   peer B would be allowed to drop packet 200-299 (which would be retransmitted
-  by peer A). In the next part of the assignment, you will have to account for
+  by peer A). In the last part of the assignment, you will have to account for
   these "gaps" in the received data.
 
 
@@ -164,9 +167,20 @@ dropped or delayed.
 
 The handling of both cases is the same: if you receive a packet that cannot
 be immediately acknowledged (because there are gaps in the sequence), you
-must buffer those packets until the sequence is complete. Whenever a gap is 
+must buffer those packets until the sequence is complete. Whenever a gap is
 filled, you must send a cumulative ACK of the last byte of contiguous data.
 
-To implement this part, you are allowed to add additional fields to 
-the ``tcp_data_t`` struct.
+We suggest you follow this approach:
 
+- Since the circular buffer will not allow you to write data in arbitrary locations (and
+  only after the last byte of data in the buffer), you should store any out-of-order
+  segments in a new list in the ``tcp_data_t`` struct. This list should be sorted by
+  increasing sequence number.
+- Whenever a new segment arrives, check the head of the out-of-order list to see
+  whether there are any contiguous segments. For example, if you receive a segment
+  with bytes 100-199, and the head of the list contains a segment with bytes
+  200-299, that means the segment in the out-of-order list can now be processed.
+- When this happens, we suggest that you simply remove the packet from the out-of-order
+  list and add it to the pending packets queue. This will result in a ``PACKET_ARRIVAL``
+  event and the out-of-order segment will be processed as usual by your packet arrival
+  handler.
