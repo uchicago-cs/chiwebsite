@@ -443,7 +443,6 @@ Ping from ``host1`` to ``host4`` and viceversa::
 ::
 
     mininet> host4 ping -c 4 host1
-    nohup: appending output to 'nohup.out'
     PING 10.1.0.42 (10.1.0.42) 56(84) bytes of data.
     64 bytes from 10.1.0.42: icmp_seq=1 ttl=61 time=48.7 ms
     64 bytes from 10.1.0.42: icmp_seq=2 ttl=61 time=41.7 ms
