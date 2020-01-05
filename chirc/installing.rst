@@ -14,10 +14,9 @@ to get the chirc code.
 Software Requirements
 ---------------------
 
-chirc itself has not special software requirements beyond a standard C compiler and the
-standard C library. However, the automated tests (described in :ref:`chirc-testing`) require
-the following software:
+chirc has the following software requirements:
 
+* `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
 * Python 3.4 or above
 * `py.test <http://pytest.org>`_, including plugins ``pytest-html`` and ``pytest-json``. All of these can be
   installed using pip (``pip3 install pytest pytest-html pytest-json``)
@@ -26,26 +25,48 @@ the following software:
 Building
 --------
 
-Once you have the chirc code, you can build it simply by running Make::
+The first time you download the chirc code to your machine, you must run the
+following from the root of the chirc code tree:
 
-   make
+::
 
-This will generate an executable called ``chirc`` that accepts the following
-parameters:
+    mkdir build
+    cd build
+    cmake ..
 
-* ``-p``: The port on which the server will listen.
-* ``-o``: To specify the "operator password".
-* ``-q``, ``-v``, or ``-vv``: To control the level of logging. See "Logging" section below. 
+This will generate a number of files necessary to build and test chirc.
 
-To modify the code, you should *only* add files to the ``src/``
-directory. Take into account that, if you add additional ``.c`` files,
-you will need to modify the ``Makefile`` file so they will be
-included in the build (more specifically, you will need to include a new
-object file in the ``OBJS`` variable).
+Once you have done this, simply run ``make`` inside the ``build`` directory
+to build chirc. This will generate the ``chirc`` executable.
 
+You should follow these conventions when modifying the provided code:
+
+- You are allowed to modify the files inside ``src/``, as well as the ``CMakeLists.txt``
+  file. Do *not* modify any other files.
+- If you add ``.c`` files to the ``src/`` directory, you must also add that file
+  to the list of files specified in the ``add_executable`` command in the ``CMakeLists.txt`` file.
+  Otherwise, the file will not be compiled and linked.
+- If you want to use third-party libraries, add them inside the ``lib/`` directory
+  (do *not* add them in the ``src/`` directory!). If the third-party library has header
+  files you need to ``#include`` in your code, *do not* copy the header files into
+  the ``src/`` directory. Instead, add the library's directory to the list
+  of directories in the ``include_directories`` command in the ``CMakeLists.txt`` file.
+  This way, you will be able to ``#include`` header files in those directories.
+
+By default, ``make`` will only print the names of the files it is building. To
+enable a more verbose output (including the exact commands that make is running
+during the build process), just run ``make`` like this::
+
+    make VERBOSE=1
 
 Running
 -------
+
+The ``chirc`` executable accepts the following parameters:
+
+* ``-p``: The port on which the server will listen.
+* ``-o``: To specify the "operator password".
+* ``-q``, ``-v``, or ``-vv``: To control the level of logging. See "Logging" section below.
 
 You need to run the executable with at least the ``-o``
 option, although this option will not be relevant until the third assignment. For

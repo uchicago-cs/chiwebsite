@@ -3,7 +3,7 @@
 Testing your Implementation
 ===========================
 
-There are two ways of testing your implementation:
+There are two ways to test your implementation:
 
 #. **Using the provided set of automated tests**. These provide a convenient
    mechanism to verify whether a specific command or set of commands is
@@ -16,95 +16,132 @@ Using the automated tests
 
 chirc includes a comprehensive set of automated tests that will allow you to
 test whether your implementation is correct. To run the automated tests,
-just run the following::
+just run one the following from inside the ``build/`` directory::
 
-   make tests
+   make assignment-1
+   make assignment-2
+   make assignment-3
    
-This will invoke a testing tool called py.test that will run a series of
-individual tests, and will provide a summary of how many tests ran correctly
-and how many failed (including the output and error messages for all the
-tests that failed). It will also produce an HTML file called ``report.html``
-with a summary of the test results.
+Each of the above will build your code, will run all the tests for the
+corresponding assignment, and will provide a summary of how many points
+you scored in that assignment's tests.
+
+If you've run the tests already, and simply want to print out the points summary
+again, you can use the following make target::
+
+   make grade-assignment-N
+
+(where ``N`` is the assignment number)
+
+Invoking py.test directly
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can have greater control on what tests are run by invoking py.test directly.
+When doing so, you must make sure that you've built the latest version of your
+code (using the make targets above will do so automatically, but running
+py.test directly will not). We encourage you to always run py.test like this::
+
+    make && py.test <PYTEST OPTIONS>
+
+Where ``<PYTEST OPTIONS>`` are the options described in the sections below.
+A few parameters that are useful across the board are the following:
+
+- ``-x``: Stop after the first failed test. This can be useful when you're failing
+  multiple tests, and want to focus on debugging one failed test at a time.
+- ``-s``: Do not suppress output from successful tests. By default, py.test only
+  shows the output produced by chirc if a test fails. In some cases, you may want
+  to look at the log messages of a successful test; use this option to force py.test
+  to show the output for that test.
+- ``--chirc-loglevel N``: This controls the logging level of the chirc server run
+  by the tests. You can specify the following values for ``N``:
+
+  - ``-1``: Corresponds to calling chirc with the ``-q`` option.
+  - ``0``: Corresponds to the default level of logging.
+  - ``1``: Corresponds to calling chirc with the ``-v`` option.
+  - ``2``: Corresponds to calling chirc with the ``-vv`` option.
+
 
 Running categories of tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-However, ``make tests`` will run *all* the tests (nearly all
-of which will fail when you start working on your project), the output
-may not be too useful. The tests are divided into several
-categories corresponding to the sections of the three assignments, and you
-can run the tests for just one category like this::
+If you want to run only a specific category of tests, you can use the
+``--chirc-category`` parameter. For example::
 
-   TEST_ARGS="-C CATEGORY" make tests
-   
-Where ``CATEGORY`` is the category of tests you want to run. All the categories
-are listed below:
+    py.test --chirc-category PRIVMSG_NOTICE
+
+The available categories are the following:
 
 - Assignment 1
 
-  ::
+  - ``BASIC_CONNECTION``
 
-      TEST_ARGS="-C BASIC_CONNECTION" make tests
-      
 - Assignment 2
 
-  ::
-  
-      TEST_ARGS="-C CONNECTION_REGISTRATION" make tests
-
-      TEST_ARGS="-C PRIVMSG_NOTICE" make tests
-
-      TEST_ARGS="-C PING_PONG" make tests
-
-      TEST_ARGS="-C MOTD" make tests
-
-      TEST_ARGS="-C LUSERS" make tests
-
-      TEST_ARGS="-C WHOIS" make tests
-
-      TEST_ARGS="-C ERR_UNKNOWN" make tests
-
-      TEST_ARGS="-C ROBUST" make tests
+  - ``CONNECTION_REGISTRATION``
+  - ``PRIVMSG_NOTICE``
+  - ``PING_PONG``
+  - ``MOTD``
+  - ``LUSERS``
+  - ``WHOIS``
+  - ``ERR_UNKNOWN``
+  - ``ROBUST``
 
 - Assignment 3
 
-  ::
-  
-      TEST_ARGS="-C CHANNEL_JOIN" make tests
-
-      TEST_ARGS="-C CHANNEL_PRIVMSG_NOTICE" make tests
-
-      TEST_ARGS="-C CHANNEL_PART" make tests
-
-      TEST_ARGS="-C CHANNEL_TOPIC" make tests
-
-      TEST_ARGS="-C MODES" make tests
-
-      TEST_ARGS="-C AWAY" make tests
-
-      TEST_ARGS="-C OPER" make tests
-
-      TEST_ARGS="-C NAMES" make tests
-
-      TEST_ARGS="-C LIST" make tests
-
-      TEST_ARGS="-C WHO" make tests
-
-      TEST_ARGS="-C UPDATE_ASSIGNMENT2" make tests      
+  - ``CHANNEL_JOIN``
+  - ``CHANNEL_PRIVMSG_NOTICE``
+  - ``CHANNEL_PART``
+  - ``CHANNEL_TOPIC``
+  - ``MODES``
+  - ``AWAY``
+  - ``OPER``
+  - ``NAMES``
+  - ``LIST``
+  - ``WHO``
+  - ``UPDATE_ASSIGNMENT``
       
 Running individual tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to focus on debugging an individual test that is failing, you can also run a single test
-by using the ``-k`` parameter::
+If you want to focus on debugging an individual test that is failing, you can
+run a single test by using the ``-k`` parameter::
 
-   TEST_ARGS="-k test_connect_both_messages_at_once" make tests
+   py.test -k test_connect_both_messages_at_once
    
 The name of each failed test can be found after the ``FAILURES`` line in the output
 from the tests. For example::
 
    ===================================== FAILURES =====================================
    ______________ TestBasicConnection.test_connect_both_messages_at_once ______________
+
+Debugging a test with a debugger
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to debug a test with a debugger, such as gdb, you will have to run chirc separately
+from the tests (using the debugger), and then instruct the tests to connect to that server (instead of having the
+tests launch chirc on their own).
+
+If using gdb, you would have to run chirc like this::
+
+    gdb --args ./chirc -o foobar -p 7776
+
+This starts chirc using port 7776 (don't forget to then use gdb's ``run`` command
+to actually run the server).
+
+Similarly, if using Valgrind, you would have to run chirc like this::
+
+    valgrind ./chirc -o foobar -p 7776
+
+Next, you will use the ``--chirc-external-port PORT`` option to instruct py.test to
+use the server you're running with a debugger::
+
+    py.test --chirc-external-port 7776 -k test_connect_both_messages_at_once
+
+Take into account that the ``--chirc-external-port`` only makes sense when running a single
+test, so you will also have to use the ``-k`` option to specify what test to run.
+
+Sniffing network traffic during a test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When running an individual test, it can sometimes be useful to take a peek at the exact
 messages that are being exchanged between a client and your server.
@@ -114,99 +151,42 @@ automated tests. Take into account that ``tshark``, like Wireshark,
 requires special privileges, so you may not be able to run it on your
 school's computers and will instead have to run it on your own machine.
 
-To capture the network traffic from a single test, you will need to run py.test
-manually (instead of ``make tests``) to force the tests to use a specific TCP port.
-For example, to run the ``test_connect_simple`` test::
+By default, py.test will randomize the port that chirc binds to. To force it to
+use a specific port, you will need to use the ``--chirc-port PORT`` option.
+For example::
 
-   py.test -k test_connect_simple --chirc-port=7776 --chirc-exe=./chirc
+   py.test -k test_connect_simple1 --chirc-port=7776
    
 Note that we use port 7776 to avoid conflicts with the standard IRC port (6667).
    
 On a separate terminal, run ``tshark`` like this::
 
    tshark -i lo \
-          -d tcp.port==7776,irc -R irc -V -O irc -T fields -e irc.request -e irc.response \
+          -d tcp.port==7776,irc -Y irc -V -O irc -T fields -e irc.request -e irc.response \
           tcp port 7776
 
 If you then run the test, ``tshark`` should print out the following (assuming
 a complete implementation of chirc)::
 
-   NICK user1  
-   USER user1 * * :User One   
-      :haddock 001 user1 :Welcome to the Internet Relay Network user1!user1@localhost
-      :haddock 002 user1 :Your host is haddock, running version chirc-0.3.9
-      :haddock 003 user1 :This server was created 2016-01-03 10:46:01
-      :haddock 004 user1 haddock chirc-0.3.9 ao mtov
-      :haddock 251 user1 :There are 1 users and 0 services on 1 servers
-      :haddock 252 user1 0 :operator(s) online
-      :haddock 253 user1 0 :unknown connection(s)
-      :haddock 254 user1 0 :channels formed
-      :haddock 255 user1 :I have 1 clients and 1 servers
-      :haddock 422 user1 :MOTD File is missing
+    NICK user1
+    USER user1 * * :User One
+        :haddock 001 user1 :Welcome to the Internet Relay Network user1!user1@localhost
+        :haddock 002 user1 :Your host is haddock, running version chirc-0.4.4
+        :haddock 003 user1 :This server was created 2020-01-05 11:54:02
+        :haddock 004 user1 haddock chirc-0.4.4 ao mtov
+        :haddock 251 user1 :There are 1 users and 0 services on 1 servers
+        :haddock 252 user1 0 :operator(s) online
+        :haddock 253 user1 0 :unknown connection(s)
+        :haddock 254 user1 0 :channels formed
+        :haddock 255 user1 :I have 1 clients and 0 servers
+        :haddock 422 user1 :MOTD File is missing
+
 
 Take into account that the automated tests close the connection as
 soon as the test has passed, which means sometimes some messages will
-not be sent. For example, in this specific test, ``tshark`` may not
+not be sent.
 
-Producing a grade report
-~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you have run all the tests, you can run the following command to produce
-a summary of how many tests you are passing, and the points scored on each category
-of tests::
-
-   make grade
-   
-Note: The above command will only produce meaninful output after you've run ``make tests``.
-
-A full implementation of chirc would produce a summary like this::
-
-   Assignment 1
-   =========================================================================
-   Category                            Passed / Total       Score  / Points    
-   -------------------------------------------------------------------------
-   Basic Connection                    15     / 15          50.00  / 50.00     
-   -------------------------------------------------------------------------
-                                                    TOTAL = 50.00  / 50        
-   =========================================================================
-   
-   Assignment 2
-   =========================================================================
-   Category                            Passed / Total       Score  / Points    
-   -------------------------------------------------------------------------
-   Connection Registration             5      / 5           35.00  / 35.00     
-   PRIVMSG and NOTICE                  10     / 10          30.00  / 30.00     
-   PING and PONG                       6      / 6           2.50   / 2.50      
-   MOTD                                2      / 2           5.00   / 5.00      
-   LUSERS                              7      / 7           10.00  / 10.00     
-   WHOIS                               2      / 2           10.00  / 10.00     
-   ERR_UNKNOWN                         3      / 3           2.50   / 2.50      
-   Robustness                          9      / 9           5.00   / 5.00      
-   -------------------------------------------------------------------------
-                                                    TOTAL = 100.00 / 100       
-   =========================================================================
-   
-   Assignment 3
-   =========================================================================
-   Category                            Passed / Total       Score  / Points    
-   -------------------------------------------------------------------------
-   JOIN                                5      / 5           15.00  / 15.00     
-   PRIVMSG and NOTICE to channels      6      / 6           15.00  / 15.00     
-   PART                                13     / 13          10.00  / 10.00     
-   TOPIC                               10     / 10          10.00  / 10.00     
-   User and channel modes              57     / 57          25.00  / 25.00     
-   AWAY                                6      / 6           5.00   / 5.00      
-   NAMES                               11     / 11          5.00   / 5.00      
-   LIST                                5      / 5           5.00   / 5.00      
-   WHO                                 6      / 6           5.00   / 5.00      
-   Update Assignment 2                 5      / 5           5.00   / 5.00      
-   -------------------------------------------------------------------------
-                                                    TOTAL = 100.00 / 100       
-   =========================================================================
-
-NOTE: The points assigned to each category may not be the ones shown above.
-These points are configurable by the instructor, who may decide to allocate
-points in different ways.
 
 Manually logging into your IRC server
 -------------------------------------
