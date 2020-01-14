@@ -21,6 +21,7 @@ just run one the following from inside the ``build/`` directory::
    make assignment-1
    make assignment-2
    make assignment-3
+   make assignment-4
    
 Each of the above will build your code, will run all the tests for the
 corresponding assignment, and will provide a summary of how many points
@@ -69,37 +70,12 @@ If you want to run only a specific category of tests, you can use the
 
     py.test --chirc-category PRIVMSG_NOTICE
 
-The available categories are the following:
+To see the exact categories available in each assignment, run the following::
 
-- Assignment 1
+    make categories-assignment-N
 
-  - ``BASIC_CONNECTION``
+(where ``N`` is the assignment number)
 
-- Assignment 2
-
-  - ``CONNECTION_REGISTRATION``
-  - ``PRIVMSG_NOTICE``
-  - ``PING_PONG``
-  - ``MOTD``
-  - ``LUSERS``
-  - ``WHOIS``
-  - ``ERR_UNKNOWN``
-  - ``ROBUST``
-
-- Assignment 3
-
-  - ``CHANNEL_JOIN``
-  - ``CHANNEL_PRIVMSG_NOTICE``
-  - ``CHANNEL_PART``
-  - ``CHANNEL_TOPIC``
-  - ``MODES``
-  - ``AWAY``
-  - ``OPER``
-  - ``NAMES``
-  - ``LIST``
-  - ``WHO``
-  - ``UPDATE_ASSIGNMENT``
-      
 Running individual tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
