@@ -181,7 +181,7 @@ Take into account the following:
    ``NICK`` and ``USER`` and have completed their registration).
 
 -  The number of clients in the ``RPL_LUSERME`` reply is the total
-   number of connections, including unknown connections.
+   number of connections, *not* including unknown connections.
 
 ``WHOIS``
 ---------
