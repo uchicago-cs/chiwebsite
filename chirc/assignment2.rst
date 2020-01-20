@@ -170,13 +170,15 @@ Take into account the following:
    The other replies are only sent back if a non-zero count is found for
    them.”)
 
--  An “unknown connection” is any connected client that isn’t fully
-   registered (i.e., any client that hasn’t successfully sent ``NICK``
-   and ``USER``).
+-  An “unknown connection” is any connected client for which we cannot yet 
+   tell whether the connection corresponds to a user (or, starting in
+   Assignment 5, another server). Once a connection receives either
+   a ``NICK`` or a ``USER`` command, we can assume that it corresponds
+   to a user connection.
 
 -  The number of users in the ``RPL_LUSERCLIENT`` reply is the number of
-   registered users (i.e., all open connections, minus unknown
-   connections).
+   registered users (i.e., connections that have successfully sent both
+   ``NICK`` and ``USER`` and have completed their registration).
 
 -  The number of clients in the ``RPL_LUSERME`` reply is the total
    number of connections, including unknown connections.
