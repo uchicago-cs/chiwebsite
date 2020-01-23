@@ -93,8 +93,13 @@ You are not expected to read all of these documents. More specifically:
    the “#” namespace, and that we will not be supporting server
    networks.
 
--  We will not be implementing any part of
-   `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__.
+-  In the fifth assignment, you will implement a subset of
+   `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__,
+   which will require implementing and updating some parts of
+   `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. You will not be
+   dealing with server-to-server connections until the fifth assignment,
+   so you can safely skip reading `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__
+   until then.
 
 Finally, you should take into account that, although IRC has an official
 specification, most IRC servers and clients do not conform to these

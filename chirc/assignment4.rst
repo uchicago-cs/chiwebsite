@@ -1,4 +1,4 @@
-.. _chirc-assignment2.5:
+.. _chirc-assignment4:
 
 Assignment 4: Abridged version of Assignments 2 and 3
 =======================================================

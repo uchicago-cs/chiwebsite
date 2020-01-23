@@ -13,4 +13,5 @@ chirc
    assignment2.rst
    assignment3.rst
    assignment4.rst
+   assignment5.rst
    testing.rst
