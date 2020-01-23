@@ -32,7 +32,7 @@ So, we will be making the following simplifying assumptions:
 
 .. note::
 
-   This assignment was introduced in 2020 and, at the moment, all the tests involve a network with just two servers. So, for now, we are ommiting certain parts of the server-server protocol that only come into play with more complex networks (such as hop counts, server tokens, etc.). Future versions of this assignment will likely support more complex networks.
+   This assignment was introduced in 2020 and, at the moment, all the tests involve a network with just two servers. So, for now, we are omitting certain parts of the server-server protocol that only come into play with more complex networks (such as hop counts, server tokens, etc.). Future versions of this assignment will likely support more complex networks.
 
    However, your implementation *cannot* implement an IRC network by having your server refer just to "the other server". You must still use data structures that can potentially support multiple servers in the network, even if that network currently won't have more than two servers.
 
@@ -55,7 +55,7 @@ The ``chirc`` executable accepts an ``-n`` option to specify a network specifica
 
     ./chirc -n 2servers.txt -s irc-1.example.net -o operpasswd
 
-This would start a server on port ``6667`` (the port specified for ``irc-1.example.net``). When starting the server, we do not take the hostname/IP into consideration, as that is only used when estabilishing connections between servers. Also note how we still have to specify an operator password, which is distinct from the server password.
+This would start a server on port ``6667`` (the port specified for ``irc-1.example.net``). When starting the server, we do not take the hostname/IP into consideration, as that is only used when establishing connections between servers. Also note how we still have to specify an operator password, which is distinct from the server password.
 
 Similarly, we would start the second server like this::
 
@@ -72,7 +72,7 @@ Incorrect values for these parameters (e.g., specifying ``-s irc-42.example.net`
 
 Similar to how a user registers by sending a ``NICK`` and ``PASS`` command, a server connects to another server by sending a ``PASS`` and ``SERVER`` commands. We will refer to the server that initiates the connection (i.e., the one that sends ``PASS`` and ``SERVER``) as the *active* server, and we will refer to the one that receives the connection as the *passive* server.
 
-You must add support for these commands, as specified in `[RFC2813 §4.1.1 <https://tools.ietf.org/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__.
+You must add support for these commands, as specified in `[RFC2813 §4.1.1 <https://tools.ietf.org/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__].
 
 Take into account the following:
 
@@ -118,17 +118,21 @@ Note how the ``SERVER`` message that is sent back *does* include a ``<token>`` p
 ``NICK``
 --------
 
-You must implement the server-to-server form of the ``NICK`` command specified in `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__. Whenever a user connects to a server, the server will send this special form of the ``NICK`` command to all the servers it is connected to, to notify them that a new user has joined the network. So, if you receive such a ``NICK`` command, you should update your list of users accordingly (but taking into account that this represents a user connected to a different server).
+You must implement the server-to-server form of the ``NICK`` command specified in `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__]. Whenever a user connects to a server, the server will send this special form of the ``NICK`` command to all the servers it is connected to, to notify them that a new user has joined the network. So, if you receive such a ``NICK`` command, you should update your list of users accordingly (but taking into account that this represents a user connected to a different server).
 
 Take into account the following:
 
 - You can set ``<hopcount>`` and ``<servertoken>`` to always be ``1``.
 - You can set ``<umode>`` to be ``+``.
 
+.. note::
+
+   Ordinarily, a server registration is followed by each server sending a ``NICK`` command for every user that is already connected to the server (to inform the other server of the users it currently has). You do not have to do this, and we do not currently test for this. You only need to send a ``NICK`` command to the other servers when a new user connects to a server.
+
 ``CONNECT``
 -----------
 
-You will be able to test the ``PASS``, ``SERVER``, and ``NICK`` command by running a single server and having a client pretend to be another server (in fact, several of the tests do just this). However, to create an actual IRC network, we will need one server to connect to another. This is done using the ``CONNECT`` command specified in `[RFC2812 §3.4.7 <https://tools.ietf.org/html/rfc2812#section-3.4.7>`__
+You will be able to test the ``PASS``, ``SERVER``, and ``NICK`` command by running a single server and having a client pretend to be another server (in fact, several of the tests do just this). However, to create an actual IRC network, we will need one server to connect to another. This is done using the ``CONNECT`` command specified in `[RFC2812 §3.4.7 <https://tools.ietf.org/html/rfc2812#section-3.4.7>`__].
 
 Take into account the following:
 
