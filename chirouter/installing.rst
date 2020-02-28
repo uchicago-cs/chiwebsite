@@ -14,26 +14,32 @@ to get the chirouter code.
 Software Requirements
 ---------------------
 
-The chirouter code itself has no special software requirements beyond a standard C compiler and the
-standard C library. However, running chirouter requires using `mininet <http://mininet.org/>`_ (2.2.1 or higher), a 
-network emulator that requires root access on a Linux machine.
-If you do not have root access on your
-personal computer, we recommend running mininet inside a virtual machine (the mininet website actually
-provides some ready-to-use virtual machines).
+chirouter has the following requirements:
 
-chirouter also requires `OpenFlow <https://openflow.stanford.edu/>`_'s `POX <https://openflow.stanford.edu/display/ONL/POX+Wiki>`_,
-but this is already included in the chirouter code.
+- `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
+- `mininet <http://mininet.org/>`_ (2.2.1 or higher), a network emulator that requires root access on a Linux machine. If you do not have root access on your personal computer, we recommend running mininet inside a virtual machine (the mininet website actually provides some ready-to-use virtual machines).
+
+chirouter also requires `OpenFlow <https://openflow.stanford.edu/>`_'s `POX <https://openflow.stanford.edu/display/ONL/POX+Wiki>`_, but this is already included in the chirouter code.
 
 
 Building
 --------
 
-Once you have the chirouter code, you can build it simply by running Make::
+The first time you download the chirouter code to your machine, you must run the
+following from the root of the chirouter code tree:
 
-   make
+::
 
-This will generate an executable called ``chirouter`` that accepts the following
-parameters:
+    mkdir build
+    cd build
+    cmake ..
+
+This will generate a number of files necessary to build chirouter.
+
+Once you have done this, simply run ``make`` inside the ``build`` directory
+to build chirc. This will generate the ``chirouter`` executable.
+
+This executable accepts the following parameters:
 
 * ``-p PORT``: [Optional] Port that chirouter will listen on (mininet and POX will use this port
   to send the router its configuration information). Defaults to 23300.
