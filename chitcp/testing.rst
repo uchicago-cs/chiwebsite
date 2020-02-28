@@ -208,6 +208,10 @@ that one of the packets arrived out of order:
 
 .. image:: out_of_order_wireshark.png
 
+Finally, take into account that the ``tests/pcap/`` directory contains pcap files generated
+with the chiTCP reference solution. These files can give you a better sense of what the
+expected behaviour is on any given test.
+
 Using gdb to debug a test
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -499,11 +503,11 @@ To install the dissector, follow these steps:
    having root privileges. If you are on a Debian/Ubuntu system, just
    follow these instructions:
 
-     http://ask.wireshark.org/questions/7523/ubuntu-machine-no-interfaces-listed
+   http://ask.wireshark.org/questions/7523/ubuntu-machine-no-interfaces-listed
 
    For other systems, there are general instructions here:
 
-     http://wiki.wireshark.org/CaptureSetup/CapturePrivileges
+   http://wiki.wireshark.org/CaptureSetup/CapturePrivileges
 
 Using the dissector
 ~~~~~~~~~~~~~~~~~~~
