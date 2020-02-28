@@ -138,7 +138,11 @@ that will operate as follows:
   send buffer is empty), reset the timer to expire after RTO seconds.
 - If the timer expires, and there is data to send, then send a probe segment with 
   a single byte of data from the send buffer. Reset the timer to expire after
-  RTO seconds. Note: this probe segment should not be added to the retransmission queue.
+  RTO seconds. Careful: you must still update SND.NXT.
+- If the timer expires again, you must send a probe segment with the same byte of
+  data. While you could use the retransmission queue for this, we suggest you manage
+  this probe segment separately (in other words, we recommend you do *not* add the
+  probe segments to the retransmission queue)
 
 Note: While `[RFC1122 § 4.2.2.17] <https://tools.ietf.org/html/rfc1122#section-4.2.2.17>`__
 suggests increasing the persist timer exponentially, we will not do so here.
