@@ -10,7 +10,7 @@ In this assignment, you should follow the instructions provided in Assignments 2
 
 - Do not implement the ``MOTD`` command.
 - You do not need to pass the "Robustness" tests, and they will not contribute to your score.
-- Do not implement the ``TOPIC`` command.
+- Do not implement the ``TOPIC`` command. You also do not need to support the ``RPL_TOPIC`` reply in other commands.
 - You will implement a greatly simplified version of "User and channel modes". More specifically:
 
   - You only need to support the user operator mode and the channel operator mode. This means you do not need to implement a general-purpose mechanism for keeping track of modes in users, channels, and in channel memberships. You are allowed to have some sort of ``is_irc_operator`` flag to keep track of whether a user is an IRC operator or not, and you are allowed to associate some sort of "list of users who are operators in this channel" to keep track of who the channel operators are.
