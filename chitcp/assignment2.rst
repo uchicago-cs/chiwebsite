@@ -171,8 +171,7 @@ dropped or delayed.
 
 The handling of both cases is the same: if you receive a packet that cannot
 be immediately acknowledged (because there are gaps in the sequence), you
-must buffer those packets until the sequence is complete. Whenever a gap is
-filled, you must send a cumulative ACK of the last byte of contiguous data.
+must buffer those packets until the sequence is complete.
 
 We suggest you follow this approach:
 
