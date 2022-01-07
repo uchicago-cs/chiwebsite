@@ -5,7 +5,7 @@ Installing, Building, and Running chirouter
 
 The source code for chirouter can be found in the following GitHub repository:
 
-    https://github.com/uchicago-cs/chirouter
+https://github.com/uchicago-cs/chirouter
 
 To work on the assignments, all you need to do is clone this repository. However,
 please note that your instructor may give you more specific instructions on how

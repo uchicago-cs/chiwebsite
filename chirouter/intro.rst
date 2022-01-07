@@ -23,7 +23,7 @@ The chirouter documentation is divided into the following sections:
   chirouter.
 * :ref:`chirouter-implementing`: A guide to implementing chirouter.
 * :ref:`chirouter-assignment`: The work you must complete in this assignment.
-* :ref:`chitcp-testing`: Suggestions and strategies for testing your
+* :ref:`chirouter-testing`: Suggestions and strategies for testing your
   implementation.
    
 Acknowledgements

@@ -69,7 +69,7 @@ specifically, the one that doesn't require supporting ARP. When you receive a me
 that triggers one of the ICMP responses described in that section of the assignment,
 you can simply use the source Ethernet address as the destination address of the reply.
 
-To test whether you're responding to Echo Replies correctly, just ping the router like
+To test whether you're responding to Echo Requests correctly, just ping the router like
 this::
 
    mininet> client1 ping -c 4 10.0.0.1
