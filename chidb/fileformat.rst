@@ -270,7 +270,7 @@ A table page is composed of four section: the **page header**, the
 **cells**, the **cell offset array**, and **free space**. 
 
 To understand how they relate to each other, it is important to understand
-how cells are laid out in a page. A table page is, to put is simply, a
+how cells are laid out in a page. A table page is, to put it simply, a
 container of cells. The bytes in a page of size :math:`PageSize` are numbered
 from 0 to (:math:`PageSize-1`). Byte 0 is the *top* of the
 page, and byte (:math:`PageSize-1`) is the *bottom* of the
