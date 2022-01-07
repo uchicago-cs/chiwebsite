@@ -93,9 +93,7 @@ following from the root of the chiTCP code tree:
 
 ::
 
-    mkdir build
-    cd build
-    cmake ..
+    cmake -B build/
 
 This will verify whether you have the necessary tools to build chiTCP and will
 also generate a number of files required to build chiTCP. You should only

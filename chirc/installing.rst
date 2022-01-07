@@ -26,18 +26,19 @@ Building
 --------
 
 The first time you download the chirc code to your machine, you must run the
-following from the root of the chirc code tree:
+following from the root of the chirc code tree::
 
-::
+    cmake -B build/
 
-    mkdir build
-    cd build
-    cmake ..
-
-This will generate a number of files necessary to build and test chirc.
+This will create a ``build`` directory containing several files necessary to build and test chirc.
 
 Once you have done this, simply run ``make`` inside the ``build`` directory
-to build chirc. This will generate the ``chirc`` executable.
+to build chirc::
+
+    cd build/
+    make
+
+This will generate the ``chirc`` executable.
 
 You should follow these conventions when modifying the provided code:
 
