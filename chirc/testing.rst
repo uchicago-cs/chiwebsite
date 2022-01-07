@@ -22,7 +22,8 @@ just run one the following from inside the ``build/`` directory::
    make assignment-2
    make assignment-3
    make assignment-4
-   
+   make assignment-5
+
 Each of the above will build your code, will run all the tests for the
 corresponding assignment, and will provide a summary of how many points
 you scored in that assignment's tests.
