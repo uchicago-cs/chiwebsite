@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'The UChicago χ-Projects'
-copyright = u'2010-2017, The University of Chicago'
+copyright = u'2010-2022, The University of Chicago'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -178,7 +178,7 @@ html_context = {
                 }
 
 def setup(app):
-    app.add_stylesheet("chiweb.css")
+    app.add_css_file("chiweb.css")
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
