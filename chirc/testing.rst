@@ -43,7 +43,7 @@ When doing so, you must make sure that you've built the latest version of your
 code (using the make targets above will do so automatically, but running
 py.test directly will not). We encourage you to always run py.test like this::
 
-    make && py.test <PYTEST OPTIONS>
+    make && py.test ../tests/ <PYTEST OPTIONS>
 
 Where ``<PYTEST OPTIONS>`` are the options described in the sections below.
 A few parameters that are useful across the board are the following:
@@ -69,7 +69,7 @@ Running categories of tests
 If you want to run only a specific category of tests, you can use the
 ``--chirc-category`` parameter. For example::
 
-    py.test --chirc-category PRIVMSG_NOTICE
+    py.test ../tests/ --chirc-category PRIVMSG_NOTICE
 
 To see the exact categories available in each assignment, run the following::
 
@@ -83,7 +83,7 @@ Running individual tests
 If you want to focus on debugging an individual test that is failing, you can
 run a single test by using the ``-k`` parameter::
 
-   py.test -k test_connect_both_messages_at_once
+   py.test ../tests/ -k test_connect_both_messages_at_once
    
 The name of each failed test can be found after the ``FAILURES`` line in the output
 from the tests. For example::
@@ -112,7 +112,7 @@ Similarly, if using Valgrind, you would have to run chirc like this::
 Next, you will use the ``--chirc-external-port PORT`` option to instruct py.test to
 use the server you're running with a debugger::
 
-    py.test --chirc-external-port 7776 -k test_connect_both_messages_at_once
+    py.test ../tests/ --chirc-external-port 7776 -k test_connect_both_messages_at_once
 
 Take into account that the ``--chirc-external-port`` only makes sense when running a single
 test, so you will also have to use the ``-k`` option to specify what test to run.
@@ -132,7 +132,7 @@ By default, py.test will randomize the port that chirc binds to. To force it to
 use a specific port, you will need to use the ``--chirc-port PORT`` option.
 For example::
 
-   py.test -k test_connect_simple1 --chirc-port=7776
+   py.test ../tests/ -k test_connect_simple1 --chirc-port=7776
    
 Note that we use port 7776 to avoid conflicts with the standard IRC port (6667).
    
