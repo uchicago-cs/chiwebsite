@@ -49,7 +49,7 @@ This reply has the following components:
 
 -  ``:Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu``:
    The second parameter. The content of this parameter is specified in
-   `[RFC2812 §5] <http://tools.ietf.org/html/rfc2812#section-5>`__::
+   `[RFC2812 §5] <https://datatracker.ietf.org/doc/html/rfc2812#section-5>`__::
 
           001    RPL_WELCOME
                  "Welcome to the Internet Relay Network
@@ -92,7 +92,7 @@ different:
 
 So, notice how there is no uniform set of parameters sent back in all
 replies (other than the first parameter, which is always the recipient
-nick). When implementing a reply, you must consult `[RFC2812 §5] <http://tools.ietf.org/html/rfc2812#section-5>`__ to determine
+nick). When implementing a reply, you must consult `[RFC2812 §5] <https://datatracker.ietf.org/doc/html/rfc2812#section-5>`__ to determine
 exactly what you should be sending back in the reply.
 
 Messaging between users

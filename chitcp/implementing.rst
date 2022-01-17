@@ -17,8 +17,8 @@ Implementing RFC 793
 --------------------
 
 In this project, you are going to implement a substantial portion of
-`[RFC793] <http://tools.ietf.org/html/rfc793>`__. In particular, you will be
-focusing on `[RFC793 § 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__
+`[RFC793] <https://datatracker.ietf.org/doc/html/rfc793>`__. In particular, you will be
+focusing on `[RFC793 § 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__
 (Event Processing), which provides a detailed description of how TCP should
 behave (whereas the preceding sections focus more on describing use cases,
 header specifications, example communications, etc.). The second paragraph of
@@ -37,7 +37,7 @@ So, we can think of TCP as a `state machine <https://en.wikipedia.org/wiki/Finit
 -  The states are CLOSED, LISTEN, SYN\_SENT, etc.
 
 -  The inputs are a series of events defined in
-   `[RFC793] <http://tools.ietf.org/html/rfc793>`__ (we describe these in more
+   `[RFC793] <https://datatracker.ietf.org/doc/html/rfc793>`__ (we describe these in more
    detail below)
 
 -  The transition from one TCP state to another is based on the current
@@ -48,7 +48,7 @@ So, we can think of TCP as a `state machine <https://en.wikipedia.org/wiki/Finit
    variables and the send/receive buffers.
 
 The events defined in
-`[RFC793 § 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__ are:
+`[RFC793 § 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__ are:
 
 -  ``OPEN``: chiTCP will generate this event when the application layer calls
    ``chisocket_connect``.
@@ -85,7 +85,7 @@ to you to write the code that will handle each event in each state.
 Of course, a TCP implementation would have to consider every possible
 combination of states and events. However, many of these are actually invalid
 combinations. For example,
-`[RFC793 § 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__ specifies that
+`[RFC793 § 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__ specifies that
 that if the ``SEND`` event happens in the following states:
 
 ::
@@ -206,7 +206,7 @@ The parameters to the function are:
 
 -  ``event`` is the event that is being handled. The list of possible events
    corresponds roughly to the ones specified in
-   `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__. They are:
+   `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__. They are:
 
    -  ``APPLICATION_CONNECT``: Application has called
       ``chisocket_connect()`` and a three-way handshake must be initiated.
@@ -301,7 +301,7 @@ The TCP variables
         uint32_t RCV_WND;  /* Receive Window */
 
     These are the TCP sequence variables as specified in
-    `[RFC793 3.2] <http://tools.ietf.org/html/rfc793#section-3.2>`__.
+    `[RFC793 3.2] <https://datatracker.ietf.org/doc/html/rfc793#section-3.2>`__.
 
 The TCP buffers
     .. code-block:: c
@@ -370,7 +370,7 @@ more easily work with TCP packets. More specifically:
 
 -  Use the ``SEG_SEQ``, ``SEG_ACK``, ``SEG_LEN``, ``SEG_WND``, ``SEG_UP``
    macros to access the ``SEG.``\ \* variables defined in `[RFC793 3.2]
-   <http://tools.ietf.org/html/rfc793#section-3.2>`__. Take into account that these macros *do* convert the values from network-order to host-order.
+   <https://datatracker.ietf.org/doc/html/rfc793#section-3.2>`__. Take into account that these macros *do* convert the values from network-order to host-order.
 
 -  Whenever you need to create a new TCP packet, *always* use the 
    ``chitcpd_tcp_packet_create`` function defined in ``serverinfo.h``. This

@@ -47,58 +47,58 @@ The IRC Protocol
 
 The IRC protocol used by IRC servers and clients is a text-based TCP
 protocol. Originally specified in 1993
-`[RFC1459] <http://tools.ietf.org/html/rfc1459>`__, it was subsequently
+`[RFC1459] <https://datatracker.ietf.org/doc/html/rfc1459>`__, it was subsequently
 specified in more detail in 2000 through the following RFCs:
 
--  `[RFC2810] <http://tools.ietf.org/html/rfc2810>`__ **Internet Relay
+-  `[RFC2810] <https://datatracker.ietf.org/doc/html/rfc2810>`__ **Internet Relay
    Chat: Architecture**. This document describes the overall
    architecture of IRC.
 
--  `[RFC2811] <http://tools.ietf.org/html/rfc2811>`__ **Internet Relay
+-  `[RFC2811] <https://datatracker.ietf.org/doc/html/rfc2811>`__ **Internet Relay
    Chat: Channel Management**. This document describes how channels are
    managed in IRC.
 
--  `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__ **Internet Relay
+-  `[RFC2812] <https://datatracker.ietf.org/doc/html/rfc2812>`__ **Internet Relay
    Chat: Client Protocol**. This document describes the protocol used
    between IRC clients and servers (sometimes referred to as the
    “client-server” protocol)
 
--  `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__ **Internet Relay
+-  `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__ **Internet Relay
    Chat: Server Protocol**. This document describes the “server-server”
    protocol used between IRC servers in the same network.
 
 You are not expected to read all of these documents. More specifically:
 
 -  We recommend you do read all of
-   `[RFC2810] <http://tools.ietf.org/html/rfc2810>`__, as it will give
+   `[RFC2810] <https://datatracker.ietf.org/doc/html/rfc2810>`__, as it will give
    you a good sense of what the IRC architecture looks like. You may
    want to give it a cursory read at first, and revisit it as you become
    more familiar with the finer points of the IRC protocol.
 
 -  In the second assignment you will implement a subset of
-   `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. We suggest you
-   read `[RFC2812 §1] <http://tools.ietf.org/html/rfc2812#section-1>`__
-   and `[RFC2812 §2] <http://tools.ietf.org/html/rfc2812#section-2>`__.
+   `[RFC2812] <https://datatracker.ietf.org/doc/html/rfc2812>`__. We suggest you
+   read `[RFC2812 §1] <https://datatracker.ietf.org/doc/html/rfc2812#section-1>`__
+   and `[RFC2812 §2] <https://datatracker.ietf.org/doc/html/rfc2812#section-2>`__.
    For the remainder of the RFC, you should only read the sections
    relevant to the parts of the IRC protocol you will be implementing.
 
 -  In the third assignment you will implement a subset of the functionality
-   described in `[RFC2811] <http://tools.ietf.org/html/rfc2811>`__,
+   described in `[RFC2811] <https://datatracker.ietf.org/doc/html/rfc2811>`__,
    which will require implementing additional parts of
-   `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. We suggest you
+   `[RFC2812] <https://datatracker.ietf.org/doc/html/rfc2812>`__. We suggest you
    hold off on reading
-   `[RFC2811] <http://tools.ietf.org/html/rfc2811>`__ until we reach
+   `[RFC2811] <https://datatracker.ietf.org/doc/html/rfc2811>`__ until we reach
    the third assignment; if you do want to read the introductory sections, take
    into account that we will only be supporting “standard channels” in
    the “#” namespace, and that we will not be supporting server
    networks.
 
 -  In the fifth assignment, you will implement a subset of
-   `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__,
+   `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__,
    which will require implementing and updating some parts of
-   `[RFC2812] <http://tools.ietf.org/html/rfc2812>`__. You will not be
+   `[RFC2812] <https://datatracker.ietf.org/doc/html/rfc2812>`__. You will not be
    dealing with server-to-server connections until the fifth assignment,
-   so you can safely skip reading `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__
+   so you can safely skip reading `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__
    until then.
 
 Finally, you should take into account that, although IRC has an official
@@ -120,7 +120,7 @@ Message format
 
 IRC clients and servers communicate by sending plain ASCII *messages* to
 each other over TCP. The format of these messages is described in
-`[RFC2812 §2.3] <http://tools.ietf.org/html/rfc2812#section-2.3>`__, and
+`[RFC2812 §2.3] <https://datatracker.ietf.org/doc/html/rfc2812#section-2.3>`__, and
 can be summarized thusly:
 
 -  The IRC protocol is a *text-based* protocol, meaning that messages
@@ -198,7 +198,7 @@ A reply is a message with the following characteristics:
 -  It always includes a prefix.
 
 -  The command will be a three-digit code. The full list of possible
-   replies is specified in `[RFC2812 §5] <http://tools.ietf.org/html/rfc2812#section-5>`__.
+   replies is specified in `[RFC2812 §5] <https://datatracker.ietf.org/doc/html/rfc2812#section-5>`__.
 
 -  The first parameter is always the target of the reply, typically a
    nick.

@@ -23,7 +23,7 @@ In ``tcp.c`` you must implement the following:
 -  Handling event ``APPLICATION_CONNECT`` in
    ``chitcpd_tcp_state_handle_CLOSED``. This corresponds to handling the
    ``OPEN Call`` in the ``CLOSED STATE`` in
-   `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__.
+   `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__.
 
 -  Handling event ``PACKET_ARRIVAL`` in:
 
@@ -34,13 +34,13 @@ In ``tcp.c`` you must implement the following:
    -  ``chitcpd_tcp_state_handle_SYN_RCVD``
 
    As described in the ``SEGMENT ARRIVES`` portion of
-   `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__.
+   `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__.
 
 Suggestion: Instead of writing separate pieces of code in each of the handler
 functions where you’re handling the ``PACKET_ARRIVAL`` event, you may want to
 write a single function whose purpose is to handle packets in any TCP state,
 following the general procedure described in pages 64-75 of
-`[RFC793] <http://tools.ietf.org/html/rfc793>`__. This will also make it easier
+`[RFC793] <https://datatracker.ietf.org/doc/html/rfc793>`__. This will also make it easier
 to implement the remaining parts of this assignment
 
 Sending and receiving data
@@ -50,19 +50,19 @@ This involves handling the following events in
 ``chitcpd_tcp_state_handle_ESTABLISHED``:
 
 -  Event ``PACKET_ARRIVAL``, as described in the ``SEGMENT ARRIVES`` portion
-   of `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__, but
+   of `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__, but
    without handling ``FIN`` packets.
 
 -  Event ``APPLICATION_SEND``. This corresponds to handling the ``SEND Call``
    in the ``ESTABLISHED STATE`` in
-   `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__. Take into
+   `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__. Take into
    account that the chisocket layer already takes care of putting data in the
    send buffer. So, this event notifies your TCP implementation that there is
    new data in the send buffer, and that it should be sent if possible.
 
 -  Event ``APPLICATION_RECEIVE``. This corresponds to handling the
    ``RECEIVE Call`` in the ``ESTABLISHED STATE`` in
-   `[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__. Take into
+   `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__. Take into
    account that the chisocket layer already takes care of retrieving data from
    the receive buffer and handing it to the application layer. This event
    notifies your TCP implementation that space has become available in the
@@ -80,7 +80,7 @@ This involves handling the ``APPLICATION_CLOSE`` event in the following handlers
 
 Both of these correspond to handling the ``CLOSE Call`` in the
 ``ESTABLISHED STATE`` and ``CLOSE-WAIT STATE`` in
-`[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__.
+`[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__.
 
 You also need to handle the ``PACKET_ARRIVAL`` event in the following handlers:
 
@@ -98,7 +98,7 @@ You also need to handle the ``PACKET_ARRIVAL`` event in the following handlers:
    ``chitcpd_tcp_state_handle_ESTABLISHED`` to handle ``FIN`` packets.
 
 All of these are described in the ``SEGMENT ARRIVES`` portion of
-`[RFC793 3.9] <http://tools.ietf.org/html/rfc793#section-3.9>`__.
+`[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__.
 
 Take into account that, when the application layer requests that a connection be
 closed, it does not instantly trigger a TCP connection teardown. Instead, the FIN

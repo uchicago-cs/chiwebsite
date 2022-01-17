@@ -16,7 +16,7 @@ remaining messages are all fairly independent of each other.
 ``JOIN``
 --------
 
-Implement the ``JOIN`` command, as described in `[RFC2812 §3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, with the
+Implement the ``JOIN`` command, as described in `[RFC2812 §3.2.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.1>`__, with the
 following exceptions:
 
 -  The command must accept a single parameter: a channel name.
@@ -30,7 +30,7 @@ Take into account the following:
    (you will implement the ``TOPIC`` message later). Otherwise, that
    reply is skipped.
 
--  Although not stated explicitly in `[RFC2812 §3.2.1] <http://tools.ietf.org/html/rfc2812#section-3.2.1>`__, the
+-  Although not stated explicitly in `[RFC2812 §3.2.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.1>`__, the
    ``RPL_NAMREPLY`` reply must be followed by a ``RPL_ENDOFNAMES``. Basically, you are
    sending the same replies generated when a ``NAMES`` message (with
    this channel as a parameter) is received.
@@ -72,7 +72,7 @@ replies in ``PRIVMSG``. However, take into account the following:
 ``PART``
 --------
 
-Implement the ``PART`` command, as described in `[RFC2812 §3.2.2] <http://tools.ietf.org/html/rfc2812#section-3.2.2>`__, with the
+Implement the ``PART`` command, as described in `[RFC2812 §3.2.2] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.2>`__, with the
 following exceptions:
 
 -  The command must accept either one parameter (a channel name) or two
@@ -89,7 +89,7 @@ Take into account the following:
 ``TOPIC``
 ---------
 
-Implement the ``TOPIC`` command, as described in `[RFC2812 §3.2.4] <http://tools.ietf.org/html/rfc2812#section-3.2.4>`__, with the
+Implement the ``TOPIC`` command, as described in `[RFC2812 §3.2.4] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.4>`__, with the
 following exceptions:
 
 -  You only need to support the ``ERR_NOTONCHANNEL``, ``RPL_NOTOPIC``,
@@ -103,7 +103,7 @@ User and channel modes
 
 In IRC, users can have certain *modes* assigned to them. Modes are
 identified by a single letter, and they are binary: a user either has a
-mode, or he doesn’t. The possible user modes are described in `[RFC2812 §3.1.5] <http://tools.ietf.org/html/rfc2812#section-3.1.5>`__, and we
+mode, or he doesn’t. The possible user modes are described in `[RFC2812 §3.1.5] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.5>`__, and we
 will be implementing only the following modes:
 
 - ``a`` -- The *away* mode. Users with this mode are considered to be “away
@@ -116,7 +116,7 @@ will be implementing only the following modes:
 
 The above two modes are global modes: they have effect across the entire
 server. Users can also have channel-specific modes (or *member status*
-modes, see `[RFC2811 §4.1] <http://tools.ietf.org/html/rfc2811#section-4.1>`__). We will be
+modes, see `[RFC2811 §4.1] <https://datatracker.ietf.org/doc/html/rfc2811#section-4.1>`__). We will be
 implementing the following member status modes:
 
 - ``o`` -- The *channel operator* mode. Users with this mode on a channel
@@ -125,7 +125,7 @@ implementing the following member status modes:
 - ``v`` -- The *voice* mode. Users with this mode are able to send messages
   to moderated channels (described below).
 
-Finally, channels themselves can also have modes (see `[RFC2811 §4] <http://tools.ietf.org/html/rfc2811#section-4>`__). We will be
+Finally, channels themselves can also have modes (see `[RFC2811 §4] <https://datatracker.ietf.org/doc/html/rfc2811#section-4>`__). We will be
 implementing the following modes:
 
 - ``m`` -- The *moderated* mode. When a channel has this mode, only certain
@@ -137,7 +137,7 @@ implementing the following modes:
 These modes are managed with the ``OPER``, ``MODE``, and ``AWAY``
 commands. For now, we will focus on the first two.
 
-You must implement the ``OPER`` message as described in `[RFC2812 §3.1.4] <http://tools.ietf.org/html/rfc2812#section-3.1.4>`__, with the
+You must implement the ``OPER`` message as described in `[RFC2812 §3.1.4] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.4>`__, with the
 following exceptions:
 
 -  You must only support the ``RPL_YOUREOPER``, ``ERR_PASSWDMISMATCH``,
@@ -148,8 +148,8 @@ ignore its content; the password expected by the ``OPER`` command is the
 one specified in the ``-o`` command-line parameter to the ``chirc``
 executable.
 
-You must implement the ``MODE`` message as described in `[RFC2812 §3.1.5] <http://tools.ietf.org/html/rfc2812#section-3.1.5>`__ (for user
-modes) and `[RFC2812 §3.2.3] <http://tools.ietf.org/html/rfc2812#section-3.2.3>`__ (for member
+You must implement the ``MODE`` message as described in `[RFC2812 §3.1.5] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.5>`__ (for user
+modes) and `[RFC2812 §3.2.3] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.3>`__ (for member
 status and channel modes), with the following exceptions:
 
 -  For user modes:
@@ -235,12 +235,12 @@ You must observe the following rules when dealing with modes:
 ``AWAY``
 --------
 
-Implement the ``AWAY`` command, as described in `[RFC2812 §4.1] <http://tools.ietf.org/html/rfc2812#section-4.1>`__.
+Implement the ``AWAY`` command, as described in `[RFC2812 §4.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-4.1>`__.
 
 ``NAMES``
 ---------
 
-Implement the ``NAMES`` command, as described in `[RFC2812 §3.2.5] <http://tools.ietf.org/html/rfc2812#section-3.2.5>`__, with the
+Implement the ``NAMES`` command, as described in `[RFC2812 §3.2.5] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.5>`__, with the
 following exceptions:
 
 -  We are not supporting invisible, private, or secret channels, so you
@@ -275,7 +275,7 @@ Take into account the following:
 ``LIST``
 --------
 
-Implement the ``LIST`` command, as described in `[RFC2812 §3.2.6] <http://tools.ietf.org/html/rfc2812#section-3.2.6>`__, with the
+Implement the ``LIST`` command, as described in `[RFC2812 §3.2.6] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.6>`__, with the
 following exceptions:
 
 -  You only need to support ``LIST`` messages with no parameters (list
@@ -297,7 +297,7 @@ Take into account the following:
 ``WHO``
 -------
 
-Implement the ``WHO`` command, as described in `[RFC2812 §3.6.1] <http://tools.ietf.org/html/rfc2812#section-3.6.1>`__, with the
+Implement the ``WHO`` command, as described in `[RFC2812 §3.6.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.6.1>`__, with the
 following exceptions:
 
 -  If a mask is specified, you only need to support the case where the

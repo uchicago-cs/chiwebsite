@@ -22,7 +22,7 @@ other.
 Connection Registration
 -----------------------
 
-Implement connection registration, as described in `[RFC2812 §3.1] <http://tools.ietf.org/html/rfc2812#section-3.1>`__, 
+Implement connection registration, as described in `[RFC2812 §3.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.1>`__,
 with the following exceptions:
 
 -  You must implement the ``NICK``, ``USER``, and ``QUIT`` messages. You
@@ -96,7 +96,7 @@ Take into account the following:
 ``PRIVMSG`` and ``NOTICE``
 --------------------------
 
-Implement messaging between users, as described in `[RFC2812 §3.3] <http://tools.ietf.org/html/rfc2812#section-3.3>`__, with the
+Implement messaging between users, as described in `[RFC2812 §3.3] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.3>`__, with the
 following exceptions:
 
 -  The only supported ``<msgtarget>`` is nicknames.
@@ -116,8 +116,8 @@ Take into account the following:
 ``PING`` and ``PONG``
 ---------------------
 
-Implement the ``PING`` and ``PONG`` commands, as described in `[RFC2812 §3.7.2] <http://tools.ietf.org/html/rfc2812#section-3.7.2>`__ 
-and `[RFC2812 §3.7.3] <http://tools.ietf.org/html/rfc2812#section-3.7.3>`__,
+Implement the ``PING`` and ``PONG`` commands, as described in `[RFC2812 §3.7.2] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.2>`__
+and `[RFC2812 §3.7.3] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.3>`__,
 with the following exceptions:
 
 -  You can ignore the parameters in ``PING``, and simply send the
@@ -136,7 +136,7 @@ Take into account the following:
 ``MOTD``
 --------
 
-Implement the ``MOTD`` command, as described in `[RFC2812 §3.4.1] <http://tools.ietf.org/html/rfc2812#section-3.4.1>`__, 
+Implement the ``MOTD`` command, as described in `[RFC2812 §3.4.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.4.1>`__,
 with the following exceptions:
 
 -  You can ignore the ``<target>`` parameter.
@@ -151,7 +151,7 @@ Take into account the following:
 ``LUSERS``
 ----------
 
-Implement the ``LUSERS`` command, as described in `[RFC2812 §3.4.2] <http://tools.ietf.org/html/rfc2812#section-3.4.2>`__, 
+Implement the ``LUSERS`` command, as described in `[RFC2812 §3.4.2] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.4.2>`__,
 with the following exceptions:
 
 -  You can ignore the ``<mask>`` and ``<target>`` parameters.
@@ -165,7 +165,7 @@ with the following exceptions:
 Take into account the following:
 
 -  You must send the replies even when they are reporting a zero value
-   (i.e., ignore this from `[RFC2812 §5.1] <http://tools.ietf.org/html/rfc2812#section-5.1>`__: “When
+   (i.e., ignore this from `[RFC2812 §5.1] <https://datatracker.ietf.org/doc/html/rfc2812#section-5.1>`__: “When
    replying, a server MUST send back RPL\_LUSERCLIENT and RPL\_LUSERME.
    The other replies are only sent back if a non-zero count is found for
    them.”)
@@ -186,7 +186,7 @@ Take into account the following:
 ``WHOIS``
 ---------
 
-Implement the ``WHOIS`` command, as described in `[RFC2812 §3.6.2] <http://tools.ietf.org/html/rfc2812#section-3.6.2>`__, with the
+Implement the ``WHOIS`` command, as described in `[RFC2812 §3.6.2] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.6.2>`__, with the
 following exceptions:
 
 -  The command must accept a single parameter: a nick (i.e., there is

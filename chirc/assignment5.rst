@@ -3,7 +3,7 @@
 Assignment 5: IRC Networks
 ==========================
 
-Up to this point, you have been adding support for client-to-server communications, where there is a single IRC server and multiple clients connecting to it. In this assignment, you will add support for *IRC networks* composed of multiple servers. The notion of an IRC network is (briefly) introduced in `[RFC2810 §3] <https://tools.ietf.org/html/rfc2810#section-3>`__, and the server-to-server part of the IRC protocol is defined in `[RFC2813] <http://tools.ietf.org/html/rfc2813>`__.
+Up to this point, you have been adding support for client-to-server communications, where there is a single IRC server and multiple clients connecting to it. In this assignment, you will add support for *IRC networks* composed of multiple servers. The notion of an IRC network is (briefly) introduced in `[RFC2810 §3] <https://tools.ietf.org/html/rfc2810#section-3>`__, and the server-to-server part of the IRC protocol is defined in `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__.
 
 In a nutshell, an IRC network is a collection of IRC servers where each server maintains an (essentially) identical list of users and channels, and any changes (e.g., someone joining a channel) are propagated to the other servers in the network. For example, the diagram shown in `[RFC2810 §3] <https://tools.ietf.org/html/rfc2810#section-3>`__ presents a network with five servers (A, B, C, D, E). Two clients (1 and 2) are connected to server A, while clients 3 and 4 are connected to B and D respectively.
 
