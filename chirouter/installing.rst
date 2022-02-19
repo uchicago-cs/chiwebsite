@@ -17,27 +17,21 @@ Software Requirements
 chirouter has the following requirements:
 
 - `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
-- `mininet <http://mininet.org/>`_ (2.2.1 or higher), a network emulator that requires root access on a Linux machine. If you do not have root access on your personal computer, we recommend running mininet inside a virtual machine (the mininet website actually provides some ready-to-use virtual machines).
-
-chirouter also requires `OpenFlow <https://openflow.stanford.edu/>`_'s `POX <https://openflow.stanford.edu/display/ONL/POX+Wiki>`_, but this is already included in the chirouter code.
-
+- `mininet <http://mininet.org/>`__ (2.3.0 or higher), a network emulator that requires root access on a Linux machine. If you do not have root access on your personal computer, we recommend running mininet inside a virtual machine (the mininet website actually provides some ready-to-use virtual machines).
+- `Ryu SDN Framework <https://ryu-sdn.org/>`__ (installed from source)
 
 Building
 --------
 
 The first time you download the chirouter code to your machine, you must run the
-following from the root of the chirouter code tree:
+following from the root of the chirouter code tree::
 
-::
-
-    mkdir build
-    cd build
-    cmake ..
+    cmake -B build/
 
 This will generate a number of files necessary to build chirouter.
 
 Once you have done this, simply run ``make`` inside the ``build`` directory
-to build chirc. This will generate the ``chirouter`` executable.
+to build chirouter. This will generate the ``chirouter`` executable.
 
 This executable accepts the following parameters:
 
@@ -52,9 +46,9 @@ This executable accepts the following parameters:
 Running
 -------
 
-To run chirouter, you must first run mininet and the POX controller, both of which are in charge
-of simulating the network where your router is located. Running mininet requires root access, but
-running the chirouter executable *does not*. So, there are two ways of running chirouter:
+To run chirouter, you must first run mininet to simulate the network where your router is located.
+Running mininet requires root access, but running the chirouter executable *does not*.
+So, there are two ways of running chirouter:
 
 Running chirouter and mininet on a machine with root access
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,50 +65,47 @@ You should see the following::
 
    [2018-02-09 10:41:13]   INFO Waiting for connection from controller...
    
-In a separate terminal, run mininet and POX like this::
+In a separate terminal, run mininet like this::
 
    sudo ./run-mininet topologies/basic.json
    
 ``sudo`` will ask you to enter your password; once you do so, you should see the following output::
 
-   *** Creating network
-   *** Adding controller
-   *** Adding hosts:
-   client1 client2 server1 server2 
-   *** Adding switches:
-   r1 s1001 s1002 s1003 
-   *** Adding links:
-   (client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002) 
-   *** Configuring hosts
-   client1 client2 server1 server2 
-   *** Starting controller
-   c0 
-   *** Starting 4 switches
-   r1 s1001 s1002 s1003 ...
-   *** Starting CLI:
-   mininet> 
-
-Note: You may notice that there is a separate ``run-pox`` script. You do not need to run this script!
-POX is launched automatically by mininet, so you only need to run the ``run-mininet`` script. 
-There are some cases where it does make sense to launch
-POX and mininet separately (and we describe those below)
+    *** Creating network
+    *** Adding controller
+    *** Adding hosts:
+    client1 client2 server1 server2
+    *** Adding switches:
+    r1 s1001 s1002 s1003
+    *** Adding links:
+    (client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002)
+    *** Configuring hosts
+    client1 client2 server1 server2
+    *** Starting SimpleHTTPServer on host server1
+    *** Starting SimpleHTTPServer on host server2
+    *** Starting controller
+    c0
+    *** Starting 4 switches
+    r1 s1001 s1002 s1003 ...
+    *** Starting CLI:
+    mininet>
 
 Now, the terminal where you ran ``chirouter`` should show something like this::
 
-   [2018-02-09 10:42:57]   INFO Controller connected from 127.0.0.1:58398
-   [2018-02-09 10:42:58]   INFO Received 1 routers
-   [2018-02-09 10:42:58]   INFO --------------------------------------------------------------------------------
-   [2018-02-09 10:42:58]   INFO ROUTER r1
-   [2018-02-09 10:42:58]   INFO 
-   [2018-02-09 10:42:58]   INFO eth1 42:7C:1C:87:EE:5B 192.168.1.1
-   [2018-02-09 10:42:58]   INFO eth2 82:4B:72:73:F7:5F 172.16.0.1
-   [2018-02-09 10:42:58]   INFO eth3 0A:4B:3F:1B:E3:ED 10.0.0.1
-   [2018-02-09 10:42:58]   INFO 
-   [2018-02-09 10:42:58]   INFO Destination     Gateway         Mask            Iface           
-   [2018-02-09 10:42:58]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1            
-   [2018-02-09 10:42:58]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2            
-   [2018-02-09 10:42:58]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3            
-   [2018-02-09 10:42:58]   INFO --------------------------------------------------------------------------------
+    [2022-02-18 18:16:51]   INFO Controller connected from 127.0.0.1:35450
+    [2022-02-18 18:16:51]   INFO Received 1 routers
+    [2022-02-18 18:16:51]   INFO --------------------------------------------------------------------------------
+    [2022-02-18 18:16:51]   INFO ROUTER r1
+    [2022-02-18 18:16:51]   INFO
+    [2022-02-18 18:16:51]   INFO eth1 82:58:1A:BC:08:4B 192.168.1.1
+    [2022-02-18 18:16:51]   INFO eth2 5E:E4:3E:37:91:5A 172.16.0.1
+    [2022-02-18 18:16:51]   INFO eth3 0A:F4:73:75:97:12 10.0.0.1
+    [2022-02-18 18:16:51]   INFO
+    [2022-02-18 18:16:51]   INFO Destination     Gateway         Mask            Iface
+    [2022-02-18 18:16:51]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1
+    [2022-02-18 18:16:51]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2
+    [2022-02-18 18:16:51]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3
+    [2022-02-18 18:16:51]   INFO --------------------------------------------------------------------------------
 
 Note: The MAC addresses will likely be different. Everything else should be the same.
 
@@ -154,15 +145,15 @@ not yet implemented ICMP in your router, it will not reply to the pings::
 
 However, if you look at the chirouter logs, you should see that it *is* receiving the ARP requests from ``client1``::
 
-   [2018-02-09 10:48:39]  DEBUG Received Ethernet frame on interface eth3
-   [2018-02-09 10:48:39]  DEBUG    ######################################################################
-   [2018-02-09 10:48:39]  DEBUG <  Src: AA:60:D3:A1:F7:E8
-   [2018-02-09 10:48:39]  DEBUG <  Dst: FF:FF:FF:FF:FF:FF
-   [2018-02-09 10:48:39]  DEBUG <  Ethertype: 0806 (ARP)
-   [2018-02-09 10:48:39]  DEBUG <  Payload (28 bytes):
-   [2018-02-09 10:48:39]  DEBUG   0000  00 01 08 00 06 04 00 01 aa 60 d3 a1 f7 e8 0a 00  .........`......
-   [2018-02-09 10:48:39]  DEBUG   0010  64 01 00 00 00 00 00 00 0a 00 00 01              d...........
-   [2018-02-09 10:48:39]  DEBUG    ######################################################################
+    [2022-02-18 18:18:21]  DEBUG Received Ethernet frame on interface r1-eth3
+    [2022-02-18 18:18:21]  DEBUG    ######################################################################
+    [2022-02-18 18:18:21]  DEBUG <  Src: 26:0F:6D:1B:55:DD
+    [2022-02-18 18:18:21]  DEBUG <  Dst: FF:FF:FF:FF:FF:FF
+    [2022-02-18 18:18:21]  DEBUG <  Ethertype: 0806 (ARP)
+    [2022-02-18 18:18:21]  DEBUG <  Payload (28 bytes):
+    [2022-02-18 18:18:21]  DEBUG   0000  00 01 08 00 06 04 00 01 26 0f 6d 1b 55 dd 0a 00  ........&.m.U...
+    [2022-02-18 18:18:21]  DEBUG   0010  64 01 00 00 00 00 00 00 0a 00 00 01              d...........
+    [2022-02-18 18:18:21]  DEBUG    ######################################################################
 
 As you develop your router, please note that it is important that you start chirouter and mininet in
 the same order: chirouter first, followed by mininet.
@@ -184,7 +175,7 @@ Where ``PORT`` is the TCP port on which chirouter will listen for connections fr
 omit this parameter, port 23300 will be used by default.   
    
 Next, on the root machine, it is enough to clone the upstream chirouter repository. In fact, none of your own
-code will run on the root machine; only the mininet/POX code (which you do not need to modify in any way)
+code will run on the root machine; only the mininet code (which you do not need to modify in any way)
 will run there.   
    
 From the root machine, run mininet as follows::
@@ -199,11 +190,11 @@ inside a virtual machine, there will typically be a special IP address to connec
 You should now observe the same outputs as described earlier.
 
 
-Running mininet and POX separately
+Running mininet and Ryu separately
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It can sometimes be useful, for debugging purposes, to run mininet and POX separately (in general, 
-you should not do this unless your instructor asks you for the output of POX). To do so, you must run
+It can sometimes be useful, for debugging purposes, to run mininet and the Ryu controller separately (in general,
+you should not do this unless your instructor asks you for the output of Ryu). To do so, you must run
 the following commands in separate terminals, and in this order::
 
    ./chirouter -vv
@@ -214,7 +205,5 @@ the following commands in separate terminals, and in this order::
    
 ::
 
-   sudo ./run-mininet topologies/basic.json --pox 127.0.0.1:6633
- 
-
+   sudo ./run-mininet topologies/basic.json --remote-controller 127.0.0.1:6633
 

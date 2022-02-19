@@ -10,4 +10,5 @@ chirouter
    implementing.rst
    assignment.rst
    testing.rst
+   automated-tests.rst
    
