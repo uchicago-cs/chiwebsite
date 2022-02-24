@@ -3,19 +3,26 @@
 Testing your Implementation
 ===========================
 
-chirouter currently does not have automated tests, and all testing is done manually
-from the mininet command-line interface (CLI). However, we provide a suggested order of
-implementation that will allow you to verify that certain components of the router
+chirouter includes automated tests, but we recommend you first start by testing your
+implementation manually from the mininet command-line interface (CLI), as this
+will provide you with better information on the progress of your implementation.
+We also suggest you follow the implementation order described
+in this page, and running the corresponding manual tests as you
+complete each part of your router, as it will allow you to verify that certain components of the router
 are working correctly before moving on to other components.
 
-We will start by using a basic network topology with a single router, and then
-move on to more complex network topologies with multiple routers.
+You should use the automated tests (described in the next page) when you are
+close to having a full implementation, so you can easily run all the tests
+in one go, instead of having to manually go through all the tests below.
+
 
 Basic Topology
 --------------
 
-To begin testing your router, you will use the ``basic.json`` topology file when
-running mininet. This will simulate the following network topology:
+We will start by using a basic network topology with a single router, and then
+move on to more complex network topologies with multiple routers. More specifically,
+you will use the ``basic.json`` topology file when running mininet.
+This will simulate the following network topology:
 
 .. figure:: topology.png
    :alt: Sample Topology
