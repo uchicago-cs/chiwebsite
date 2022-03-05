@@ -40,14 +40,14 @@ addresses, you will need to send an ICMP reply:
   but that IP address is *not* the IP address of the interface on which the
   datagram was received, send an ICMP Host Unreachable message to the host
   that sent the IP datagram.
+* If your router receives a TCP/UDP packet directed to one of its IP addresses,
+  you must send an ICMP Port Unreachable to the host that sent that TCP/UDP packet.
 * If your router receives an IP datagram directed to one of its IP addresses,
   and that IP datagram's TTL is 1, you must send a Time Exceeded message to
   the host that sent the IP datagram (Note: Once you implement IP forwarding,
   this behaviour will change slightly)
 * If your router receives an ICMP Echo Request directed to one of its IP addresses, 
   you must send an ICMP Echo Reply to the host that sent the ICMP Echo Request.
-* If your router receives a TCP/UDP packet directed to one of its IP addresses,
-  you must send an ICMP Port Unreachable to the host that sent that TCP/UDP packet.
 
 For the above, you can assume that the source Ethernet address of the frame that
 triggered one of the above responses can be used as the destination Ethernet address
