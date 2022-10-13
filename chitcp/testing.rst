@@ -84,6 +84,10 @@ To run entire categories of tests, simply run the following:
 
     ./test-tcp --filter "data_transfer/*"
 
+* Assignment 1 tests only::
+
+    ./test-tcp --filter '@(conn_init|conn_term|data_transfer)/*'
+
 * Timer API::
 
     ./test-tcp --filter "multitimer/*"
