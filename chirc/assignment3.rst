@@ -143,7 +143,7 @@ following exceptions:
 -  You must only support the ``RPL_YOUREOPER``, ``ERR_PASSWDMISMATCH``,
    and ``ERR_NEEDMOREPARAMS``.
 
-Take into account that you should expect a ``<user>`` parameter but will
+Take into account that you should expect a ``<name>`` parameter but will
 ignore its content; the password expected by the ``OPER`` command is the
 one specified in the ``-o`` command-line parameter to the ``chirc``
 executable.
