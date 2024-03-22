@@ -7,14 +7,8 @@ This first assignment is meant as a warm-up exercise to get reacquainted
 with socket programming. You must implement an IRC server that
 implements the ``NICK`` and ``USER`` messages only well enough to
 perform a *single* user registration as shown in :ref:`chirc-irc-examples`.
-Take into account that a barely minimal server that meets these
-requirements, and passes most of the automated tests for this assignment, can be
-written in roughly 50 lines of C code (in fact, we will *give you* those
-50 lines of code). However, although this kludgy solution will get you 
-some number of points on the tests, it will earn you a zero on the design grade.
 
-So, you should start implementing your solution with the requirements of
-the rest of the project in mind. More specifically, your solution to
+More specifically, your solution to
 this assignment should meet the following requirements:
 
 -  (A) You must send the ``RPL_WELCOME`` *only* after the
@@ -26,13 +20,18 @@ this assignment should meet the following requirements:
 
 -  (C) Your solution must parse the nick and username from the
    ``NICK`` and ``USER`` messages, and compose the correct
-   ``RPL_WELCOME`` reply.
+   ``RPL_WELCOME`` reply. You must use the provided ``message.c``
+   module for this.
 
 Although not required for this assignment, you should take into account
-that the remaining two parts of the project will involve adding support
-for additional messages and replies. Any time you spend writing a message parser and
-constructor (that works with more than just ``NICK`` and ``USER``) will
-be time well spent. However, if your solution to this assignment takes some
+that subsequent assignments will involve adding support
+for additional messages and replies. So, while it is possible to implement
+your solution entirely inside the ``chirc_run`` function in ``main.c``,
+you should start looking at the ``handlers.c`` module, which provides
+a more robust mechanism for dispatching messages to handler functions
+that will process them.
+
+That said, if your solution to this assignment takes some
 shortcuts by assuming that you will only be dealing with the ``NICK``
 and ``USER`` messages and the ``RPL_WELCOME`` reply, you will not be
 penalized for it.
