@@ -17,7 +17,7 @@ Software Requirements
 chirc has the following software requirements:
 
 * `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
-* Python 3.4 or above
+* Python 3.8 or above
 * `py.test <http://pytest.org>`_, including plugins ``pytest-html`` and ``pytest-json``. All of these can be
   installed using pip (``pip3 install pytest pytest-html pytest-json``)
 
@@ -67,6 +67,7 @@ The ``chirc`` executable accepts the following parameters:
 
 * ``-p``: The port on which the server will listen.
 * ``-o``: To specify the "operator password".
+* ``-n``: Specifies an IRC network file. This will only be relevant in Assignment 5.
 * ``-q``, ``-v``, or ``-vv``: To control the level of logging. See "Logging" section below.
 
 You need to run the executable with at least the ``-o``
