@@ -9,7 +9,7 @@ to Assignment 5.
 In this assignment, you should follow the instructions provided in Assignments 2 and 3, but can skip the following:
 
 - Do not implement the ``MOTD`` command. Please note that you still need to send a ``ERR_NOMOTD`` as part of the welcome messages.
-- Do not implement the ``TOPIC`` command. You also do not need to support the ``RPL_TOPIC`` reply in other commands.
+- Do not implement the ``TOPIC`` command. You also do not need to support the ``RPL_TOPIC`` reply in other commands. Please note that you still have to support the `"t"` mode being set and unset, but will just not do anything differently based on whether that mode is set or not.
 - Do not implement the ``NAMES`` command. Note that you still need to send the ``RPL_NAMREPLY`` replies after a ``JOIN``, but you can implement that directly in your implementation of ``JOIN``.
 - Do not implement the ``WHO`` command.
 - You do not need to pass the "Robustness" tests, and they will not contribute to your score.
