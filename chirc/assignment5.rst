@@ -29,12 +29,7 @@ So, we will be making the following simplifying assumptions:
 - Communications between servers are reliable: there are no dropped messages, and connections between the servers do not get interrupted.
 - The servers that make up the IRC network are known in advance: previously unknown servers cannot dynamically join our IRC network. This is actually a common assumption in production IRC networks, where network administrators only allow a pre-approved set of servers to join the network.
 - Loops cannot be formed between servers (i.e., servers always connect in a spanning tree, as required by the IRC specification), and we do not have to detect or react to loops in server connections.
-
-.. note::
-
-   This assignment was introduced in 2020 and, at the moment, all the tests involve a network with just two servers. So, for now, we are omitting certain parts of the server-server protocol that only come into play with more complex networks (such as hop counts, server tokens, etc.). Future versions of this assignment will likely support more complex networks.
-
-   However, your implementation *cannot* implement an IRC network by having your server refer just to "the other server". You must still use data structures that can potentially support multiple servers in the network, even if that network currently won't have more than two servers.
+- In fact, our testing will be limited to just two servers.
 
 The network specification file
 ------------------------------
@@ -63,21 +58,17 @@ Similarly, we would start the second server like this::
 
 This would start a server on port ``6668``. Note how we don't specify a port using the ``-p`` option (the port is always taken from the network specification file).
 
-For the tests to be able to run, you must ensure that your server can correctly accept the ``-n`` and ``-s`` options defined above. You must load the contents of the network specification file into a data structure when your server starts up; you cannot read the file every time information from that file is needed.
-
-Incorrect values for these parameters (e.g., specifying ``-s irc-42.example.net`` using the above network specification file) should result in your server not starting at all.
-
 ``PASS`` and ``SERVER``
 -----------------------
 
 Similar to how a user registers by sending a ``NICK`` and ``PASS`` command, a server connects to another server by sending a ``PASS`` and ``SERVER`` commands. We will refer to the server that initiates the connection (i.e., the one that sends ``PASS`` and ``SERVER``) as the *active* server, and we will refer to the one that receives the connection as the *passive* server.
 
-You must add support for these commands, as specified in `[RFC2813 §4.1.1 <https://tools.ietf.org/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__].
+You must add support for these commands, as specified in `[RFC2813 §4.1.1] <https://tools.ietf.org/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__].
 
 Take into account the following:
 
-- When receiving a ``PASS`` command, you only need to look at the ``<password>`` parameter, which must match the passive server's password.
-- When receiving a ``SERVER`` command, you only need to look at the ``<servername>`` parameter, which will be the server name of the active server. Take into account that the ``SERVER`` message will not include a ``<token>`` parameter at first, so you should not expect it.
+- When receiving a ``PASS`` command, you only need to look at the ``<password>`` parameter, which must match the passive server's password. You can ignore the other parameters.
+- When receiving a ``SERVER`` command, you only need to look at the ``<servername>`` parameter, which will be the server name of the active server. You can ignore the other parameters.
 - Once *both* commands are received, you must send back an ``ERROR`` message in the following cases:
 
   - If the ``PASS`` command included an incorrect password::
@@ -96,29 +87,27 @@ Take into account the following:
 
   - In the ``PASS`` commmand, the ``<password>`` must be the *active* server's password, the ``<version>`` must be ``0210`` and the ``<flags>`` must be a string of the form ``chirc|XXX`` (where ``XXX`` can be any version identifier, such as ``0.1``, ``3.11``, etc.).
 
-  - In the ``SERVER`` command, the ``<servername>`` must be the *passive* server's name. The ``<token>`` should be set to ``1`` and the ``<serverinfo>`` can be any arbitrary string.
+  - In the ``SERVER`` command, the ``<servername>`` must be the *passive* server's name. The ``<hopcount>`` and ``<token>`` should be set to ``1`` and the ``<serverinfo>`` can be any arbitrary string.
 
 
 For example, suppose ``irc-2.example.net`` wanted to connect to ``irc-1.example.net``. It would send these messages::
 
-    PASS pass1 0210 chirc|0.5.1
-    SERVER irc-2.example.net :chirc server
+    PASS pass1 0210 chirc|0.6
+    SERVER irc-2.example.net 1 1 :chirc server
 
 You can read these as "Hello server, I am ``irc-2.example.net`` and I wish to connect to you. Your password is ``pass1``"
 
 ``irc-1.example.net`` will then reply with the following::
 
-    :irc-1.example.net PASS pass2 0210 chirc|0.5.1
-    :irc-1.example.net SERVER irc-1.example.net 1 :chirc server
+    :irc-1.example.net PASS pass2 0210 chirc|0.6
+    :irc-1.example.net SERVER irc-1.example.net 1 1 :chirc server
 
 You can read this reply as "Hello server, I would also like to connect with you. I am ``irc-1.example.net``. Your password is ``pass2``"
-
-Note how the ``SERVER`` message that is sent back *does* include a ``<token>`` parameter.
 
 ``NICK``
 --------
 
-You must implement the server-to-server form of the ``NICK`` command specified in `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__]. Whenever a user connects to a server, the server will send this special form of the ``NICK`` command to all the servers it is connected to, to notify them that a new user has joined the network. So, if you receive such a ``NICK`` command, you should update your list of users accordingly (but taking into account that this represents a user connected to a different server).
+You must implement the server-to-server form of the ``NICK`` command specified in `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__]. Whenever a user connects to a server, the server will send this special form of the ``NICK`` command to all the servers it is connected to, to notify them that a new user has joined the network. So, if you receive such a ``NICK`` command, you should add the user to the server's list of users (but taking into account that this represents a user connected to a different server).
 
 Take into account the following:
 
@@ -127,7 +116,7 @@ Take into account the following:
 
 .. note::
 
-   Ordinarily, a server registration is followed by each server sending a ``NICK`` command for every user that is already connected to the server (to inform the other server of the users it currently has). You do not have to do this, and we do not currently test for this. You only need to send a ``NICK`` command to the other servers when a new user connects to a server.
+   Ordinarily, a server registration is followed by each server sending a ``NICK`` command for every user that is already connected to the server (to inform the other server of the users it currently has). You do not have to do this, and we do not currently test for this. You only need to send a ``NICK`` command to the other servers when a *new* user connects to a server.
 
 ``CONNECT``
 -----------
@@ -155,7 +144,7 @@ Once two servers are connected, they must relay information to ensure their inte
 
 You must relay the following commands:
 
-- User registrations: When a new user registers, you must send a server-to-server ``NICK`` message to all servers.
+- User registrations: When a new user registers, you must send a server-to-server ``NICK`` message to all servers, as described earlier.
 - ``PRIVMSG`` to users: you must relay all ``PRIVMSG`` messages intended for users who are not in the same server as the sending user. ``PRIVMSG`` messages between users in the same server should *not* be relayed.
 - ``JOIN``: you must relay all ``JOIN`` messages.
 - ``PRIVMSG`` to channels:  You must relay all ``PRIVMSG`` messages to channels, even if all the users are in the same server and a relay would be unnecessary.
