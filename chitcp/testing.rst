@@ -228,6 +228,22 @@ Replace ``TEST`` with the test you want to debug, and substitute ``PORT`` with a
 By default, the tests will use ``1234`` but, if you are on a machine with multiple users, other users 
 may be trying to use that port.
 
+.. note::
+
+   If you get the following error message::
+
+       tcp:1234: cannot resolve name: Temporary failure in name resolution
+
+   You are likely using an older (2.3.x or older) version of Criterion. Those versions
+   have a `bug <https://github.com/Snaipe/Criterion/issues/301>`__ that prevents remote
+   debugging from working. If you cannot update Criterion, there is a workaround that
+   will allow you to run the above command using an older version of Criterion. You
+   will need to run the following before running ``test-tcp``:
+
+       TMP_HOSTS=$(mktemp); echo 'tcp localhost' > $TMP_HOSTS; export HOSTALIASES=$TMP_HOSTS
+
+   You just need to run this once when you open a terminal (not each time you run the tests).
+
 Then, on another terminal, run this::
 
    gdb ./test-tcp
@@ -240,6 +256,7 @@ Substituting ``PORT`` with the same port you used earlier.
 
 Now, just use gdb as usual (note that you have to use the ``continue`` command instead
 of the ``run`` command to ge the test running)
+
 
 Running Valgrind on a test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
