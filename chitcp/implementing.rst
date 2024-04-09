@@ -136,9 +136,12 @@ your implementation should take the following into account:
 -  You do not need to support TCP options.
 
 -  You do not need to support the ``TIME_WAIT`` timeout. You should still
-   update the TCP state to ``TIME_WAIT`` when required, but do not have to
-   implement a timeout. Instead, you should immediately transition to
-   ``CLOSED`` from the ``TIME_WAIT`` state.
+   update the TCP state to ``TIME_WAIT`` when required by the RFC, but do not have to
+   implement a timeout.
+
+   In other words, if the RFC specifies that you must transition to ``TIME_WAIT``,
+   you should do so and, after doing so, you must immediately transition to ``CLOSED``
+   (in a sense, we are setting the ``TIME_WAIT`` timeout to zero seconds)
 
 -  You do not need to support simultaneous opens (i.e., the transition from
    ``SYN_SENT`` to ``SYN_RCVD``).
@@ -264,7 +267,7 @@ The pending packet queue
 
     The list is implemented using `utlist <https://troydhanson.github.io/uthash/utlist.html>`__, 
     which is already included in the chiTCP code. While you can use the utlist macros
-    directly, we also provide some helper functions in `packet.h` to manipulate
+    directly, we also provide some helper functions in ``packet.h`` to manipulate
     lists of TCP packets. For example, extracting the packet from the head
     of the list would be done like this:
 
