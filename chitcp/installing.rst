@@ -36,7 +36,7 @@ On Ubuntu systems, you should be able to install them as follows::
 
     sudo apt install protobuf-c-compiler libprotobuf-c1 libprotobuf-c-dev
 
-On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__:
+On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__::
 
     brew install protobuf-c
 
@@ -94,7 +94,7 @@ On Ubuntu systems, you should be able to install them as follows::
 
     sudo apt install criterion criterion-dev
 
-On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__:
+On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__::
 
     brew install criterion
 
