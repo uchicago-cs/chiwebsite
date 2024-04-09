@@ -27,6 +27,14 @@ CMake
 
 Building the chiTCP code requires `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
 
+On Ubuntu systems, you should be able to install it as follows::
+
+    sudo apt install cmake
+
+On a Mac system, you should be able to install it with `Homebrew <https://brew.sh/>`__::
+
+    brew install cmake
+
 ``protobuf`` and ``protobuf-c``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
