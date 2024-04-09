@@ -49,48 +49,8 @@ On a Mac system, you should be able to install these libraries with `Homebrew <h
     brew install protobuf-c
 
 On other systems, you will need
-to install them from source. You can find the appropriate tarballs at
-https://github.com/google/protobuf and https://github.com/protobuf-c/protobuf-c.
-
-On most UNIX systems, you should be able to install ``protobuf`` by running the
-following:
-
-::
-
-   wget https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protobuf-26.1.tar.gz
-   tar xvzf protobuf-26.1.tar.gz
-   cd protobuf-26.1/
-   ./configure --prefix=/usr
-   make
-   sudo make install
-
-And ``protobuf-c`` by running the following:
-
-::
-
-   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.5.0/protobuf-c-1.5.0.tar.gz
-   tar xvzf protobuf-c-1.5.0.tar.gz
-   cd protobuf-c-1.5.0/
-   ./configure --prefix=/usr
-   make
-   sudo make install
-
-Please note the use of ``--prefix=/usr``. If you omit this parameter, the
-libraries will be installed in ``/usr/local/lib``, which can cause problems on
-some systems. If you encounter an error like this:
-
-::
-
-    error while loading shared libraries: libprotoc.so.N: cannot open shared object file: 
-                                                                           No such file or directory
-
-you will need to explicitly add ``/usr/local/lib`` (or any alternate prefix you
-specify when installing) to the ``LD_LIBRARY_PATH`` environment variable:
-
-::
-
-    export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/local/lib
-
+to install them from source following the `protobuf instructions <https://github.com/protocolbuffers/protobuf/blob/main/src/README.md>`__
+and the `protobuf-c instructions <https://github.com/protobuf-c/protobuf-c/blob/master/README.md>`__.
 
 Criterion Unit Testing Framework
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
