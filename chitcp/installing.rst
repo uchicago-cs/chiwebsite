@@ -25,14 +25,22 @@ smoothly on Mac systems.
 CMake
 ~~~~~
 
-Building the chiTCP code requires the `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
+Building the chiTCP code requires `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
 
 ``protobuf`` and ``protobuf-c``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-chiTCP requires ``protobuf`` 2.6.1 and ``protobuf-c`` 1.x (it may work with
-``protobuf`` 3.x, but we have not tested it with that version). If these
-versions are not available as packages on your operating system, you will need
+chiTCP requires ``protobuf`` 3.x or higher and ``protobuf-c`` 1.x or higher.
+
+On Ubuntu systems, you should be able to install them as follows::
+
+    sudo apt install protobuf-c-compiler libprotobuf-c1 libprotobuf-c-dev
+
+On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__:
+
+    brew install protobuf-c
+
+On other systems, you will need
 to install them from source. You can find the appropriate tarballs at
 https://github.com/google/protobuf and https://github.com/protobuf-c/protobuf-c.
 
@@ -41,9 +49,9 @@ following:
 
 ::
 
-   wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
-   tar xvzf protobuf-2.6.1.tar.gz 
-   cd protobuf-2.6.1/
+   wget https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protobuf-26.1.tar.gz
+   tar xvzf protobuf-26.1.tar.gz
+   cd protobuf-26.1/
    ./configure --prefix=/usr
    make
    sudo make install
@@ -52,9 +60,9 @@ And ``protobuf-c`` by running the following:
 
 ::
 
-   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.2.1/protobuf-c-1.2.1.tar.gz
-   tar xvzf protobuf-c-1.2.1.tar.gz 
-   cd protobuf-c-1.2.1/
+   wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.5.0/protobuf-c-1.5.0.tar.gz
+   tar xvzf protobuf-c-1.5.0.tar.gz
+   cd protobuf-c-1.5.0/
    ./configure --prefix=/usr
    make
    sudo make install
@@ -79,9 +87,18 @@ specify when installing) to the ``LD_LIBRARY_PATH`` environment variable:
 Criterion Unit Testing Framework
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-chiTCP uses the `Criterion unit testing framework <https://github.com/Snaipe/Criterion>`_
-to run its unit tests. Installation instructions can be found `here <https://github.com/Snaipe/Criterion/blob/bleeding/README.md>`_.
-Please note that you must install version 2.3.0-1 or later.
+chiTCP requires the `Criterion unit testing framework <https://github.com/Snaipe/Criterion>`_
+(version 2.3 or higher).
+
+On Ubuntu systems, you should be able to install them as follows::
+
+    sudo apt install criterion criterion-dev
+
+On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__:
+
+    brew install criterion
+
+On other systems, you must install the framework manually following their `installation instructions <https://criterion.readthedocs.io/en/latest/setup.html#installation>`__.
 
 .. _chitcp-building:
 
