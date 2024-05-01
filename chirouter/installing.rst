@@ -201,7 +201,7 @@ the following commands in separate terminals, and in this order::
    
 ::
 
-   ./run-pox topologies/basic.json
+   ./run-controller topologies/basic.json
    
 ::
 

@@ -99,7 +99,11 @@ must also fetch the pending ARP request, and forward all withheld frames (since 
 will now know what MAC address to send them to). You must also remove the pending
 ARP request from the pending ARP request list. 
 
-Regarding the ARP cache, take into account that entries in the ARP cache will time 
+Regarding the ARP cache, you are only required to update it when you receive an
+ARP reply (to add the mapping specified in that reply). You may optionally also
+update it when you receive an ARP request, as the request will include the
+IP address and MAC address of the host that sent the ARP request (and you could
+go ahead and add it to the cache). In any case, take into account that entries in the ARP cache will time
 out after 15 seconds, but this is handled by our code; you are only responsible for 
 adding entries to the cache. 
 
