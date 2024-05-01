@@ -238,7 +238,7 @@ may be trying to use that port.
    have a `bug <https://github.com/Snaipe/Criterion/issues/301>`__ that prevents remote
    debugging from working. If you cannot update Criterion, there is a workaround that
    will allow you to run the above command using an older version of Criterion. You
-   will need to run the following before running ``test-tcp``:
+   will need to run the following before running ``test-tcp``::
 
        TMP_HOSTS=$(mktemp); echo 'tcp localhost' > $TMP_HOSTS; export HOSTALIASES=$TMP_HOSTS
 
