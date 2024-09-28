@@ -39,12 +39,14 @@
             <li class="active">{{ title }}</li>
         </ul>
     </div>
-{%- endif %}
 </div>
+{{ bsidebar() }}
+{%- endif %}
 {% endblock %}
 
-{% block sidebar2 %} 
-{%- if pagename != master_doc and pagename not in pages_without_nav %}
+{% block sidebar2 %}
+    <div class="row">
+    <div class="col-md-12">
 <nav class="related">
   <ul class="pager">
   {%- if prev and not pagename.endswith("/index") %}
@@ -53,7 +55,7 @@
       {%- if theme_bootstrap_version == "2" -%}<span class="icon-chevron-left visible-tablet"></span>{%- endif -%}
       {%- if theme_bootstrap_version == "3" -%}<span class="glyphicon glyphicon-chevron-left visible-sm"></span>{%- endif -%}
       <span class="hidden-sm hidden-tablet">{{ "&laquo;"|safe }} {{ prev.title|striptags }}</span>
-    </a>    
+    </a>
     </li>
   {%- endif %}
   {%- if next %}
@@ -62,10 +64,11 @@
       {%- if theme_bootstrap_version == "2" -%}<span class="icon-chevron-right visible-tablet"></span>{%- endif -%}
       {%- if theme_bootstrap_version == "3" -%}<span class="glyphicon glyphicon-chevron-right visible-sm"></span>{%- endif -%}
       <span class="hidden-sm hidden-tablet">{{ next.title|striptags }} {{ "&raquo;"|safe }}</span>
-    </a>    
+    </a>
     </li>
   {%- endif %}
   </ul>
 </nav>
-{%- endif %}
+    </div>
+    </div>
 {% endblock %}

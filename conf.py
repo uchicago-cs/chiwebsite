@@ -39,7 +39,7 @@ extensions = [
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = {'.rst': 'restructuredtext'}
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -72,7 +72,7 @@ release = ''
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ['_build', 'venv']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -101,6 +101,16 @@ highlight_language = 'none'
 
 
 # -- Options for HTML output ----------------------------------------------
+
+html_sidebars = {'*':  None,
+                 'chirc/irc':  ['localtoc.html'],
+                 'chirc/irc_examples':  ['localtoc.html'],
+                 'chirc/installing':  ['localtoc.html'],
+                 'chirc/assignment2':  ['localtoc.html'],
+                 'chirc/assignment3':  ['localtoc.html'],
+                 'chirc/assignment5':  ['localtoc.html'],
+                 'chirc/testing':  ['localtoc.html'],
+                 }
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
