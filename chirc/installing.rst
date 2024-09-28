@@ -18,8 +18,8 @@ chirc has the following software requirements:
 
 * `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
 * Python 3.8 or above
-* `py.test <http://pytest.org>`_, including plugins ``pytest-html`` and ``pytest-json``. All of these can be
-  installed using pip (``pip3 install pytest pytest-html pytest-json``)
+* `pytest <http://pytest.org>`_, including plugins ``pytest-json-report``. All of these can be
+  installed using pip (``pip3 install pytest pytest-json-report``)
 
 
 Building

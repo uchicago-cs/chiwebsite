@@ -35,24 +35,42 @@ again, you can use the following make target::
 
 (where ``N`` is the assignment number)
 
-Invoking py.test directly
+Interpreting the test output
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The tests will often alert you to specific issues with the commands/replies that
+your server is returning, such as missing parameters, incorrectly formatted replies,
+etc. While this test output is often self-explanatory, there are some cases
+where the test output can be less clear.
+
+A common error message you'll see in the tests will be the following::
+
+    Failed: chirc process failed during test. rc = -11
+
+This means that your code produced a segfault when running the test. To
+debug the issue, you should run the individual test that is failing using
+a debugger (see below for instructions on how to do this). This will
+allow you to pinpoint the exact line where the segfault is happening.
+
+
+Invoking pytest directly
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can have greater control on what tests are run by invoking py.test directly.
+You can have greater control on what tests are run by invoking pytest directly.
 When doing so, you must make sure that you've built the latest version of your
 code (using the make targets above will do so automatically, but running
-py.test directly will not). We encourage you to always run py.test like this::
+pytest directly will not). We encourage you to always run pytest like this::
 
-    make && py.test ../tests/ <PYTEST OPTIONS>
+    make && pytest ../tests/ <PYTEST OPTIONS>
 
 Where ``<PYTEST OPTIONS>`` are the options described in the sections below.
 A few parameters that are useful across the board are the following:
 
 - ``-x``: Stop after the first failed test. This can be useful when you're failing
   multiple tests, and want to focus on debugging one failed test at a time.
-- ``-s``: Do not suppress output from successful tests. By default, py.test only
+- ``-s``: Do not suppress output from successful tests. By default, pytest only
   shows the output produced by chirc if a test fails. In some cases, you may want
-  to look at the log messages of a successful test; use this option to force py.test
+  to look at the log messages of a successful test; use this option to force pytest
   to show the output for that test.
 - ``--chirc-loglevel N``: This controls the logging level of the chirc server run
   by the tests. You can specify the following values for ``N``:
@@ -69,7 +87,7 @@ Running categories of tests
 If you want to run only a specific category of tests, you can use the
 ``--chirc-category`` parameter. For example::
 
-    py.test ../tests/ --chirc-category PRIVMSG_NOTICE
+    pytest ../tests/ --chirc-category PRIVMSG_NOTICE
 
 To see the exact categories available in each assignment, run the following::
 
@@ -83,7 +101,7 @@ Running individual tests
 If you want to focus on debugging an individual test that is failing, you can
 run a single test by using the ``-k`` parameter::
 
-   py.test ../tests/ -k test_connect_both_messages_at_once
+   pytest ../tests/ -k test_connect_both_messages_at_once
    
 The name of each failed test can be found after the ``FAILURES`` line in the output
 from the tests. For example::
@@ -109,10 +127,10 @@ Similarly, if using Valgrind, you would have to run chirc like this::
 
     valgrind ./chirc -o foobar -p 7776
 
-Next, you will use the ``--chirc-external-port PORT`` option to instruct py.test to
+Next, you will use the ``--chirc-external-port PORT`` option to instruct pytest to
 use the server you're running with a debugger::
 
-    py.test ../tests/ --chirc-external-port 7776 -k test_connect_both_messages_at_once
+    pytest ../tests/ --chirc-external-port 7776 -k test_connect_both_messages_at_once
 
 Take into account that the ``--chirc-external-port`` only makes sense when running a single
 test, so you will also have to use the ``-k`` option to specify what test to run.
@@ -128,11 +146,11 @@ automated tests. Take into account that ``tshark``, like Wireshark,
 requires special privileges, so you may not be able to run it on your
 school's computers and will instead have to run it on your own machine.
 
-By default, py.test will randomize the port that chirc binds to. To force it to
+By default, pytest will randomize the port that chirc binds to. To force it to
 use a specific port, you will need to use the ``--chirc-port PORT`` option.
 For example::
 
-   py.test ../tests/ -k test_connect_simple1 --chirc-port=7776
+   pytest ../tests/ -k test_connect_simple1 --chirc-port=7776
    
 Note that we use port 7776 to avoid conflicts with the standard IRC port (6667).
    
@@ -203,4 +221,28 @@ your implementation is pretty good). However, take into account that clients lik
 to type in IRC commands directly (like a telnet session would allow you to). You will need to
 use the commands defined in the IRC client (which the IRC client will translate into actual IRC commands
 sent over the TCP connection to your server).
+
+Testing partial/multiple messages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some of the automated tests will result in ``recv()`` returning multiple messages in a single buffer. For example::
+
+    USER user1 * * :User One\r\nNICK user1\r\n
+
+If your code fails in this situation, you may find that the issue does not surface when testing your code
+manually with telnet. This is because telnet is sending each message separately (and ``recv`` will only return
+one command at a time). You can debug this issue further by using the `netcat <https://en.wikipedia.org/wiki/Netcat>`__ command.
+
+For example, here is how you would send two commands in one message::
+
+    printf "USER user1 * * :User One\r\nNICK user1\r\n" | nc localhost 6667
+
+Here is how you would test what happens when you omit the \r\n terminator::
+
+    printf "NICK user1" | nc localhost 6667
+
+And here is how you could test what happens when two messages are partitioned into two pieces
+(but not along the ``\r\n`` message terminator)::
+
+    (printf "NICK user1"; sync; printf "\r\nUSER user1 * * :User One\r\n") | nc localhost 6667
 
