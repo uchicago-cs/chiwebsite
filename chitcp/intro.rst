@@ -2,7 +2,7 @@ Introduction
 ============
 
 In this project you will be implementing the Transmission Control Protocol, as
-specified in `[RFC793] <https://datatracker.ietf.org/doc/html/rfc793>`__. However, instead
+specified in `[RFC9293] <https://datatracker.ietf.org/doc/html/rfc9293>`__. However, instead
 of implementing it inside the operating system itself, you will be implementing
 it inside a system called chiTCP. This system allows you to write socket-based
 applications that rely on your TCP implementation instead of the one included

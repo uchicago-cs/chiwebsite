@@ -13,12 +13,12 @@ as a description of header files and functions that you will need to be aware
 of as you implement your version of TCP. As a rule of thumb, if a function
 is not described here, you probably should not use it in your code.
 
-Implementing RFC 793
---------------------
+Implementing RFC 9293
+---------------------
 
 In this project, you are going to implement a substantial portion of
-`[RFC793] <https://datatracker.ietf.org/doc/html/rfc793>`__. In particular, you will be
-focusing on `[RFC793 § 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__
+`[RFC9293] <https://datatracker.ietf.org/doc/html/rfc9293>`__. In particular, you will be
+focusing on `[RFC9293 § 3.10] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.10>`__
 (Event Processing), which provides a detailed description of how TCP should
 behave (whereas the preceding sections focus more on describing use cases,
 header specifications, example communications, etc.). The second paragraph of
@@ -26,18 +26,20 @@ this section sums up pretty nicely how a TCP implementation should behave:
 
 ::
 
-      The activity of the TCP can be characterized as responding to events.
-      The events that occur can be cast into three categories:  user calls,
-      arriving segments, and timeouts.  This section describes the
-      processing the TCP does in response to each of the events.  In many
-      cases the processing required depends on the state of the connection.
+      The activity of the TCP endpoint can be characterized as responding
+      to events. The events that occur can be cast into three categories:
+      user calls, arriving segments, and timeouts. This section describes
+      the processing the TCP endpoint does in response to each of the
+      events. In many cases, the processing required depends on the state
+      of the connection.
+
 
 So, we can think of TCP as a `state machine <https://en.wikipedia.org/wiki/Finite-state_machine>`__ where:
 
 -  The states are CLOSED, LISTEN, SYN\_SENT, etc.
 
 -  The inputs are a series of events defined in
-   `[RFC793] <https://datatracker.ietf.org/doc/html/rfc793>`__ (we describe these in more
+   `[RFC9293] <https://datatracker.ietf.org/doc/html/rfc9293>`__ (we describe these in more
    detail below)
 
 -  The transition from one TCP state to another is based on the current
@@ -48,7 +50,7 @@ So, we can think of TCP as a `state machine <https://en.wikipedia.org/wiki/Finit
    variables and the send/receive buffers.
 
 The events defined in
-`[RFC793 § 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__ are:
+`[RFC9293 § 3.10] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.10>`__ are:
 
 -  ``OPEN``: chiTCP will generate this event when the application layer calls
    ``chisocket_connect``.
@@ -85,7 +87,7 @@ to you to write the code that will handle each event in each state.
 Of course, a TCP implementation would have to consider every possible
 combination of states and events. However, many of these are actually invalid
 combinations. For example,
-`[RFC793 § 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__ specifies that
+`[RFC9293 § 3.10] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.10>`__ specifies that
 that if the ``SEND`` event happens in the following states:
 
 ::
@@ -116,22 +118,30 @@ your implementation should take the following into account:
    to wait for a timeout to increase the probability that you’ll be able to
    piggyback data on the acknowledgement).
 
--  You do not need to support the ``RST`` bit.
+-  You do not need to implement algorithms for Silly Window Syndrome Avoidance.
+   This means that the sender is always allowed to send data, as long as that
+   data falls within the effective window, and the receiver always sends the
+   current size of the receive window (i.e., the amount of available space
+   in the receive buffer).
 
--  You do not need to support the ``PSH`` bit.
+-  You do not need to implement any TCP Congestion Control mechanisms.
 
--  You do not need to support the Urgent Pointer field or the ``URG`` bit in
-   the TCP header. This also means you do not need to support the ``SND.UP``,
-   ``RCV.UP``, or ``SEG.UP`` variables.
+-  You do not need to support the following flags and variables. This means
+   you can ignore any parts of RFC 9293 that depend on checking the value
+   of these flags/variables, or involve sending packets with these flags set,
+   or updating these variables.
 
--  You do not need to support the ``SND.WL1`` and ``SND.WL2`` variables and
-   can ignore any checks that involve those variables.
+   - ``RST`` and ``PSH`` flags in the TCP header.
 
--  You do not need to support TCP’s "security/compartment" features, which
-   means you can assume that ``SEG.PRC`` and ``TCB.PRC`` always have valid and
-   correct values.
+   - Urgent Pointer field or the ``URG`` bit in the TCP header,
+     as well as the ``SND.UP``, ``RCV.UP``, or ``SEG.UP`` variables.
 
--  You do not need to support the checksum field of the TCP header.
+   - ``SND.WL1`` and ``SND.WL2`` variables.
+
+-  You can ignore any references to checking the "security/compartment" of a segment
+   or TCB.
+
+-  You do not need to support the checksum field of the TCP header
 
 -  You do not need to support TCP options.
 
@@ -145,10 +155,6 @@ your implementation should take the following into account:
 
 -  You do not need to support simultaneous opens (i.e., the transition from
    ``SYN_SENT`` to ``SYN_RCVD``).
-   
-Whenever something is unclear in RFC 793, please make sure you also take a look
-at `[RFC1122 § 4.2] <https://tools.ietf.org/html/rfc1122#page-82>`__, which clarifies a number
-of aspects of RFC 793, and even provides a few corrections.
 
 
 Implementing the ``tcp.c`` file
@@ -209,7 +215,7 @@ The parameters to the function are:
 
 -  ``event`` is the event that is being handled. The list of possible events
    corresponds roughly to the ones specified in
-   `[RFC793 3.9] <https://datatracker.ietf.org/doc/html/rfc793#section-3.9>`__. They are:
+   `[RFC9293 § 3.10] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.10>`__. They are:
 
    -  ``APPLICATION_CONNECT``: Application has called
       ``chisocket_connect()`` and a three-way handshake must be initiated.
@@ -232,15 +238,21 @@ The parameters to the function are:
       in the send buffer has been sent.
 
    -  ``PACKET_ARRIVAL``: A packet has arrived through the network and
-      needs to be processed (RFC 793 calls this “SEGMENT ARRIVES”)
+      needs to be processed (RFC 9293 calls this “SEGMENT ARRIVES”)
 
    -  ``TIMEOUT_RTX``: A retransmission timeout has happened.
 
    -  ``TIMEOUT_PST``: The persist timer has timed out.
 
 To implement the TCP protocol, you will need to implement the handler functions
-in ``tcp.c``. You should not need to modify any other file. However, you will
-need to use a number of functions and structs defined elsewhere.
+in ``tcp.c``. However, the vast majority of your code will actually reside in
+the ``chitcpd_tcp_handle_packet`` function, which is called from the handler functions
+when a ``PACKET_ARRIVAL`` event is received (i.e., when a new packet arrives).
+
+Finally, please note that, unless an assignment specifically tells you otherwise,
+you should not need to modify any file other than ``tcp.c``. However, you will
+need to use a number of functions and structs defined elsewhere,
+which we describe below.
 
 The ``tcp_data_t`` struct
 -------------------------
@@ -304,7 +316,7 @@ The TCP variables
         uint32_t RCV_WND;  /* Receive Window */
 
     These are the TCP sequence variables as specified in
-    `[RFC793 3.2] <https://datatracker.ietf.org/doc/html/rfc793#section-3.2>`__.
+    `[RFC9293 3.3.1] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.3.1>`__.
 
 The TCP buffers
     .. code-block:: c
@@ -372,15 +384,13 @@ more easily work with TCP packets. More specifically:
    pointer to the packet’s payload and its length, respectively.
 
 -  Use the ``SEG_SEQ``, ``SEG_ACK``, ``SEG_LEN``, ``SEG_WND``, ``SEG_UP``
-   macros to access the ``SEG.``\ \* variables defined in `[RFC793 3.2]
-   <https://datatracker.ietf.org/doc/html/rfc793#section-3.2>`__. Take into account that these macros *do* convert the values from network-order to host-order.
+   macros to access the ``SEG.``\ \* variables defined in `[RFC9293 3.3.1] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.3.1>`__.
+   Take into account that these macros *do* convert the values from network-order to host-order.
 
 -  Whenever you need to create a new TCP packet, *always* use the 
    ``chitcpd_tcp_packet_create`` function defined in ``serverinfo.h``. This
    will initialize certain fields in the TCP header that depend on the
    socket associated with that TCP packet (e.g., the source/destination ports).
-   **CAREFUL**: There is a similarly-named function in ``packet.h`` called
-   ``chitcp_tcp_packet_create``; you should *not* use that function.
 
 Example: Creating a packet without a payload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -110,6 +110,7 @@ html_sidebars = {'*':  None,
                  'chirc/assignment3':  ['localtoc.html'],
                  'chirc/assignment5':  ['localtoc.html'],
                  'chirc/testing':  ['localtoc.html'],
+                 'chitcp/testing':  ['localtoc.html'],
                  }
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

@@ -127,7 +127,9 @@ an unreliable network.
 
 So, the proper way to deal with this is by periodically sending a *probe segment*
 to the receiving host, meant to elicit an ACK that provides the latest 
-window value. The sending of this proble segment is handled via a *persist timer*
+window value. This process is described, at a high level, in
+`[RFC9293 3.8.6.1] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.8.6.1>`__.
+You will implement the sending of probe segments by using a *persist timer*
 that will operate as follows:
 
 - When a segment is received with SEG.WND=0 (i.e., the advertised window is zero),
@@ -144,7 +146,7 @@ that will operate as follows:
   this probe segment separately (in other words, we recommend you do *not* add the
   probe segments to the retransmission queue)
 
-Note: While `[RFC1122 § 4.2.2.17] <https://tools.ietf.org/html/rfc1122#section-4.2.2.17>`__
+Note: While `[RFC9293 3.8.6.1] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.8.6.1>`__
 suggests increasing the persist timer exponentially, we will not do so here.
 
 We suggest you follow this approach:
