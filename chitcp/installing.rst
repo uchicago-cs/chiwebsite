@@ -33,10 +33,10 @@ On Ubuntu systems, you should be able to install it as follows::
 
     sudo apt install cmake
 
-..
-    On a Mac system, you should be able to install it with `Homebrew <https://brew.sh/>`__::
 
-        brew install cmake
+On a Mac system, you should be able to install it with `Homebrew <https://brew.sh/>`__::
+
+    brew install cmake
 
 ``protobuf`` and ``protobuf-c``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,14 +47,14 @@ On Ubuntu systems, you should be able to install them as follows::
 
     sudo apt install protobuf-c-compiler libprotobuf-c1 libprotobuf-c-dev
 
-..
-    On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__::
 
-        brew install protobuf-c
+On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__::
 
-    On other systems, you will need
-    to install them from source following the `protobuf instructions <https://github.com/protocolbuffers/protobuf/blob/main/src/README.md>`__
-    and the `protobuf-c instructions <https://github.com/protobuf-c/protobuf-c/blob/master/README.md>`__.
+    brew install protobuf-c
+
+On other systems, you will need
+to install them from source following the `protobuf instructions <https://github.com/protocolbuffers/protobuf/blob/main/src/README.md>`__
+and the `protobuf-c instructions <https://github.com/protobuf-c/protobuf-c/blob/master/README.md>`__.
 
 Criterion Unit Testing Framework
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,12 +66,12 @@ On Ubuntu systems, you should be able to install them as follows::
 
     sudo apt install libcriterion-dev
 
-..
-    On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__::
 
-        brew install criterion
+On a Mac system, you should be able to install these libraries with `Homebrew <https://brew.sh/>`__::
 
-    On other systems, you must install the framework manually following their `installation instructions <https://criterion.readthedocs.io/en/latest/setup.html#installation>`__.
+    brew install criterion
+
+On other systems, you must install the framework manually following their `installation instructions <https://criterion.readthedocs.io/en/latest/setup.html#installation>`__.
 
 .. _chitcp-building:
 
