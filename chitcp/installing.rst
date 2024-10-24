@@ -17,12 +17,8 @@ Software Requirements
 chiTCP has a number of software requirements. If you are doing the chiTCP assignments
 as part of a class, it's likely that this software is already installed on your
 school's computers. If so, you can skip this section, unless you want to run chiTCP
-on your own computer. Please note that, so far, chiTCP has only been tested on
-Linux systems (including WSL under Windows).
-
-At this point, chiTCP does not build on Mac systems, although we're working on
-adding support for Mac systems.
-
+on your own computer. chiTCP has been tested on Linux systems (including WSL under Windows),
+as well as MacOS systems.
 
 CMake
 ~~~~~
