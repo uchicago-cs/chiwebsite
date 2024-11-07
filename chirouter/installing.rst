@@ -11,17 +11,10 @@ To work on the assignments, all you need to do is clone this repository. However
 please note that your instructor may give you more specific instructions on how
 to get the chirouter code.
 
-Software Requirements
----------------------
+Building chirouter
+------------------
 
-chirouter has the following requirements:
-
-- `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
-- `mininet <http://mininet.org/>`__ (2.3.0 or higher), a network emulator that requires root access on a Linux machine. If you do not have root access on your personal computer, we recommend running mininet inside a virtual machine (the mininet website actually provides some ready-to-use virtual machines).
-- `Ryu SDN Framework <https://ryu-sdn.org/>`__ (installed from source)
-
-Building
---------
+To build chirouter, the only requirement is `CMake <https://cmake.org/>`__ (version 3.5.1 or higher).
 
 The first time you download the chirouter code to your machine, you must run the
 following from the root of the chirouter code tree::
@@ -39,83 +32,289 @@ This executable accepts the following parameters:
   to send the router its configuration information). Defaults to 23300.
 * ``-c FILE``: [Optional] When specified, produces a capture file (in PCAPNG format) with all
   the Ethernet frames sent/received by the routers. This file can be opened in Wireshark for analysis.
-* ``-v``, ``-vv``, or ``-vvv``: To control the level of logging. This is described in 
+* ``-v``, ``-vv``, or ``-vvv``: To control the level of logging. This is described in
   more detail in :ref:`chirouter-implementing`
 
+Installing the chirouter Docker container
+-----------------------------------------------------
 
-Running
--------
+chirouter depends on the `mininet <http://mininet.org/>`__ network emulator to simulate the conditions of a real network.
+While it is technically possible to install mininet by itself, it is much easier to run a Docker container
+with all the necessary software. We provide such a container, and provide instructions below on how to install
+it and run it.
 
-To run chirouter, you must first run mininet to simulate the network where your router is located.
-Running mininet requires root access, but running the chirouter executable *does not*.
-So, there are two ways of running chirouter:
+Before performing these steps, make sure that you have built chirouter as described above.
 
-Running chirouter and mininet on a machine with root access
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MacOS / Linux
+~~~~~~~~~~~~~
 
-If you have root access on the machine you are working on, you should start two terminals
-and, on the first one, run chirouter::
+First of all, you will need to install Docker
+Desktop on `Mac <https://docs.docker.com/desktop/install/mac-install/>`__
+or `Linux <https://docs.docker.com/desktop/setup/install/linux/>`__. You
+may be prompted to “sign up” for a Docker account. You are welcome to do
+so, but none of the steps below require a Docker account (you can just
+click on “Continue without signing in” when prompted to sign up for an
+account)
+
+Once you’ve installed Docker Desktop, open it and, on the search bar,
+type in “chirouter”:
+
+.. figure:: docker-mac-1.png
+
+Click the “Pull” button next to “borjasotomayor/chirouter”
+
+Once the download is complete, you should see the image appear in the
+“Images” section on Docker Desktop:
+
+.. figure:: docker-mac-2.png
+
+Next, open two terminal windows. On the first terminal window, go to the
+``build`` directory of your repository, and run the following:
+
+::
 
    ./chirouter -vv
 
-Note: The ``-vv`` parameter is not ordinarily necessary, but we will use it to verify that
-chirouter and mininet are running correctly.
+You should see the following:
 
-You should see the following::
+::
 
-   [2018-02-09 10:41:13]   INFO Waiting for connection from controller...
-   
-In a separate terminal, run mininet like this::
+   [2024-04-30 14:18:38]   INFO Waiting for connection from controller...
 
-   sudo ./run-mininet topologies/basic.json
-   
-``sudo`` will ask you to enter your password; once you do so, you should see the following output::
+On the second terminal, run the following from the root of your
+repository:
 
-    *** Creating network
-    *** Adding controller
-    *** Adding hosts:
-    client1 client2 server1 server2
-    *** Adding switches:
-    r1 s1001 s1002 s1003
-    *** Adding links:
-    (client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002)
-    *** Configuring hosts
-    client1 client2 server1 server2
-    *** Starting SimpleHTTPServer on host server1
-    *** Starting SimpleHTTPServer on host server2
-    *** Starting controller
-    c0
-    *** Starting 4 switches
-    r1 s1001 s1002 s1003 ...
-    *** Starting CLI:
-    mininet>
+::
 
-Now, the terminal where you ran ``chirouter`` should show something like this::
+   ./run-docker basic
 
-    [2022-02-18 18:16:51]   INFO Controller connected from 127.0.0.1:35450
-    [2022-02-18 18:16:51]   INFO Received 1 routers
-    [2022-02-18 18:16:51]   INFO --------------------------------------------------------------------------------
-    [2022-02-18 18:16:51]   INFO ROUTER r1
-    [2022-02-18 18:16:51]   INFO
-    [2022-02-18 18:16:51]   INFO eth1 82:58:1A:BC:08:4B 192.168.1.1
-    [2022-02-18 18:16:51]   INFO eth2 5E:E4:3E:37:91:5A 172.16.0.1
-    [2022-02-18 18:16:51]   INFO eth3 0A:F4:73:75:97:12 10.0.0.1
-    [2022-02-18 18:16:51]   INFO
-    [2022-02-18 18:16:51]   INFO Destination     Gateway         Mask            Iface
-    [2022-02-18 18:16:51]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1
-    [2022-02-18 18:16:51]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2
-    [2022-02-18 18:16:51]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3
-    [2022-02-18 18:16:51]   INFO --------------------------------------------------------------------------------
+You should see the following:
 
-Note: The MAC addresses will likely be different. Everything else should be the same.
+::
 
-This means that chirouter has correctly received the network configuration from mininet.
+   *** Error setting resource limits. Mininet's performance may be affected.
+   *** Creating network
+   *** Adding controller
+   *** Adding hosts:
+   client1 client2 server1 server2
+   *** Adding switches:
+   r1 s1001 s1002 s1003
+   *** Adding links:
+   (client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002)
+   *** Configuring hosts
+   client1 client2 server1 server2
+   *** Starting SimpleHTTPServer on host server1
+   *** Starting SimpleHTTPServer on host server2
+   *** Starting controller
+   c0
+   *** Starting 4 switches
+   r1 s1001 s1002 s1003 ...
+   *** Starting CLI:
+   mininet>
 
-Go back to the mininet terminal, which should show a command prompt like this::
-   
-   mininet> 
-   
-To verify that mininet is running correctly, you can run the following from the mininet prompt::
+If you look at the first terminal, you should see the following output:
+
+::
+
+   [2024-04-30 14:19:35]   INFO Controller connected from ::ffff:127.0.0.1:52167
+   [2024-04-30 14:19:35]   INFO Received 1 routers
+   [2024-04-30 14:19:35]   INFO --------------------------------------------------------------------------------
+   [2024-04-30 14:19:35]   INFO ROUTER r1
+   [2024-04-30 14:19:35]   INFO
+   [2024-04-30 14:19:35]   INFO eth1 BE:BA:81:AC:7D:8F 192.168.1.1
+   [2024-04-30 14:19:35]   INFO eth2 5A:42:D3:55:91:5A 172.16.0.1
+   [2024-04-30 14:19:35]   INFO eth3 CA:43:81:D1:0B:82 10.0.0.1
+   [2024-04-30 14:19:35]   INFO
+   [2024-04-30 14:19:35]   INFO Destination     Gateway         Mask            Iface
+   [2024-04-30 14:19:35]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1
+   [2024-04-30 14:19:35]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2
+   [2024-04-30 14:19:35]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3
+   [2024-04-30 14:19:35]   INFO --------------------------------------------------------------------------------
+
+Note: The MAC addresses will be different, but everything else should
+look as it does above.
+
+To exit the mininet prompt in the first terminal, press Control-D
+
+Next up, skip to the "General" section below.
+
+Windows
+~~~~~~~
+
+First of all, you will need to `install Docker
+Desktop <https://docs.docker.com/desktop/install/windows-install/>`__.
+
+.. note::
+
+    Docker can be run on Windows in one of two modes: WSL2 or
+    Hyper-V. The default WSL2 **does not** support mininet, so
+    you will need to setup Docker to use Hyper-V instead. When
+    prompted to use WSL2, make sure that option is unchecked:
+
+    .. figure:: docker-windows-1.png
+       :alt: image_tooltip
+
+       alt_text
+
+    Docker Desktop may ask you at various points whether you want to switch
+    to using WSL2. Remember to always decline that option.
+
+    That said, in some setups (e.g., Windows Home), Docker may tell
+    you that WSL2 is the only option available (additionally, you
+    may get better performance from using WSL2). In that case,
+    you will need to update your WSL2 kernel. We provide instructions
+    for this at the end of this section.
+
+After Docker Desktop has finished installing (this may include
+restarting your computer), open it. You may be prompted to “sign up” for
+a Docker account. You are welcome to do so, but none of the steps below
+require a Docker account (you can just click on “Continue without
+signing in” when prompted to sign up for an account)
+
+Next, type in “chirouter” on the Docker Desktop search bar:
+
+.. figure:: docker-windows-2.png
+
+Click the “Pull” button next to “borjasotomayor/chirouter”
+
+Once the download is complete, you should see the image appear in the
+“Images” section on Docker Desktop:
+
+.. figure:: docker-windows-3.png
+
+Next, open two terminals: a WSL2 terminal and a PowerShell terminal.
+
+On the WSL2 terminal, go to the ``build`` directory of your repository, and
+run the following:
+
+::
+
+   ./chirouter -vv
+
+You should see the following:
+
+::
+
+   [2024-04-30 14:18:38]   INFO Waiting for connection from controller…
+
+Then, on the PowerShell terminal, run the following:
+
+::
+
+   docker.exe run -ti --rm --privileged --name chirouter --add-host=host.docker.internal:host-gateway borjasotomayor/chirouter basic
+
+Note: To avoid running that command every time, you can also create a
+file called ``run-docker.ps1`` with the following contents:
+
+::
+
+   docker.exe run -ti --rm --privileged --name chirouter --add-host=host.docker.internal:host-gateway borjasotomayor/chirouter $args
+
+Then, run the following:
+
+::
+
+   .\run-docker.ps1 basic
+
+You should see the following output:
+
+::
+
+   *** Error setting resource limits. Mininet's performance may be affected.
+   *** Creating network
+   *** Adding controller
+   *** Adding hosts:
+   client1 client2 server1 server2
+   *** Adding switches:
+   r1 s1001 s1002 s1003
+   *** Adding links:
+   (client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002)
+   *** Configuring hosts
+   client1 client2 server1 server2
+   *** Starting SimpleHTTPServer on host server1
+   *** Starting SimpleHTTPServer on host server2
+   *** Starting controller
+   c0
+   *** Starting 4 switches
+   r1 s1001 s1002 s1003 ...
+   *** Starting CLI:
+   mininet>
+
+On the WSL2 terminal, you should see the following:
+
+::
+
+   [2024-04-30 21:44:02]   INFO Controller connected from 127.0.0.1:48598
+   [2024-04-30 21:44:02]   INFO Received 1 routers
+   [2024-04-30 21:44:02]   INFO --------------------------------------------------------------------------------
+   [2024-04-30 21:44:02]   INFO ROUTER r1
+   [2024-04-30 21:44:02]   INFO
+   [2024-04-30 21:44:02]   INFO eth1 C6:CC:B6:5B:C7:8B 192.168.1.1
+   [2024-04-30 21:44:02]   INFO eth2 C2:AB:30:7A:99:63 172.16.0.1
+   [2024-04-30 21:44:02]   INFO eth3 16:57:6A:8D:AD:0D 10.0.0.1
+   [2024-04-30 21:44:02]   INFO
+   [2024-04-30 21:44:02]   INFO Destination     Gateway         Mask            Iface
+   [2024-04-30 21:44:02]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1
+   [2024-04-30 21:44:02]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2
+   [2024-04-30 21:44:02]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3
+   [2024-04-30 21:44:02]   INFO --------------------------------------------------------------------------------
+
+Note: The MAC addresses will be different, but everything else should
+look as it does above.
+
+To exit the mininet prompt in the first terminal, press Control-D
+
+Next up, skip to the "Running chirouter" section below.
+
+**Updating the WSL2 Kernel**
+
+If you want to run our Docker container in WSL2 mode, you will need to build a new WSL2 kernel
+(the default WSL2 kernel does not include the Open vSwitch module needed to run mininet).
+You can do so by following the instructions on `this page <https://learn.microsoft.com/en-us/community/content/wsl-user-msft-kernel-v6>`__:
+
+IMPORTANT: Between steps 4 and 5 of the linked instructions, you need to run the following command:
+
+    make menuconfig KCONFIG_CONFIG=Microsoft/config-wsl
+
+Then navigate to ``Networking support -> Networking Options -> Open vSwitch``, and make sure it is
+compiled into the kernel (make sure the option appears as <*> Open vSwitch)
+
+Running chirouter
+-----------------
+
+Running chirouter involves running the ``chirouter`` executable in one terminal,
+and mininet (using the Docker container) in another terminal. To do this,
+follow the same instructions describe above when installing the Docker container.
+
+The first parameter to the ``run-docker`` script specifies the network topology
+we want to simulate:
+
+- MacOS/Linux::
+
+    ./run-docker basic
+
+- Windows::
+
+    .\run-docker.ps1 basic
+
+These topologies are described in more detail in the :ref:`chirouter-testing`
+page but, for now, all we need to know is that the ``basic`` topology involves
+a single router connecting multiple networks together, each containing some hosts.
+
+The mininet terminal (which will show a prompt like this: ``mininet>``)
+will allow you to run network commands on a specific host of the topology. For example,
+this::
+
+   mininet> client1 ping -c 4 server1
+
+Would run the ``ping`` command on ``client1`` (and would specifically
+ping ``server1`` four times). While the network itself is being simulated
+by Mininet, the commands that are being run are the exact same ones you
+would run on a Linux system.
+
+Please note that the above command won't yet work, because you have not
+yet implemented the router. However, to verify that mininet is running correctly,
+you can run the following::
 
    mininet> client1 ping -c 4 client1
    PING 10.0.100.1 (10.0.100.1) 56(84) bytes of data.
@@ -129,9 +328,9 @@ To verify that mininet is running correctly, you can run the following from the 
    rtt min/avg/max/mdev = 0.014/0.019/0.023/0.004 ms
 
 The above command just instructs ``client1`` to ping itself. Since your router isn't involved in delivering the
-ICMP messages, this will run fine even if you haven't implemented the router yet. On the other hand, the following
+messages, this will run fine even if you haven't implemented the router yet. On the other hand, the following
 command instructs ``client1`` to ping ``10.0.0.1`` (one of the router's interfaces). Since you have
-not yet implemented ICMP in your router, it will not reply to the pings::
+not yet implemented your router, it will not reply to the pings::
 
    mininet> client1 ping -c 4 10.0.0.1
    PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
@@ -143,7 +342,7 @@ not yet implemented ICMP in your router, it will not reply to the pings::
    --- 10.0.0.1 ping statistics ---
    4 packets transmitted, 0 received, +4 errors, 100% packet loss, time 3014ms
 
-However, if you look at the chirouter logs, you should see that it *is* receiving the ARP requests from ``client1``::
+However, if you look at the chirouter logs, you should see that it *is* receiving ARP requests from ``client1``::
 
     [2022-02-18 18:18:21]  DEBUG Received Ethernet frame on interface r1-eth3
     [2022-02-18 18:18:21]  DEBUG    ######################################################################
@@ -158,52 +357,43 @@ However, if you look at the chirouter logs, you should see that it *is* receivin
 As you develop your router, please note that it is important that you start chirouter and mininet in
 the same order: chirouter first, followed by mininet.
 
+Running without a topology
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Running chirouter and mininet on separate machines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you run run-docker without any parameters, you will instead get a
+root shell in the container::
 
-Since mininet requires root access, it may sometimes be more convenient to run chirouter on your usual
-development machine (e.g., your laptop), and mininet on a machine with root access. In particular,
-it should be easy to run mininet inside a virtual machine running on the same machine where
-you are doing your chirouter development.
+   $ ./run-docker
+   root@e37390d6efd7:/chirouter#
 
-To do this, you should clone your repository on the (non-root) machine, and run chirouter as follows::
+You will need to do this to run the automated tests, which are described
+later in this documentation.
 
-   ./chirouter -vv -p PORT
-   
-Where ``PORT`` is the TCP port on which chirouter will listen for connections from mininet. If you
-omit this parameter, port 23300 will be used by default.   
-   
-Next, on the root machine, it is enough to clone the upstream chirouter repository. In fact, none of your own
-code will run on the root machine; only the mininet code (which you do not need to modify in any way)
-will run there.   
-   
-From the root machine, run mininet as follows::
+Inside this root shell, you can run also run a ``run-mininet`` command directly
+to start Mininet::
 
-   sudo ./run-mininet topologies/basic.json --chirouter HOST:PORT
-   
-Where ``HOST`` is the hostname or IP address of the machine running chirouter. If you are running mininet
-inside a virtual machine, there will typically be a special IP address to connect to the VM's host machine
-(which is where you're running chirouter). ``PORT`` is the port specified when running ``chirouter`` (or
-23300 if you did not specify a ``-p`` parameter when running ``chirouter``)
+       $ ./run-docker
+       root@e37390d6efd7:/chirouter# ./run-mininet topologies/basic.json
+       *** Error setting resource limits. Mininet's performance may be affected.
+       *** Creating network
+       *** Adding controller
+       *** Adding hosts:
+       client1 client2 server1 server2
+       … etc …
 
-You should now observe the same outputs as described earlier.
+**CAREFUL**: When you exit this root shell, any work you did inside the container
+will be lost. You should only use the container to run mininet or the automated tests;
+you should not be creating and saving any files inside the container.
 
+Finally, chirouter listens on port 23320 for connections from mininet
+(and mininet will, by default, use that port). Since you will be running
+on your own computer, this should not cause any conflicts but, if you do
+need to use a different port, run chirouter like this::
 
-Running mininet and Ryu separately
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   ./chirouter -p PORT
 
-It can sometimes be useful, for debugging purposes, to run mininet and the Ryu controller separately (in general,
-you should not do this unless your instructor asks you for the output of Ryu). To do so, you must run
-the following commands in separate terminals, and in this order::
+(where ``PORT`` is the alternate port you want to use)
 
-   ./chirouter -vv
-   
-::
+And, from the container’s root shell, run this::
 
-   ./run-controller topologies/basic.json
-   
-::
-
-   sudo ./run-mininet topologies/basic.json --remote-controller 127.0.0.1:6633
-
+   ./run-mininet topologies/basic.json --chirouter host.docker.internal:PORT
