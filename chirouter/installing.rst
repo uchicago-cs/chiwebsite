@@ -29,7 +29,7 @@ to build chirouter. This will generate the ``chirouter`` executable.
 This executable accepts the following parameters:
 
 * ``-p PORT``: [Optional] Port that chirouter will listen on (mininet and POX will use this port
-  to send the router its configuration information). Defaults to 23300.
+  to send the router its configuration information). Defaults to 23320.
 * ``-c FILE``: [Optional] When specified, produces a capture file (in PCAPNG format) with all
   the Ethernet frames sent/received by the routers. This file can be opened in Wireshark for analysis.
 * ``-v``, ``-vv``, or ``-vvv``: To control the level of logging. This is described in
@@ -136,7 +136,7 @@ look as it does above.
 
 To exit the mininet prompt in the first terminal, press Control-D
 
-Next up, skip to the "General" section below.
+Next up, skip to the "Running chirouter" section below.
 
 Windows
 ~~~~~~~
