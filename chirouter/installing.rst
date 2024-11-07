@@ -152,9 +152,6 @@ Desktop <https://docs.docker.com/desktop/install/windows-install/>`__.
     prompted to use WSL2, make sure that option is unchecked:
 
     .. figure:: docker-windows-1.png
-       :alt: image_tooltip
-
-       alt_text
 
     Docker Desktop may ask you at various points whether you want to switch
     to using WSL2. Remember to always decline that option.
@@ -162,7 +159,7 @@ Desktop <https://docs.docker.com/desktop/install/windows-install/>`__.
     That said, in some setups (e.g., Windows Home), Docker may tell
     you that WSL2 is the only option available (additionally, you
     may get better performance from using WSL2). In that case,
-    you will need to update your WSL2 kernel. We provide instructions
+    you will need to update your WSL2 kernel to be able to run our Docker container. We provide instructions
     for this at the end of this section.
 
 After Docker Desktop has finished installing (this may include
@@ -270,14 +267,14 @@ Next up, skip to the "Running chirouter" section below.
 
 If you want to run our Docker container in WSL2 mode, you will need to build a new WSL2 kernel
 (the default WSL2 kernel does not include the Open vSwitch module needed to run mininet).
-You can do so by following the instructions on `this page <https://learn.microsoft.com/en-us/community/content/wsl-user-msft-kernel-v6>`__:
+You can do so by following the instructions on `this page <https://learn.microsoft.com/en-us/community/content/wsl-user-msft-kernel-v6>`__.
 
-IMPORTANT: Between steps 4 and 5 of the linked instructions, you need to run the following command:
+IMPORTANT: Between steps 4 and 5 of the linked instructions, you need to run the following command::
 
     make menuconfig KCONFIG_CONFIG=Microsoft/config-wsl
 
 Then navigate to ``Networking support -> Networking Options -> Open vSwitch``, and make sure it is
-compiled into the kernel (make sure the option appears as <*> Open vSwitch)
+compiled into the kernel (make sure the option appears as ``<*> Open vSwitch``)
 
 Running chirouter
 -----------------
@@ -360,7 +357,7 @@ the same order: chirouter first, followed by mininet.
 Running without a topology
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you run run-docker without any parameters, you will instead get a
+If you run ``run-docker`` without any parameters, you will instead get a
 root shell in the container::
 
    $ ./run-docker
