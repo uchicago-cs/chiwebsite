@@ -112,6 +112,7 @@ html_sidebars = {'*':  None,
                  'chirc/testing':  ['localtoc.html'],
                  'chitcp/testing':  ['localtoc.html'],
                  'chirouter/installing':  ['localtoc.html'],
+                 'chirouter/implementing': ['localtoc.html'],
                  'chirouter/testing':  ['localtoc.html'],
                  }
 

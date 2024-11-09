@@ -62,6 +62,71 @@ You are allowed, and encouraged, to use helper functions to implement ``chiroute
 For example, it would make sense to write separate functions to handle ARP messages,
 ICMP messages directed to the router, and IP datagrams.
 
+Accessing/Creating Protocol Headers
+-----------------------------------
+
+The ``chirouter_process_ethernet_frame`` function will receive an ``ethernet_frame_t`` struct
+representing an Ethernet frame arriving at the router. This struct contains the raw contents
+of the Ethernet frame, but you will generally want to access individual fields not just
+in the Ethernet header, but also is other protocol headers (such as ARP, IP, and ICMP) contained within
+the Ethernet frame.
+
+To access these protocol headers, you should use the structs and macros provided in the
+``ethernet.h``, ``arp.h``, ``ipv4.h``, and ``icmp.h`` header files (located in the ``src/router/protocols`` directory).
+
+For example, given an inbound Ethernet frame (an ``ethernet_frame_t`` struct) you can access the
+different headers like this::
+
+   /* Accessing the Ethernet header */
+   ethhdr_t* hdr = (ethhdr_t*) frame->raw;
+
+   /* Accessing an ARP message */
+   arp_packet_t* arp = (arp_packet_t*) (frame->raw + sizeof(ethhdr_t));
+
+   /* Accessing the IP header */
+   iphdr_t* ip_hdr = (iphdr_t*) (frame->raw + sizeof(ethhdr_t));
+
+   /* Accessing an ICMP message */
+   icmp_packet_t* icmp = (icmp_packet_t*) (frame->raw + sizeof(ethhdr_t) + sizeof(iphdr_t));
+
+
+Your router will also create new Ethernet frames to send out. To do this, you will have to
+first allocate enough memory for all the headers (including their payload), and then use
+the structs/macros in ``ethernet.h``, ``arp.h``, ``ipv4.h``, and ``icmp.h`` to set the correct
+values in each header. For example, creating an ARP reply would look something like this::
+
+    int frame_len = sizeof(ethhdr_t) + sizeof(arp_packet_t);
+    uint8_t out_frame[frame_len];
+    memset(arp_reply, 0, sizeof(out_frame));
+
+    ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
+    /* Use ether_hdr to set the fields in the Ethernet header */
+
+    arp_packet_t* arp = (arp_packet_t*) (out_frame + sizeof(ethhdr_t));
+    /* Use arp to set the fields in the ARP message */
+
+On the other hand, creating an ICMP message would look something like this::
+
+    /* We assume we've already computed the size of the ICMP payload, and that
+       it is stored in payload_len */
+    int frame_len = sizeof(ethhdr_t) + sizeof(iphdr_t) + ICMP_HDR_SIZE + payload_len;
+    uint8_t out_frame[frame_len];
+    memset(frame, 0, sizeof(out_frame));
+
+    ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
+    /* Use ether_hdr to set the fields in the Ethernet header */
+
+    iphdr_t* ip_hdr = (iphdr_t*) (out_frame + sizeof(ethhdr_t));
+    /* Use ip_hdr to set the fields in the IP header */
+
+    icmp_packet_t* icmp = (icmp_packet_t*) (out_frame + sizeof(ethhdr_t) + sizeof(iphdr_t));
+    /* Use icmp to set the fields in the ICMP message */
+
+The ``chirouter_send_frame`` function
+-------------------------------------
+
+Once you've crafted an Ethernet frame, you will need to send it through one of the router's interfaces.
+This is done using the ``chirouter_send_frame`` function, defined in the ``chirouter.h`` header file.
 
 arp.c / arp.h
 -------------
@@ -88,37 +153,7 @@ However, this file does provide several functions to access and/or manipulate th
 ARP cache and list of pending ARP requests, which you can use in your implementation.
 Take into account that these functions assume that the ``lock_arp`` mutex has already been
 locked before the functions are called.
- 
- 
-The ``chirouter_send_frame`` function
--------------------------------------
 
-When an Ethernet frame arrives and is processed in ``chirouter_process_ethernet_frame`` you will,
-in many cases, have to *send* an Ethernet frame through one of the router's interfaces. 
-This is done using the ``chirouter_send_frame`` function, defined in the ``chirouter.h`` header file. 
-
-
-ethernet.h, arp.h, icmp.h, and ipv4.h
--------------------------------------
-
-These header files (located in the ``src/router/protocols`` directory) provide structs that
-allow easy access to the values contained in Ethernet, ARP, ICMP, and IPv4 headers.
-
-Given an inbound Ethernet frame (an ``ethernet_frame_t`` struct), you can access the
-different headers like this::
-
-   /* Accessing the Ethernet header */
-    ethhdr_t* hdr = (ethhdr_t*) frame->raw;
-    
-   /* Accessing the IP header */
-   iphdr_t* ip_hdr = (iphdr_t*) (frame->raw + sizeof(ethhdr_t));
-   
-   /* Accessing an ARP message */
-   arp_packet_t* arp = (arp_packet_t*) (frame->raw + sizeof(ethhdr_t));
-   
-   /* Accessing an ICMP message */
-   icmp_packet_t* icmp = (icmp_packet_t*) (frame->raw + sizeof(ethhdr_t) + sizeof(iphdr_t));
-   
 
 utils.c / utils.h
 -----------------
@@ -142,24 +177,20 @@ messages:
     chilog(DEBUG, "Received Ethernet frame with unsupported Ethertype: %i)", ntohs(hdr->type));
 
 And the ``chilog_ethernet()``, ``chilog_arp()``, ``chilog_ip()``, and
-``chilog_icmp()`` functions to dump the contents of an Ethernet header,
-ARP message, IP header, or ICMP message. For example:
+``chilog_icmp()`` functions to log the contents of an Ethernet header,
+ARP message, IP header, or ICMP message. For example, suppose we have
+received an Ethernet frame (a ``frame`` variable of type ``ethernet_frame_t``) containing
+and ICMP message. We could log each header like this:
 
 .. code-block:: c
 
-    int reply_len = sizeof(ethhdr_t) + sizeof(iphdr_t) + ICMP_HDR_SIZE + payload_len;
-    uint8_t reply[reply_len];
-    memset(reply, 0, reply_len);
+    ethhdr_t* ether_hdr = (ethhdr_t*) frame->raw;
+    iphdr_t* ip_hdr = (iphdr_t*) (frame->raw + sizeof(ethhdr_t));
+    icmp_packet_t* icmp = (icmp_packet_t*) (frame->raw + sizeof(ethhdr_t) + sizeof(iphdr_t));
 
-    ethhdr_t* reply_ether_hdr = (ethhdr_t*) reply;
-    iphdr_t* reply_ip_hdr = (iphdr_t*) (reply + sizeof(ethhdr_t));
-    icmp_packet_t* reply_icmp = (icmp_packet_t*) (reply + sizeof(ethhdr_t) + sizeof(iphdr_t));
-    
-    /* Set values in all the headers */
-
-    chilog(DEBUG, "Sending ICMP packet");
-    chilog_ip(DEBUG, reply_ip_hdr, LOG_OUTBOUND);
-    chilog_icmp(DEBUG, reply_icmp, LOG_OUTBOUND);
+    chilog_ethernet(DEBUG, ether_hdr, LOG_OUTBOUND);
+    chilog_ip(DEBUG, ip_hdr, LOG_OUTBOUND);
+    chilog_icmp(DEBUG, icmp, LOG_OUTBOUND);
 
 The last parameter of these functions can be ``LOG_INBOUND`` or ``LOG_OUTBOUND``
 to designate a message that is being received or sent, respectively (this
