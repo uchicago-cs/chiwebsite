@@ -263,7 +263,7 @@ Running Valgrind on a test
 
 To run Valgrind on a single test, run the following::
 
-   valgrind ./test-tcp --filter "TEST"
+   valgrind --trace-children=yes ./test-tcp --filter "TEST"
    
 Replace ``TEST`` with the test you want to run.
 
