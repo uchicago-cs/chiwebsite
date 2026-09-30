@@ -238,7 +238,7 @@ And press Enter. If your server is correctly implemented, the telnet client will
 welcome replies that your server would send in reply to the ``NICK`` and ``USER`` commands. Once
 you've logged in like this, you can manually test other IRC commands.
 
-You can also test your implementation with an existing IRC client. We recommend using ``irssi`` (http://irssi.org/),
+You can also test your implementation with an existing IRC client. We recommend using ``irssi`` (https://irssi.org/),
 which provides a simple terminal-based interface. This will allow you to interact with the IRC protocol
 at a higher level (plus, if your server works correctly with a standard IRC client, that is a sign that
 your implementation is pretty good). However, take into account that clients like ``irssi`` do not allow you

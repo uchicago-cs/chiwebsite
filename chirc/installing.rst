@@ -18,7 +18,7 @@ chirc has the following software requirements:
 
 * `CMake <https://cmake.org/>`__ (version 3.21 or higher)
 * Python 3.12 or above
-* `pytest <http://pytest.org>`_, including the ``pytest-json-report`` plugin. The grading script
+* `pytest <https://pytest.org>`_, including the ``pytest-json-report`` plugin. The grading script
   additionally depends on the Click library. All of these can be
   installed using pip (``pip3 install pytest pytest-json-report click``).
 
