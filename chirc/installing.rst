@@ -18,9 +18,9 @@ chirc has the following software requirements:
 
 * `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
 * Python 3.8 or above
-* `pytest <http://pytest.org>`_, including the ``pytest-json-report`` `plugin. The grading script
+* `pytest <http://pytest.org>`_, including the ``pytest-json-report`` plugin. The grading script
   additionally depends on the Click library. All of these can be
-  installed using pip (``pip3 install pytest pytest-json-report click``)
+  installed using pip (``pip3 install pytest pytest-json-report click``).
 
 
 Building
@@ -77,7 +77,7 @@ example::
 
    ./chirc -o foobar
 
-The provided code, however, doesn’t do anything other that process the
+The provided code, however, doesn’t do anything other than process the
 command-line parameters. You should nonetheless verify that it builds
 and runs correctly.
 
@@ -89,9 +89,9 @@ Logging
 -------
 
 The chirc server prints out messages to standard output using a
-simple logging function called ``chilog()``, declared in ``src/log.h``. 
+simple logging function called ``chilog()``, declared in ``src/log.h``.
 If you need to print messages to standard output, you *must* use the
-``chilog()`` function. This is a simple function that expects the 
+``chilog()`` function. This is a simple function that expects the
 same parameters as ``printf``, plus an additional parameter to specify a logging level.
 For example:
 
@@ -110,7 +110,7 @@ The first parameter to ``chilog()`` is used to specify the log level:
    continue running, but a specific part of it to fail (e.g., an individual
    socket).
 
--  ``WARNING``: Used to indicate unexpected situation which, while not
+-  ``WARNING``: Used to indicate unexpected situations which, while not
    technically an error, could cause one.
 
 -  ``INFO``: Used to print general information about the state of the program.
@@ -121,7 +121,7 @@ The first parameter to ``chilog()`` is used to specify the log level:
 -  ``TRACE``: Used to print low-level information, such as function
    entry/exit points, dumps of entire data structures, etc.
 
-The level of logging is controlled by the ``q`` and ``-v`` argument when running
+The level of logging is controlled by the ``-q`` and ``-v`` arguments when running
 ``chirc``:
 
 -  No ``-q`` or ``-v`` argument: Print only ``CRITICAL``, ``ERROR``, ``WARNING`` and ``INFO`` messages.

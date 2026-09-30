@@ -2,9 +2,9 @@ Introduction
 ============
 
 In this project, you will implement a simple Internet Relay Chat (IRC)
-server called **chirc**. IRC is one of the earliest network protocols 
+server called **chirc**. IRC is one of the earliest network protocols
 for text messaging and multi-participant chatting. It remains a popular
-standard and still sees heavy use in certain communities, specially the
+standard and still sees heavy use in certain communities, especially the
 open source software community.
 
 Your implementation must be compliant enough
@@ -23,7 +23,7 @@ equivalent of a "chat group" or a "chat room").
 
 The chirc documentation is divided into the following sections:
 
-* :ref:`chirc-irc` and :ref:`chirc-irc-examples` provide an overview of 
+* :ref:`chirc-irc` and :ref:`chirc-irc-examples` provide an overview of
   the IRC protocol and provide several examples of valid IRC communications.
 * :ref:`chirc-build` describes how to get the chirc code and how to build and run it.
 * :ref:`chirc-assignment1`, :ref:`chirc-assignment2`, and :ref:`chirc-assignment3`,

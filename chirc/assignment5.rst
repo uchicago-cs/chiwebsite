@@ -18,7 +18,7 @@ In a nutshell, an IRC network is a collection of IRC servers where each server m
 
    Servers: A, B, C, D, E         Clients: 1, 2, 3, 4
 
-If client 1 were to join channel ``#foobar``, A would propagate this information to B, who would then propagate it to C, who would then propagate it to both D and E. So, if client 4 was already in ``#foobar``, they would see client 1 join that channel, even though client 1 and 4 are connected to different servers.
+If client 1 were to join channel ``#foobar``, A would propagate this information to B, who would then propagate it to C, who would then propagate it to both D and E. So, if client 4 was already in ``#foobar``, they would see client 1 join that channel, even though clients 1 and 4 are connected to different servers.
 
 So, an IRC network gives clients the impression that they are dealing with a single system, even though there are actually multiple servers in the network. From a client's perspective, it doesn't matter what server they connect to, as they should all have the same information (same list of users and channels, etc.). However, by having multiple servers, our IRC network can support more users.
 
@@ -46,7 +46,7 @@ Each row corresponds to one server, and contains the following fields:
 - **Port** (e.g., ``6667``): The port we can use to connect to the server.
 - **Server Password** (e.g., ``pass1``): Each server has an associated password. Other servers must supply this password to connect to the server.
 
-The ``chirc`` executable accepts an ``-n`` option to specify a network specification file, and an ``-s`` file to specify what server from that network should be run by ``chirc``. For example, suppose the above network specification file is named ``2servers.txt``. We would start the first server like this::
+The ``chirc`` executable accepts an ``-n`` option to specify a network specification file, and an ``-s`` option to specify what server from that network should be run by ``chirc``. For example, suppose the above network specification file is named ``2servers.txt``. We would start the first server like this::
 
     ./chirc -n 2servers.txt -s irc-1.example.net -o operpasswd
 
@@ -61,7 +61,7 @@ This would start a server on port ``6668``. Note how we don't specify a port usi
 ``PASS`` and ``SERVER``
 -----------------------
 
-Similar to how a user registers by sending a ``NICK`` and ``PASS`` command, a server connects to another server by sending a ``PASS`` and ``SERVER`` commands. We will refer to the server that initiates the connection (i.e., the one that sends ``PASS`` and ``SERVER``) as the *active* server, and we will refer to the one that receives the connection as the *passive* server.
+Similar to how a user registers by sending a ``NICK`` and ``PASS`` command, a server connects to another server by sending ``PASS`` and ``SERVER`` commands. We will refer to the server that initiates the connection (i.e., the one that sends ``PASS`` and ``SERVER``) as the *active* server, and we will refer to the one that receives the connection as the *passive* server.
 
 You must add support for these commands, as specified in `[RFC2813 §4.1.1] <https://tools.ietf.org/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__].
 
@@ -85,7 +85,7 @@ Take into account the following:
 
 - Once both commands are received, you must send back a ``PASS`` and ``SERVER`` message to the active server, providing the active server's password in ``PASS`` and the passive server's server name in ``SERVER``. Additionally, these ``PASS`` and ``SERVER`` messages must have a prefix containing the passive server's server name.
 
-  - In the ``PASS`` commmand, the ``<password>`` must be the *active* server's password, the ``<version>`` must be ``0210`` and the ``<flags>`` must be a string of the form ``chirc|XXX`` (where ``XXX`` can be any version identifier, such as ``0.1``, ``3.11``, etc.).
+  - In the ``PASS`` command, the ``<password>`` must be the *active* server's password, the ``<version>`` must be ``0210`` and the ``<flags>`` must be a string of the form ``chirc|XXX`` (where ``XXX`` can be any version identifier, such as ``0.1``, ``3.11``, etc.).
 
   - In the ``SERVER`` command, the ``<servername>`` must be the *passive* server's name. The ``<hopcount>`` and ``<token>`` should be set to ``1`` and the ``<serverinfo>`` can be any arbitrary string.
 
@@ -95,14 +95,14 @@ For example, suppose ``irc-2.example.net`` wanted to connect to ``irc-1.example.
     PASS pass1 0210 chirc|0.6
     SERVER irc-2.example.net 1 1 :chirc server
 
-You can read these as "Hello server, I am ``irc-2.example.net`` and I wish to connect to you. Your password is ``pass1``"
+You can read these as "Hello server, I am ``irc-2.example.net`` and I wish to connect to you. Your password is ``pass1``".
 
 ``irc-1.example.net`` will then reply with the following::
 
     :irc-1.example.net PASS pass2 0210 chirc|0.6
     :irc-1.example.net SERVER irc-1.example.net 1 1 :chirc server
 
-You can read this reply as "Hello server, I would also like to connect with you. I am ``irc-1.example.net``. Your password is ``pass2``"
+You can read this reply as "Hello server, I would also like to connect with you. I am ``irc-1.example.net``. Your password is ``pass2``".
 
 ``NICK``
 --------
@@ -121,7 +121,7 @@ Take into account the following:
 ``CONNECT``
 -----------
 
-You will be able to test the ``PASS``, ``SERVER``, and ``NICK`` command by running a single server and having a client pretend to be another server (in fact, several of the tests do just this). However, to create an actual IRC network, we will need one server to connect to another. This is done using the ``CONNECT`` command specified in `[RFC2812 §3.4.7 <https://tools.ietf.org/html/rfc2812#section-3.4.7>`__].
+You will be able to test the ``PASS``, ``SERVER``, and ``NICK`` commands by running a single server and having a client pretend to be another server (in fact, several of the tests do just this). However, to create an actual IRC network, we will need one server to connect to another. This is done using the ``CONNECT`` command specified in `[RFC2812 §3.4.7 <https://tools.ietf.org/html/rfc2812#section-3.4.7>`__].
 
 Take into account the following:
 
@@ -161,7 +161,7 @@ But it would be relayed to other *servers* like this::
 
     :jrandom PRIVMSG #test :Hello, everyone!
 
-Note: You will be able to test your implementation of relayed commands before implementing ``CONNECT`` (we have included tests for this that don't rely on ``CONNECT``)
+Note: You will be able to test your implementation of relayed commands before implementing ``CONNECT`` (we have included tests for this that don't rely on ``CONNECT``).
 
 Querying the Network's State
 ----------------------------

@@ -65,7 +65,7 @@ replies in ``PRIVMSG``. However, take into account the following:
    they have not joined. When this happens, a ``ERR_CANNOTSENDTOCHAN``
    reply must be sent back (only in the case of ``PRIVMSG`` messages).
 
--  Once you have implement modes, there may be additional cases where a
+-  Once you have implemented modes, there may be additional cases where a
    message will be denied if the user has insufficient privileges to
    speak on a channel.
 
@@ -76,7 +76,7 @@ Implement the ``PART`` command, as described in `[RFC2812 §3.2.2] <https://data
 following exceptions:
 
 -  The command must accept either one parameter (a channel name) or two
-   parameters (a channel name and a parting message)
+   parameters (a channel name and a parting message).
 
 -  You must only support the ``ERR_NOTONCHANNEL``,
    ``ERR_NOSUCHCHANNEL``, and ``ERR_NEEDMOREPARAMS`` replies.
@@ -103,7 +103,7 @@ User and channel modes
 
 In IRC, users can have certain *modes* assigned to them. Modes are
 identified by a single letter, and they are binary: a user either has a
-mode, or he doesn’t. The possible user modes are described in `[RFC2812 §3.1.5] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.5>`__, and we
+mode, or they don’t. The possible user modes are described in `[RFC2812 §3.1.5] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.5>`__, and we
 will be implementing only the following modes:
 
 - ``a`` -- The *away* mode. Users with this mode are considered to be “away
@@ -141,7 +141,7 @@ You must implement the ``OPER`` message as described in `[RFC2812 §3.1.4] <http
 following exceptions:
 
 -  You must only support the ``RPL_YOUREOPER``, ``ERR_PASSWDMISMATCH``,
-   and ``ERR_NEEDMOREPARAMS``.
+   and ``ERR_NEEDMOREPARAMS`` replies.
 
 Take into account that you should expect a ``<name>`` parameter but will
 ignore its content; the password expected by the ``OPER`` command is the
@@ -257,7 +257,7 @@ following exceptions:
       all connected users are in a channel, this final ``RPL_NAMREPLY``
       is omitted.
 
-   -  When a single parameters is specified, that parameter is
+   -  When a single parameter is specified, that parameter is
       interpreted to be a channel.
 
 -  You do not need to support the ``ERR_TOOMANYMATCHES`` and
@@ -301,7 +301,7 @@ Implement the ``WHO`` command, as described in `[RFC2812 §3.6.1] <https://datat
 following exceptions:
 
 -  If a mask is specified, you only need to support the case where the
-   mask is the name of a channel. If such channel exists, you must
+   mask is the name of a channel. If such a channel exists, you must
    return a ``RPL_WHOREPLY`` for each user in that channel.
 
 -  We are not supporting invisible clients so, if no mask is specified
@@ -338,10 +338,10 @@ Take into account the following:
 
    When a channel is not specified, the ``@`` and ``+`` flags are not
    included (regardless of what channel modes that user may have in the
-   users he belongs to).
+   channels they belong to).
 
-Updating commands from previous assignment
-------------------------------------------
+Updating commands from the previous assignment
+----------------------------------------------
 
 Update the implementation of the following commands:
 
@@ -350,7 +350,7 @@ Update the implementation of the following commands:
 
 -  ``QUIT``: When a user sends this message, it must be relayed to all
    the channels that user is in. Take into account that a ``QUIT``
-   results in that user leaving all the channels he is in.
+   results in that user leaving all the channels they are in.
 
 -  ``WHOIS``: Add support for the ``RPL_WHOISOPERATOR``,
    ``RPL_WHOISCHANNELS``, and ``RPL_AWAY`` replies. These are only sent
@@ -359,5 +359,5 @@ Update the implementation of the following commands:
    ``RPL_WHOISUSER``, ``RPL_WHOISCHANNELS``, ``RPL_WHOISSERVER``,
    ``RPL_AWAY``, ``RPL_WHOISOPERATOR``, ``RPL_ENDOFWHOIS``.
 
--  ``LUSERS``: The replies need to be updated to show the correct number 
+-  ``LUSERS``: The replies need to be updated to show the correct number
    of IRCops and the number of channels.

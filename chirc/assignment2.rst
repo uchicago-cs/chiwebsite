@@ -53,15 +53,15 @@ with the following exceptions:
 
        Closing Link: HOSTNAME (MSG)
 
-   Where ``HOSTNAME`` is the user’s hostname and `MSG`` is the ``<Quit Message>``
+   Where ``HOSTNAME`` is the user’s hostname and ``MSG`` is the ``<Quit Message>``
    parameter provided in the ``QUIT`` message. If none is provided, the
-   default is ``Client Quit``
+   default is ``Client Quit``.
 
 Take into account the following:
 
 -  The ``NICK`` and ``USER`` messages can be received in any order, and
    a connection is not *fully* registered until both messages have been
-   received (and neither contain any errors)
+   received (and neither contains any errors).
 
 -  If you receive any message other than ``NICK`` or ``USER`` before the
    connection registration is complete, you must send a ``ERR_NOTREGISTERED``
@@ -69,7 +69,7 @@ Take into account the following:
    commands we are asking you to implement in this project).
    Otherwise, you should just silently ignore that message. Take into account
    that, once registration is complete, this behavior will change (see
-   ``ERR_UNKNOWNCOMMAND`` below)
+   ``ERR_UNKNOWNCOMMAND`` below).
 
 -  The ``NICK`` command can also be used *after* the connection
    registration to change a user’s nick.
@@ -78,8 +78,8 @@ Take into account the following:
    other commands depend on it.
 
 -  Most IRC servers send the replies corresponding to the ``MOTD`` and
-   ``LUSER`` messages after the welcome messages are sent. Most of our
-   tests expect this but, until you implement ``MOTD`` and ``LUSER``,
+   ``LUSERS`` messages after the welcome messages are sent. Most of our
+   tests expect this but, until you implement ``MOTD`` and ``LUSERS``,
    you can get away with simply sending the following replies verbatim::
 
       :hostname 251 user1 :There are 1 users and 0 services on 1 servers
@@ -101,7 +101,7 @@ following exceptions:
 
 -  The only supported ``<msgtarget>`` is nicknames.
 
--  You must implement the ``ERR_NORECIPIENT``, ``ERR_NOTEXTTOSEND``. and ``ERR_NOSUCHNICK`` replies.
+-  You must implement the ``ERR_NORECIPIENT``, ``ERR_NOTEXTTOSEND``, and ``ERR_NOSUCHNICK`` replies.
 
 Take into account the following:
 
@@ -124,12 +124,12 @@ with the following exceptions:
    ``PONG`` response to the client that sent the ``PING`` message.
 
 -  You must silently drop any ``PONG`` messages you receive (do *not*
-   send a ``ERR_UNKNOWNCOMMAND`` reply)
+   send a ``ERR_UNKNOWNCOMMAND`` reply).
 
 Take into account the following:
 
 -  Implementing ``PING`` and ``PONG`` is essential to testing your
-   server with real IRC clients. IRC clients will sent ``PING`` messages
+   server with real IRC clients. IRC clients will send ``PING`` messages
    periodically and, if they do not receive a ``PONG`` message back,
    they will close the connection.
 
@@ -158,9 +158,9 @@ with the following exceptions:
 
 -  You must return the replies in the following order:
    ``RPL_LUSERCLIENT``, ``RPL_LUSEROP``, ``RPL_LUSERUNKNOWN``,
-   ``RPL_LUSERCHANNELS``, ``RPL_LUSERME``
+   ``RPL_LUSERCHANNELS``, ``RPL_LUSERME``.
 
--  You do not need to support the ``ERR_NOSUCHSERVER`` reply
+-  You do not need to support the ``ERR_NOSUCHSERVER`` reply.
 
 Take into account the following:
 
@@ -170,7 +170,7 @@ Take into account the following:
    The other replies are only sent back if a non-zero count is found for
    them.”)
 
--  An “unknown connection” is any connected client for which we cannot yet 
+-  An “unknown connection” is any connected client for which we cannot yet
    tell whether the connection corresponds to a user (or, starting in
    Assignment 5, another server). Once a connection receives either
    a ``NICK`` or a ``USER`` command, we can assume that it corresponds
@@ -191,13 +191,13 @@ following exceptions:
 
 -  The command must accept a single parameter: a nick (i.e., there is
    only a single ``<mask>``, and it must be a nick; ignore the
-   ``<target>`` parameter)
+   ``<target>`` parameter).
 
 -  Ordinarily, the ``WHOIS`` command can be used without parameters, so
-   the RFC does not *not* require a ``ERR_NEEDMOREPARAMS`` reply in this case.
+   the RFC does *not* require a ``ERR_NEEDMOREPARAMS`` reply in this case.
    However, since we do not support ``WHOIS`` without parameters, if you
    receive such a message you should silently ignore it (i.e., don't send any
-   reply back at all)
+   reply back at all).
 
 -  You must only send back the following replies, in this order:
    ``RPL_WHOISUSER``, ``RPL_WHOISSERVER``, ``RPL_ENDOFWHOIS``.
@@ -215,7 +215,7 @@ Take into account the following:
 ``ERR_UNKNOWNCOMMAND``
 ----------------------
 
-If, after registering correctly, your server receives any message not described here 
+If, after registering correctly, your server receives any message not described here
 (or in the next assignment), you must return a ``ERR_UNKNOWNCOMMAND`` reply.
 
 

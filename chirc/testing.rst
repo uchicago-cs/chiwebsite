@@ -16,7 +16,7 @@ Using the automated tests
 
 chirc includes a comprehensive set of automated tests that will allow you to
 test whether your implementation is correct. To run the automated tests,
-just run one the following from inside the ``build/`` directory::
+just run one of the following from inside the ``build/`` directory::
 
    make assignment-1
    make assignment-2
@@ -56,7 +56,7 @@ allow you to pinpoint the exact line where the segfault is happening.
 Invoking pytest directly
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can have greater control on what tests are run by invoking pytest directly.
+You can have greater control over what tests are run by invoking pytest directly.
 When doing so, you must make sure that you've built the latest version of your
 code (using the make targets above will do so automatically, but running
 pytest directly will not). We encourage you to always run pytest like this::
@@ -102,7 +102,7 @@ If you want to focus on debugging an individual test that is failing, you can
 run a single test by using the ``-k`` parameter::
 
    pytest ../tests/ -k test_connect_both_messages_at_once
-   
+
 The name of each failed test can be found after the ``FAILURES`` line in the output
 from the tests. For example::
 
@@ -141,7 +141,7 @@ Sniffing network traffic during a test
 When running an individual test, it can sometimes be useful to take a peek at the exact
 messages that are being exchanged between a client and your server.
 You can use network sniffers like ``tcpdump`` and Wireshark. The
-console version of Wireshark, ``tshark`` can be useful to debug the
+console version of Wireshark, ``tshark``, can be useful to debug the
 automated tests. Take into account that ``tshark``, like Wireshark,
 requires special privileges, so you may not be able to run it on your
 school's computers and will instead have to run it on your own machine.
@@ -151,9 +151,9 @@ use a specific port, you will need to use the ``--chirc-port PORT`` option.
 For example::
 
    pytest ../tests/ -k test_connect_simple1 --chirc-port=7776
-   
+
 Note that we use port 7776 to avoid conflicts with the standard IRC port (6667).
-   
+
 On a separate terminal, run ``tshark`` like this::
 
    tshark -i lo \
@@ -196,27 +196,27 @@ by manually connecting to the server using the standard ``telnet`` client. Just
 run your server like this::
 
    ./chirc -o foobar -p 7776
-   
+
 And log into it like this::
 
    telnet localhost 7776
-   
+
 This provides a direct interface to the IRC protocol. So, for example, to register
 as a user, you would have to type the following into the telnet client::
 
    NICK user1
-   
+
 Pressing the Enter key will send the ``\r\n`` terminator. Next, type this::
 
    USER user1 * * :User One
-   
+
 And press Enter. If your server is correctly implemented, the telnet client will print out the
 welcome replies that your server would send in reply to the ``NICK`` and ``USER`` commands. Once
 you've logged in like this, you can manually test other IRC commands.
 
-You can also test your implementation with an existing IRC client. We recommend using ``irssi`` (http://irssi.org/), 
+You can also test your implementation with an existing IRC client. We recommend using ``irssi`` (http://irssi.org/),
 which provides a simple terminal-based interface. This will allow you to interact with the IRC protocol
-and a higher level (plus, if your server works correctly with a standard IRC client, that is a sign that
+at a higher level (plus, if your server works correctly with a standard IRC client, that is a sign that
 your implementation is pretty good). However, take into account that clients like ``irssi`` do not allow you
 to type in IRC commands directly (like a telnet session would allow you to). You will need to
 use the commands defined in the IRC client (which the IRC client will translate into actual IRC commands

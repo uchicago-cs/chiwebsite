@@ -8,7 +8,7 @@ multi-participant chatting. It was created in 1988 and, despite the
 emergence of more sophisticated messaging protocols (including open
 standards like XMPP and SIP/SIMPLE, and proprietary protocols such as
 Microsoft’s MSNP, AOL’s OSCAR, and Skype), IRC remains a popular
-standard and still sees heavy use in certain communities, specially the
+standard and still sees heavy use in certain communities, especially the
 open source software community.
 
 .. figure:: architecture1.png
@@ -18,7 +18,7 @@ open source software community.
 
 The basic architecture of IRC, shown in the figure above, is
 fairly straightforward. In the simplest case, there is a single *IRC
-server* to which multiple *IRC clients* can connect to. An IRC client
+server* to which multiple *IRC clients* can connect. An IRC client
 connects to the server with a specific identity. Most notably, each
 client must choose a unique *nickname*, or “nick”. Once a client is
 connected, it can communicate one-to-one with other users. Additionally,
@@ -61,7 +61,7 @@ specified in more detail in 2000 through the following RFCs:
 -  `[RFC2812] <https://datatracker.ietf.org/doc/html/rfc2812>`__ **Internet Relay
    Chat: Client Protocol**. This document describes the protocol used
    between IRC clients and servers (sometimes referred to as the
-   “client-server” protocol)
+   “client-server” protocol).
 
 -  `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__ **Internet Relay
    Chat: Server Protocol**. This document describes the “server-server”
@@ -147,14 +147,14 @@ can be summarized thusly:
    parameters are all separated by a single ASCII space character. The
    following are examples of valid IRC messages::
 
-      NICK amy 
-      
-      WHOIS doctor 
-      
-      MODE amy +o 
-      
-      JOIN #tardis 
-      
+      NICK amy
+
+      WHOIS doctor
+
+      MODE amy +o
+
+      JOIN #tardis
+
       QUIT
 
 -  When the last parameter is prefixed with a colon character, the value
@@ -162,10 +162,10 @@ can be summarized thusly:
    space characters). The following are examples of valid IRC messages
    with a “long parameter”::
 
-      PRIVMSG rory :Hey Rory... 
-      
-      PRIVMSG #cmsc23300 :Hello everybody 
-      
+      PRIVMSG rory :Hey Rory...
+
+      PRIVMSG #cmsc23300 :Hello everybody
+
       QUIT :Done for the day, leaving
 
 -  Some messages also include a *prefix* before the command and the
@@ -180,7 +180,7 @@ can be summarized thusly:
    The following are examples of valid IRC messages with prefixes::
 
       :borja!borja@polaris.cs.uchicago.edu PRIVMSG #cmsc23300 :Hello everybody
-      
+
       :doctor!doctor@baz.example.org QUIT :Done for the day, leaving
 
 Replies
@@ -205,9 +205,9 @@ A reply is a message with the following characteristics:
 
 The following are examples of valid IRC replies::
 
-   :irc.example.com 001 borja :Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu 
-   
-   :irc.example.com 433 * borja :Nickname is already in use. 
-   
+   :irc.example.com 001 borja :Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu
+
+   :irc.example.com 433 * borja :Nickname is already in use.
+
    :irc.example.org 332 borja #cmsc23300 :A channel for CMSC 23300 students
 

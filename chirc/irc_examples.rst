@@ -183,7 +183,7 @@ The server then relays this message to ``river``
 and ``amy``, prefixing the message with ``doctor``\ ’s full client
 identifier (messages 1, 2a, and 2b). Similarly, ``amy`` sends a message
 to the channel, which is relayed to ``doctor`` and ``river``, prefixed
-with ``amy``\ ’s full client identifier (messages 3, 4a, and 4b)
+with ``amy``\ ’s full client identifier (messages 3, 4a, and 4b).
 
 .. image:: channel_part.png
 
@@ -192,9 +192,9 @@ follows a similar pattern to joining and talking in the channel: the
 user wishing to leave sends a ``PART`` message, and this message is
 relayed to everyone in the channel so they are aware that the user has
 left. The server also internally removes that client from the channel,
-which means he will no longer receive any messages directed to that
+which means it will no longer receive any messages directed to that
 channel. The figure above shows an example of what
 this would look like. Notice how the ``PART`` message includes two
-parameters: the channel the users wants to leave, and a “parting
+parameters: the channel the user wants to leave, and a “parting
 message” (which is relayed as part of the ``PART`` message to all users
 in the channel).
