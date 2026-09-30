@@ -3,9 +3,9 @@
 Assignment 5: IRC Networks
 ==========================
 
-Up to this point, you have been adding support for client-to-server communications, where there is a single IRC server and multiple clients connecting to it. In this assignment, you will add support for *IRC networks* composed of multiple servers. The notion of an IRC network is (briefly) introduced in `[RFC2810 §3] <https://tools.ietf.org/html/rfc2810#section-3>`__, and the server-to-server part of the IRC protocol is defined in `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__.
+Up to this point, you have been adding support for client-to-server communications, where there is a single IRC server and multiple clients connecting to it. In this assignment, you will add support for *IRC networks* composed of multiple servers. The notion of an IRC network is (briefly) introduced in `[RFC2810 §3] <https://datatracker.ietf.org/doc/html/rfc2810#section-3>`__, and the server-to-server part of the IRC protocol is defined in `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__.
 
-In a nutshell, an IRC network is a collection of IRC servers where each server maintains an (essentially) identical list of users and channels, and any changes (e.g., someone joining a channel) are propagated to the other servers in the network. For example, the diagram shown in `[RFC2810 §3] <https://tools.ietf.org/html/rfc2810#section-3>`__ presents a network with five servers (A, B, C, D, E). Two clients (1 and 2) are connected to server A, while clients 3 and 4 are connected to B and D respectively.
+In a nutshell, an IRC network is a collection of IRC servers where each server maintains an (essentially) identical list of users and channels, and any changes (e.g., someone joining a channel) are propagated to the other servers in the network. For example, the diagram shown in `[RFC2810 §3] <https://datatracker.ietf.org/doc/html/rfc2810#section-3>`__ presents a network with five servers (A, B, C, D, E). Two clients (1 and 2) are connected to server A, while clients 3 and 4 are connected to B and D respectively.
 
 ::
 
@@ -61,9 +61,9 @@ This would start a server on port ``6668``. Note how we don't specify a port usi
 ``PASS`` and ``SERVER``
 -----------------------
 
-Similar to how a user registers by sending a ``NICK`` and ``PASS`` command, a server connects to another server by sending ``PASS`` and ``SERVER`` commands. We will refer to the server that initiates the connection (i.e., the one that sends ``PASS`` and ``SERVER``) as the *active* server, and we will refer to the one that receives the connection as the *passive* server.
+Similar to how a user registers by sending ``NICK`` and ``USER`` commands, a server connects to another server by sending ``PASS`` and ``SERVER`` commands. We will refer to the server that initiates the connection (i.e., the one that sends ``PASS`` and ``SERVER``) as the *active* server, and we will refer to the one that receives the connection as the *passive* server.
 
-You must add support for these commands, as specified in `[RFC2813 §4.1.1] <https://tools.ietf.org/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__].
+You must add support for these commands, as specified in `[RFC2813 §4.1.1] <https://datatracker.ietf.org/doc/html/rfc2813#section-4.1.1>`__ and `[RFC2813 §4.1.2] <https://datatracker.ietf.org/doc/html/rfc2813#section-4.1.2>`__.
 
 Take into account the following:
 
@@ -107,7 +107,7 @@ You can read this reply as "Hello server, I would also like to connect with you.
 ``NICK``
 --------
 
-You must implement the server-to-server form of the ``NICK`` command specified in `[RFC2813 §4.1.2 <https://tools.ietf.org/html/rfc2813#section-4.1.2>`__]. Whenever a user connects to a server, the server will send this special form of the ``NICK`` command to all the servers it is connected to, to notify them that a new user has joined the network. So, if you receive such a ``NICK`` command, you should add the user to the server's list of users (but taking into account that this represents a user connected to a different server).
+You must implement the server-to-server form of the ``NICK`` command specified in `[RFC2813 §4.1.3] <https://datatracker.ietf.org/doc/html/rfc2813#section-4.1.3>`__. Whenever a user connects to a server, the server will send this special form of the ``NICK`` command to all the servers it is connected to, to notify them that a new user has joined the network. So, if you receive such a ``NICK`` command, you should add the user to the server's list of users (but taking into account that this represents a user connected to a different server).
 
 Take into account the following:
 
@@ -121,7 +121,7 @@ Take into account the following:
 ``CONNECT``
 -----------
 
-You will be able to test the ``PASS``, ``SERVER``, and ``NICK`` commands by running a single server and having a client pretend to be another server (in fact, several of the tests do just this). However, to create an actual IRC network, we will need one server to connect to another. This is done using the ``CONNECT`` command specified in `[RFC2812 §3.4.7 <https://tools.ietf.org/html/rfc2812#section-3.4.7>`__].
+You will be able to test the ``PASS``, ``SERVER``, and ``NICK`` commands by running a single server and having a client pretend to be another server (in fact, several of the tests do just this). However, to create an actual IRC network, we will need one server to connect to another. This is done using the ``CONNECT`` command specified in `[RFC2812 §3.4.7] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.4.7>`__.
 
 Take into account the following:
 
@@ -145,9 +145,9 @@ Once two servers are connected, they must relay information to ensure their inte
 You must relay the following commands:
 
 - User registrations: When a new user registers, you must send a server-to-server ``NICK`` message to all servers, as described earlier.
-- ``PRIVMSG`` to users: you must relay all ``PRIVMSG`` messages intended for users who are not in the same server as the sending user. ``PRIVMSG`` messages between users in the same server should *not* be relayed.
-- ``JOIN``: you must relay all ``JOIN`` messages.
-- ``PRIVMSG`` to channels:  You must relay all ``PRIVMSG`` messages to channels, even if all the users are in the same server and a relay would be unnecessary.
+- ``PRIVMSG`` to users: You must relay all ``PRIVMSG`` messages intended for users who are not in the same server as the sending user. ``PRIVMSG`` messages between users in the same server should *not* be relayed.
+- ``JOIN``: You must relay all ``JOIN`` messages.
+- ``PRIVMSG`` to channels: You must relay all ``PRIVMSG`` messages to channels, even if all the users are in the same server and a relay would be unnecessary.
 
 When relaying a message to another server, the message itself should not be modified in any way, but the prefix should include *only* the nick of the originating user. So, suppose a server receives the following from a client (registered with nick ``jrandom``)::
 

@@ -64,7 +64,7 @@ Take into account the following:
    received (and neither contains any errors).
 
 -  If you receive any message other than ``NICK`` or ``USER`` before the
-   connection registration is complete, you must send a ``ERR_NOTREGISTERED``
+   connection registration is complete, you must send an ``ERR_NOTREGISTERED``
    reply if that message contained a supported command (i.e., one of the
    commands we are asking you to implement in this project).
    Otherwise, you should just silently ignore that message. Take into account
@@ -86,7 +86,7 @@ Take into account the following:
       :hostname 252 user1 0 :operator(s) online
       :hostname 253 user1 0 :unknown connection(s)
       :hostname 254 user1 0 :channels formed
-      :hostname 255 user1 :I have 1 clients and 1 servers
+      :hostname 255 user1 :I have 1 clients and 0 servers
       :hostname 422 user1 :MOTD File is missing
 
    This will be enough to pass the connection registration tests (they
@@ -124,7 +124,7 @@ with the following exceptions:
    ``PONG`` response to the client that sent the ``PING`` message.
 
 -  You must silently drop any ``PONG`` messages you receive (do *not*
-   send a ``ERR_UNKNOWNCOMMAND`` reply).
+   send an ``ERR_UNKNOWNCOMMAND`` reply).
 
 Take into account the following:
 
@@ -146,7 +146,7 @@ Take into account the following:
 -  Your server should read the “Message Of The Day” from a file called
    ``motd.txt`` in the directory from where you ran the server.
 
--  If the file does not exist, you must return a ``ERR_NOMOTD`` reply.
+-  If the file does not exist, you must return an ``ERR_NOMOTD`` reply.
 
 ``LUSERS``
 ----------
@@ -194,7 +194,7 @@ following exceptions:
    ``<target>`` parameter).
 
 -  Ordinarily, the ``WHOIS`` command can be used without parameters, so
-   the RFC does *not* require a ``ERR_NEEDMOREPARAMS`` reply in this case.
+   the RFC does *not* require an ``ERR_NEEDMOREPARAMS`` reply in this case.
    However, since we do not support ``WHOIS`` without parameters, if you
    receive such a message you should silently ignore it (i.e., don't send any
    reply back at all).
@@ -216,7 +216,7 @@ Take into account the following:
 ----------------------
 
 If, after registering correctly, your server receives any message not described here
-(or in the next assignment), you must return a ``ERR_UNKNOWNCOMMAND`` reply.
+(or in the next assignment), you must return an ``ERR_UNKNOWNCOMMAND`` reply.
 
 
 Robustness

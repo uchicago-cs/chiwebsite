@@ -5,11 +5,10 @@ Internet Relay Chat
 
 IRC is one of the earliest network protocols for text messaging and
 multi-participant chatting. It was created in 1988 and, despite the
-emergence of more sophisticated messaging protocols (including open
-standards like XMPP and SIP/SIMPLE, and proprietary protocols such as
-Microsoft’s MSNP, AOL’s OSCAR, and Skype), IRC remains a popular
-standard and still sees heavy use in certain communities, especially the
-open source software community.
+emergence of more sophisticated messaging systems (including open
+standards like XMPP and Matrix, and proprietary platforms such as
+Slack, Discord, and WhatsApp), IRC is still in use in certain
+communities, especially the open source software community.
 
 .. figure:: architecture1.png
    :alt: Basic IRC architecture
@@ -39,8 +38,9 @@ servers form a tree of connections to support more clients and provide
 greater capacity. Servers in the same network share information about
 local events (e.g., a new client connects, a user connected to a given
 server joins a channel, etc.) so that all servers will have a copy of
-the same global state. In this project, we will only consider the case
-where there is a single IRC server.
+the same global state. For most of this project, we will only consider
+the case where there is a single IRC server; server networks will only
+come into play in the fifth assignment.
 
 The IRC Protocol
 ================
@@ -90,8 +90,8 @@ You are not expected to read all of these documents. More specifically:
    `[RFC2811] <https://datatracker.ietf.org/doc/html/rfc2811>`__ until we reach
    the third assignment; if you do want to read the introductory sections, take
    into account that we will only be supporting “standard channels” in
-   the “#” namespace, and that we will not be supporting server
-   networks.
+   the “#” namespace, and that server networks will not be relevant
+   until the fifth assignment.
 
 -  In the fifth assignment, you will implement a subset of
    `[RFC2813] <https://datatracker.ietf.org/doc/html/rfc2813>`__,
@@ -142,8 +142,8 @@ can be summarized thusly:
    counting the delimiter) will be truncated, with the last two
    characters replaced with “``\r\n``”.
 
--  A message contains at least two parts: the command and the command
-   parameters. There may be at most 15 parameters. The command and the
+-  A message contains a command, which may be followed by one or more
+   command parameters. There may be at most 15 parameters. The command and the
    parameters are all separated by a single ASCII space character. The
    following are examples of valid IRC messages::
 
@@ -207,7 +207,7 @@ The following are examples of valid IRC replies::
 
    :irc.example.com 001 borja :Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu
 
-   :irc.example.com 433 * borja :Nickname is already in use.
+   :irc.example.com 433 * borja :Nickname is already in use
 
    :irc.example.org 332 borja #cmsc23300 :A channel for CMSC 23300 students
 

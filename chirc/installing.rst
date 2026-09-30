@@ -16,8 +16,8 @@ Software Requirements
 
 chirc has the following software requirements:
 
-* `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
-* Python 3.8 or above
+* `CMake <https://cmake.org/>`__ (version 3.21 or higher)
+* Python 3.12 or above
 * `pytest <http://pytest.org>`_, including the ``pytest-json-report`` plugin. The grading script
   additionally depends on the Click library. All of these can be
   installed using pip (``pip3 install pytest pytest-json-report click``).
@@ -52,7 +52,7 @@ You should follow these conventions when modifying the provided code:
   (do *not* add them in the ``src/`` directory!). If the third-party library has header
   files you need to ``#include`` in your code, *do not* copy the header files into
   the ``src/`` directory. Instead, add the library's directory to the list
-  of directories in the ``include_directories`` command in the ``CMakeLists.txt`` file.
+  of directories in the ``target_include_directories`` command in the ``CMakeLists.txt`` file.
   This way, you will be able to ``#include`` header files in those directories.
 
 By default, ``make`` will only print the names of the files it is building. To
@@ -66,10 +66,14 @@ Running
 
 The ``chirc`` executable accepts the following parameters:
 
-* ``-p``: The port on which the server will listen.
+* ``-p``: The port on which the server will listen (6667 by default).
 * ``-o``: To specify the "operator password".
 * ``-n``: Specifies an IRC network file. This will only be relevant in Assignment 5.
+* ``-s``: Specifies which server in the IRC network file (specified with ``-n``)
+  should be run. This parameter is required when using ``-n``, and will only be
+  relevant in Assignment 5.
 * ``-q``, ``-v``, or ``-vv``: To control the level of logging. See "Logging" section below.
+* ``-h``: Print a usage message and exit.
 
 You need to run the executable with at least the ``-o``
 option, although this option will not be relevant until the third assignment. For

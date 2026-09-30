@@ -28,12 +28,26 @@ Each of the above will build your code, will run all the tests for the
 corresponding assignment, and will provide a summary of how many points
 you scored in that assignment's tests.
 
+If you are doing several assignments together (e.g., Assignments 2 and 3,
+or Assignments 4 and 5), you can also use the following targets to run the
+tests for several assignments at once, and get a combined points summary::
+
+   make assignment-2+3
+   make assignment-2+3+5
+   make assignment-4+5
+
 If you've run the tests already, and simply want to print out the points summary
 again, you can use the following make target::
 
    make grade-assignment-N
 
-(where ``N`` is the assignment number)
+If you want to run the tests without printing the points summary, you can
+use the following make target::
+
+   make tests-assignment-N
+
+(where ``N`` is the assignment number, or one of the combinations above,
+such as ``2+3``)
 
 Interpreting the test output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -166,9 +180,9 @@ a complete implementation of chirc)::
     NICK user1
     USER user1 * * :User One
         :haddock 001 user1 :Welcome to the Internet Relay Network user1!user1@localhost
-        :haddock 002 user1 :Your host is haddock, running version chirc-0.4.4
-        :haddock 003 user1 :This server was created 2020-01-05 11:54:02
-        :haddock 004 user1 haddock chirc-0.4.4 ao mtov
+        :haddock 002 user1 :Your host is haddock, running version chirc-0.6.0
+        :haddock 003 user1 :This server was created 2026-09-30 11:54:02
+        :haddock 004 user1 haddock chirc-0.6.0 ao mtov
         :haddock 251 user1 :There are 1 users and 0 services on 1 servers
         :haddock 252 user1 0 :operator(s) online
         :haddock 253 user1 0 :unknown connection(s)
@@ -192,7 +206,7 @@ debugging the tests, even with ``tshark``, can be cumbersome since you're
 limited by the specific actions that the tests carry out (and check for).
 
 When debugging a specific issue in your server, you can debug it more interactively
-by manually connecting to the server using the standard ``telnet`` client. Just
+by manually connecting to the server using the ``telnet`` client. Just
 run your server like this::
 
    ./chirc -o foobar -p 7776
@@ -200,6 +214,16 @@ run your server like this::
 And log into it like this::
 
    telnet localhost 7776
+
+``telnet`` is not installed by default on some systems (including macOS and
+some Linux distributions). If you don't have it, you can use ``nc`` (netcat)
+instead, but make sure you tell it to send ``\r\n`` line endings (otherwise,
+pressing Enter will only send ``\n``). For example, on most Linux systems::
+
+   nc -C localhost 7776
+
+The exact option varies between versions of netcat, so check ``man nc`` if
+``-C`` doesn't work on your system.
 
 This provides a direct interface to the IRC protocol. So, for example, to register
 as a user, you would have to type the following into the telnet client::
@@ -235,14 +259,14 @@ one command at a time). You can debug this issue further by using the `netcat <h
 
 For example, here is how you would send two commands in one message::
 
-    printf "USER user1 * * :User One\r\nNICK user1\r\n" | nc localhost 6667
+    printf "USER user1 * * :User One\r\nNICK user1\r\n" | nc localhost 7776
 
 Here is how you would test what happens when you omit the \r\n terminator::
 
-    printf "NICK user1" | nc localhost 6667
+    printf "NICK user1" | nc localhost 7776
 
 And here is how you could test what happens when two messages are partitioned into two pieces
 (but not along the ``\r\n`` message terminator)::
 
-    (printf "NICK user1"; sync; printf "\r\nUSER user1 * * :User One\r\n") | nc localhost 6667
+    (printf "NICK user1"; sync; printf "\r\nUSER user1 * * :User One\r\n") | nc localhost 7776
 

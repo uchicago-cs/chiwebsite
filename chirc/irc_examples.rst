@@ -47,7 +47,7 @@ This reply has the following components:
 -  ``amy``: The first parameter which, in reply messages, must always be
    the nick of the user this reply is intended for.
 
--  ``:Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu``:
+-  ``:Welcome to the Internet Relay Network amy!amy@foo.example.com``:
    The second parameter. The content of this parameter is specified in
    `[RFC2812 §5] <https://datatracker.ietf.org/doc/html/rfc2812#section-5>`__::
 
@@ -74,7 +74,7 @@ The following figure shows a variant of the communication described above:
    Connecting to an IRC server when the chosen nick is taken.
 
 If a user tries to register with a nick that is already
-taken, the server will send back a ``ERR_NICKNAMEINUSE`` reply (code
+taken, the server will send back an ``ERR_NICKNAMEINUSE`` reply (code
 ``433``). Notice how the parameters in this reply are slightly
 different:
 
@@ -127,18 +127,23 @@ message going from ``amy`` to ``rory``.
 Notice how all messages are *relayed* through the IRC server (hence the
 name of the protocol: Internet Relay Chat). Non-relayed messaging is not
 supported in the IRC specification, and we will not be implementing such
-a functionality in this project. However, there are two extensions to
-IRC (CTCP, the Client-to-Client Protocol, and DCC, Direct
-Client-to-Client) that are the *de facto* standard for non-relayed chat
-on IRC. Most IRC servers and clients support these extensions, even
-though they have never been formally specified as an RFC (the closest
-thing to a specification is this document:
-http://www.irchelp.org/irchelp/rfc/ctcpspec.html).
+a functionality in this project. However, DCC (Direct Client-to-Client)
+is the *de facto* standard for non-relayed chat on IRC. Two clients use
+CTCP (the Client-to-Client Protocol) to negotiate a DCC connection; CTCP
+messages are embedded in ordinary ``PRIVMSG`` and ``NOTICE`` messages,
+so they are still relayed through the server, but the DCC connection
+itself is made directly between the two clients. Most IRC clients support
+these extensions, even though they have never been formally specified as
+an RFC (the closest thing to a specification is this document:
+https://www.irchelp.org/irchelp/rfc/ctcpspec.html).
 
 Joining, talking in, and leaving a channel
 ------------------------------------------
 
-.. image:: channel_join.png
+.. figure:: channel_join.png
+   :alt: Joining a channel
+
+   Joining a channel
 
 Users connected to an IRC server can join existing channels by using the
 ``JOIN`` message. The format of the message itself is pretty simple (its
@@ -170,7 +175,10 @@ give them special privileges in the server or on individual channels.
 For example, a channel operator is typically the only type of user that
 can change the channel’s topic.
 
-.. image:: channel_privmsg.png
+.. figure:: channel_privmsg.png
+   :alt: Sending a message to a channel
+
+   Sending a message to a channel
 
 Once a user has joined a channel, sending a message to the channel is
 essentially the same as sending a message to an individual user. The
@@ -185,7 +193,10 @@ identifier (messages 1, 2a, and 2b). Similarly, ``amy`` sends a message
 to the channel, which is relayed to ``doctor`` and ``river``, prefixed
 with ``amy``\ ’s full client identifier (messages 3, 4a, and 4b).
 
-.. image:: channel_part.png
+.. figure:: channel_part.png
+   :alt: Leaving a channel
+
+   Leaving a channel
 
 Leaving a channel is accomplished with the ``PART`` message, which
 follows a similar pattern to joining and talking in the channel: the

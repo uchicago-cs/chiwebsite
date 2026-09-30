@@ -62,7 +62,7 @@ replies in ``PRIVMSG``. However, take into account the following:
    when a non-existent channel is specified.
 
 -  Users cannot send ``PRIVMSG`` and ``NOTICE`` messages to channels
-   they have not joined. When this happens, a ``ERR_CANNOTSENDTOCHAN``
+   they have not joined. When this happens, an ``ERR_CANNOTSENDTOCHAN``
    reply must be sent back (only in the case of ``PRIVMSG`` messages).
 
 -  Once you have implemented modes, there may be additional cases where a
@@ -223,7 +223,7 @@ You must observe the following rules when dealing with modes:
    ``ERR_CANNOTSENDTOCHAN`` reply.
 
 -  When a channel has the ``t`` mode, only channel operators can change
-   the channel’s topic. Other users will receive a
+   the channel’s topic. Other users will receive an
    ``ERR_CHANOPRIVSNEEDED`` reply.
 
 -  In terms of permissions, server operators (i.e., with user mode
