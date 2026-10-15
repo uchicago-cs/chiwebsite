@@ -120,8 +120,16 @@ Implement the ``PING`` and ``PONG`` commands, as described in `[RFC2812 §3.7.2]
 and `[RFC2812 §3.7.3] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.3>`__,
 with the following exceptions:
 
--  You can ignore the parameters in ``PING``, and simply send the
-   ``PONG`` response to the client that sent the ``PING`` message.
+-  If the ``PING`` message includes a parameter (which we will refer to as
+   the *token*), the ``PONG`` response must include that same token as its
+   last parameter. For example, if your server (``irc.example.com``)
+   receives ``PING abc123``, it must reply with::
+
+       :irc.example.com PONG irc.example.com :abc123
+
+   If the ``PING`` has no parameters, simply reply with
+   ``:irc.example.com PONG irc.example.com``. You can ignore any other
+   parameters in the ``PING``.
 
 -  You must silently drop any ``PONG`` messages you receive (do *not*
    send an ``ERR_UNKNOWNCOMMAND`` reply).
@@ -131,7 +139,10 @@ Take into account the following:
 -  Implementing ``PING`` and ``PONG`` is essential to testing your
    server with real IRC clients. IRC clients will send ``PING`` messages
    periodically and, if they do not receive a ``PONG`` message back,
-   they will close the connection.
+   they will close the connection. Although `[RFC2812 §3.7.2] <https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.2>`__
+   does not explicitly require the ``PONG`` to repeat the token, all modern
+   IRC servers do this, and many IRC clients (such as HexChat) rely on it to
+   match each ``PONG`` with the ``PING`` it replies to (e.g., to measure lag).
 
 ``MOTD``
 --------
