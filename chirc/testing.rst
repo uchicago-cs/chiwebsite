@@ -149,6 +149,11 @@ use the server you're running with a debugger::
 Take into account that the ``--chirc-external-port`` only makes sense when running a single
 test, so you will also have to use the ``-k`` option to specify what test to run.
 
+.. note::
+
+   The ``--chirc-external-port`` parameter only works for tests that launch a single server.
+   It will not work for tests that involve running more than one server at the same time.
+
 Sniffing network traffic during a test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
