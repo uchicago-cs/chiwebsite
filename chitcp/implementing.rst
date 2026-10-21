@@ -131,7 +131,7 @@ your implementation should take the following into account:
    of these flags/variables, or involve sending packets with these flags set,
    or updating these variables.
 
-   - ``RST`` and ``PSH`` flags in the TCP header.
+   - ``RST``, ``PSH``, and ``ECE`` flags in the TCP header.
 
    - Urgent Pointer field or the ``URG`` bit in the TCP header,
      as well as the ``SND.UP``, ``RCV.UP``, or ``SEG.UP`` variables.
@@ -244,21 +244,33 @@ The parameters to the function are:
 
    -  ``TIMEOUT_PST``: The persist timer has timed out.
 
+   -  ``CLEANUP``: The socket has reached the ``CLOSED`` state and is about
+      to be freed. This event is only delivered to the ``CLOSED`` state
+      handler, and gives you a chance to release any additional resources
+      associated with the socket.
+
 To implement the TCP protocol, you will need to implement the handler functions
 in ``tcp.c``. However, the vast majority of your code will actually reside in
 the ``chitcpd_tcp_handle_packet`` function, which is called from the handler functions
 when a ``PACKET_ARRIVAL`` event is received (i.e., when a new packet arrives).
 
-Finally, please note that, unless an assignment specifically tells you otherwise,
-you should not need to modify any file other than ``tcp.c``. However, you will
+Finally, please note that most of your code will be in ``tcp.c``. However, you
+will also need to modify ``src/chitcpd/tcp.h``, which defines the ``tcp_data_t``
+struct (see below), and any other files an assignment specifically tells you
+to modify. You should not need to modify any other files, but you will
 need to use a number of functions and structs defined elsewhere,
 which we describe below.
 
 The ``tcp_data_t`` struct
 -------------------------
 
-This struct contains all the TCP data for a given socket. It is also useful to
+This struct is defined in ``src/chitcpd/tcp.h``, and contains all the TCP data
+for a given socket. It is also useful to
 think of this struct as the "Transmission Control Block" for a given connection.
+The struct already includes the fields you will need for Assignment 1, but you
+are allowed (and, in Assignment 2, expected) to add your own fields to it. If you
+do, make sure to initialize them in ``tcp_data_init`` and free any resources they
+use in ``tcp_data_free`` (both in ``tcp.c``).
 
 The pending packet queue
     .. code-block:: c
@@ -285,7 +297,7 @@ The pending packet queue
 
     .. code-block:: c
 
-        tcp_packet_t *packet = NULL
+        tcp_packet_t *packet = NULL;
         if(tcp_data->pending_packets)
         {
             /* tcp_data->pending_packets points to the head node of the list */
@@ -308,12 +320,12 @@ The TCP variables
         uint32_t ISS;      /* Initial send sequence number */
         uint32_t SND_UNA;  /* First byte sent but not acknowledged */
         uint32_t SND_NXT;  /* Next sendable byte */
-        uint32_t SND_WND;  /* Send Window */
+        uint16_t SND_WND;  /* Send Window */
     
         /* Receive sequence variables */
         uint32_t IRS;      /* Initial receive sequence number */
         uint32_t RCV_NXT;  /* Next byte expected */
-        uint32_t RCV_WND;  /* Receive Window */
+        uint16_t RCV_WND;  /* Receive Window */
 
     These are the TCP sequence variables as specified in
     `[RFC9293 3.3.1] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.3.1>`__.
@@ -334,7 +346,7 @@ The TCP buffers
        and generates an ``APPLICATION_SEND`` event.
 
     -  The ``chisocket_recv()`` function extracts data from the receive
-       buffer and generates an ``APPLICATION_RECV`` event.
+       buffer and generates an ``APPLICATION_RECEIVE`` event.
 
     In other words, you do not need to implement the above functionality; it
     is already implemented for you. On the other hand, you will be responsible
@@ -349,7 +361,7 @@ The TCP buffers
        extract the data from those packets, verify that the sequence numbers
        are correct and, if appropriate, put the data in the receive buffer.
 
-    -  When an ``APPLICATION_RECV`` event happens, you do not need to
+    -  When an ``APPLICATION_RECEIVE`` event happens, you do not need to
        modify the receive buffer in any way, but you do need to check whether
        the size of the receive window should be adjusted.
 
@@ -425,7 +437,7 @@ window size ``4096``:
     header->seq = chitcp_htonl(1000);
     header->ack_seq = chitcp_htonl(530);
     header->win = chitcp_htons(4096);
-    header->ack = 1
+    header->ack = 1;
 
 The ``chitcpd_update_tcp_state`` function
 -----------------------------------------
@@ -457,15 +469,24 @@ send a TCP packet to the socket’s peer, you must use this function. For exampl
 The ``si`` and ``entry`` parameters are the same ones that are passed to the TCP
 handler function.
 
+Take into account that ``chitcpd_send_tcp_packet`` does not free the packet
+(it sends a copy of the packet's contents). The caller remains responsible
+for freeing it when it is no longer needed: ``chitcp_tcp_packet_free`` frees the
+raw contents of the packet (header and payload) and, if the ``tcp_packet_t``
+itself was allocated in the heap, you must also ``free`` it.
+
 The ``chitcpd_timeout`` function
 --------------------------------
 
 This function is defined in ``src/chitcpd/serverinfo.h``. This function will
-generate a ``TIMEOUT`` event for a given socket:
+generate a timeout event for a given socket. Its third parameter is the type of
+timer that has expired (``RETRANSMISSION`` or ``PERSIST``, defined in
+``src/chitcpd/tcp.h``), which will generate a ``TIMEOUT_RTX`` or ``TIMEOUT_PST``
+event, respectively:
 
 .. code-block:: c
 
-    chitcpd_timeout(si, entry);
+    chitcpd_timeout(si, entry, RETRANSMISSION);
 
 The ``si`` and ``entry`` parameters are the same ones that are passed to the TCP
 handler function.
@@ -474,7 +495,7 @@ The logging functions
 ---------------------
 
 The chiTCP daemon prints out detailed information to standard output using a
-series of logging functions declared in ``src/include/log.h``. We encourage you
+series of logging functions declared in ``include/chitcp/log.h``. We encourage you
 to use these logging functions instead of using ``printf`` directly. More
 specifically, you should use the printf-style ``chilog()`` function to print
 messages:
@@ -492,7 +513,7 @@ And the ``chilog_tcp()`` function to dump the contents of a TCP packet:
     /* Initialize values in packet */
 
     chilog(DEBUG, "Sending packet...");
-    chilog_tcp(DEBUG, packet, LOG_OUTBOUND);
+    chilog_tcp(DEBUG, &packet, LOG_OUTBOUND);
     chitcpd_send_tcp_packet(si, entry, &packet);
 
 The third parameter of ``chilog_tcp`` can be ``LOG_INBOUND`` or ``LOG_OUTBOUND``

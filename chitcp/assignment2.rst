@@ -10,7 +10,7 @@ particular, you must account for the fact that packets could be dropped
 by the network layer, or that some packets could be delayed and arrive
 out of order.
 
-Doing so will require using *timers*. A timer is mechanism that allows
+Doing so will require using *timers*. A timer is a mechanism that allows
 a certain action to be scheduled to happen at some point in the future
 (when this happens, the timer is said to "expire" or "time out", and the action
 associated with that timer will be performed). TCP relies on several
@@ -79,11 +79,11 @@ Please note the following:
 
 We suggest you follow this approach:
 
-- Add a multitimer to the ``tcp_data_t`` struct. Initialize it in ``tcp_data_init`` 
-  and free it in ``tcp_data_free`` (in tcp.c).
+- Add a multitimer to the ``tcp_data_t`` struct (defined in ``src/chitcpd/tcp.h``).
+  Initialize it in ``tcp_data_init`` and free it in ``tcp_data_free`` (in ``tcp.c``).
 
 - Add a *retransmission queue* to the ``tcp_data_t`` struct. Every time a packet is sent,
-  add the packet to the restransmission queue, along with any metadata necessary
+  add the packet to the retransmission queue, along with any metadata necessary
   to manage the retransmission (such as the time when the packet was sent). You may
   also add other fields to ``tcp_data_t``.
   
@@ -98,7 +98,7 @@ We suggest you follow this approach:
   already includes an (empty) ``if (event == TIMEOUT_RTX)`` branch in the handler
   functions where you need to process the ``TIMEOUT_RTX`` event.
 
-- When a packet is acknowledged, don't forget to remove it from the retranmission queue.
+- When a packet is acknowledged, don't forget to remove it from the retransmission queue.
   Since a TCP packet could acknowledge multiple packets at once, you must make
   sure to traverse the retransmission queue in case there are multiple packets
   that should be removed.
@@ -151,7 +151,7 @@ suggests increasing the persist timer exponentially, we will not do so here.
 
 We suggest you follow this approach:
 
-- Modify ``tcp_data_init`` (in tcp.c) so your multimer will have two timers instead of one.
+- Modify ``tcp_data_init`` (in tcp.c) so your multitimer will have two timers instead of one.
 - Modify your packet arrival handler to set the persist timer when a zero window is received,
   and to cancel it when a non-zero window is received.
 - The callback function to the timer must generate a ``TIMEOUT_PST`` event

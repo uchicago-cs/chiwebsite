@@ -28,7 +28,7 @@ In ``tcp.c`` you must implement the following:
 -  Doing an initial implementation of the ``chitcpd_tcp_handle_packet`` function,
    that only covers the arrival of segments in the ``LISTEN``, ``SYN_SENT``, and
    ``SYN_RCVD`` states, as specified in
-   `[RFC9293 3.7.10] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
+   `[RFC9293 3.10.7] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
 
 
 Sending and receiving data
@@ -55,7 +55,7 @@ This involves handling the following events in
 You will also have to complete the implementation of the
 ``chitcpd_tcp_handle_packet`` function, to handle the arrival of segments in
 the ``ESTABLISHED`` state, as specified in
-`[RFC9293 3.7.10] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
+`[RFC9293 3.10.7] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
 HOwever, at this point, you can ignore the handing of ``FIN`` packets, as well
 as the arrival of packets in the ``FIN_WAIT_1``, ``FIN_WAIT_2``, ``CLOSE_WAIT``,
 ``CLOSING``, and ``LAST_ACK`` states.
@@ -77,7 +77,7 @@ You also need to complete the implementation of the
 ``chitcpd_tcp_handle_packet`` function to handle ``FIN`` packets in the
 ``ESTABLISHED`` state, as well as the arrival of packets in the ``FIN_WAIT_1``, ``FIN_WAIT_2``, ``CLOSE_WAIT``,
 ``CLOSING``, and ``LAST_ACK`` states, as specified in
-`[RFC9293 3.7.10] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
+`[RFC9293 3.10.7] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
 
 Take into account that, when the application layer requests that a connection be
 closed, it does not instantly trigger a TCP connection teardown. Instead, the FIN

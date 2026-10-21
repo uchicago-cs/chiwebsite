@@ -42,12 +42,12 @@ To run a single test, simply run the following::
    ./test-tcp --filter "TEST_CATEGORY/TEST_NAME"
 
 Where ``TEST_CATEGORY`` is the category of the test, and ``TEST_NAME`` is the name
-of the test (you can see both of these by running ``tests/test-tcp -l``). For example,
+of the test (you can see both of these by running ``./test-tcp -l``). For example,
 this will run the first connection establishment test::
 
    ./test-tcp --filter "conn_init/3way_states"
 
-If the test is succesful, you will see the following::
+If the test is successful, you will see the following::
 
    [====] Synthesis: Tested: 1 | Passing: 1 | Failing: 0 | Crashing: 0
    
@@ -99,7 +99,15 @@ To run entire categories of tests, simply run the following:
     ./test-tcp --filter "unreliable_data_transfer/*"
     ./test-tcp --filter "unreliable_out_of_order/*"
 
-The ``--filter`` option uses regular expressions, so you can further constrain the tests
+* Persist timer::
+
+    ./test-tcp --filter "persist/*"
+
+The test suite also includes an ``rtt_estimation`` category, which is not
+graded and is not included in the above categories.
+
+The ``--filter`` option uses glob patterns (including extended patterns like
+``@(a|b)``, as shown above), so you can further constrain the tests
 that will be run. For example, to only run the "echo" tests from the data transfer
 tests, you could run the following::
 
@@ -148,20 +156,24 @@ The output of this test (if successful) would look like this::
    [09:55:41.737779939]     tcp-socket-0 [S0] SYN_SENT -> ESTABLISHED
    [09:55:41.737806251]  network-layer-0 [S2] RCVD 127.0.0.1.49152 > 127.0.0.1.7: Flags [.], seq 244, ack 12, win 4096, length 0
    [09:55:41.738532355]     tcp-socket-2 [S2] SYN_RCVD -> ESTABLISHED
-   [09:55:41.740581751]      lt-test-tcp ~~~~~~~~~ chiTCP is shutting down ~~~~~~~~~
+   [09:55:41.740581751]         test-tcp ~~~~~~~~~ chiTCP is shutting down ~~~~~~~~~
    [09:55:41.740649209]   socket-layer-0 [S0] ESTABLISHED -> CLOSED
    [09:55:41.740846044]   socket-layer-1 [S2] ESTABLISHED -> CLOSED
-   [09:55:41.741517438]      lt-test-tcp =========  chiTCP has shut down   =========
+   [09:55:41.741517438]         test-tcp =========  chiTCP has shut down   =========
 
 You should ignore the column containing ``tcp-socket-0``, ``network-layer-0``, etc. Instead focus on the ``[S0]``, ``[S1]``, etc.
 which tells you what socket is producing this log message. The log message can be either ``SENT`` (the socket sent a packet),
-``RCVD`` (the socket received a packet), a state transition (two states separated by ``->``, or a message indicating that
-a passive socket has spawned an active socket.
+``RCVD`` (the socket received a packet), a state transition (two states separated by ``->``), or a message indicating that
+a passive socket has spawned an active socket. In tests that simulate an unreliable network, you may also see
+``DROP_SENT`` or ``DROP_RCVD`` (chiTCP simulated dropping a packet that was being sent or received),
+``RCVD_DELAYED`` (a packet that had been withheld by the test was delivered late), and ``RCVD_DUPLICATE``
+(a duplicate copy of a packet was delivered), as well as ``RETRANSMISSION TIMEOUT`` and ``PERSIST TIMEOUT``
+(a timer has expired).
 
-Whe a packet is sent or received, the log message will include the source IP and port, the destination IP and port, the
+When a packet is sent or received, the log message will include the source IP and port, the destination IP and port, the
 flags in the TCP header (``S``: SYN, ``F``: FIN, ``.``: ACK), the sequence number, the acknowledgement number,
 the advertised window size, and the payload length. Please note that the sequence numbers are likely to be different
-that shown in the above output, depending on how you set IRS and ISS.
+than shown in the above output, depending on how you set IRS and ISS.
 
 We also provide a script that will colorize this output for extra readability. Just pipe the output of
 the test to ``tests/colorize-minimal.sh``::
@@ -181,8 +193,8 @@ The output will look like this:
 
 .. image:: minimal-color2.png
 
-The ``DROP_RCVD`` message indicates that chiTCP simulated a dropped packet, and ``TIMEOUT`` indicates that
-a TCP timeout has happened.   
+The ``DROP_RCVD`` message indicates that chiTCP simulated a dropped packet, and ``RETRANSMISSION TIMEOUT`` indicates that
+a retransmission timeout has happened.   
    
 Other logging levels
 ~~~~~~~~~~~~~~~~~~~~
@@ -201,11 +213,11 @@ help you verify whether all the values in the TCP packets are set to the correct
 Wireshark will "dissect" your TCP packets just like it would any TCP packet (and will highlight any
 issues).
 
-To produce a pcap file, simply include ``PCAP=FILENAME`` before ``tests/test-tcp``, replacing
+To produce a pcap file, simply include ``PCAP=FILENAME`` before ``./test-tcp``, replacing
 ``FILENAME`` with a name for the pcap file. For example, if we ran the following test,
 which has packets arrive out of order::
 
-   PCAP=out_of_order.pcap ./test-tcp --filter "unreliable_data_transfer/out_of_order_1"
+   PCAP=out_of_order.pcap ./test-tcp --filter "unreliable_out_of_order/out_of_order_1"
    
 And then open ``out_of_order.pcap`` in Wireshark, we can see that it correctly detects
 that one of the packets arrived out of order:
@@ -255,7 +267,7 @@ On the GDB prompt, run this::
 Substituting ``PORT`` with the same port you used earlier.
 
 Now, just use gdb as usual (note that you have to use the ``continue`` command instead
-of the ``run`` command to ge the test running)
+of the ``run`` command to get the test running).
 
 
 Running Valgrind on a test
@@ -273,13 +285,15 @@ Running the tests on machines with multiple users
 
 The tests internally run the chiTCP daemon which, just like the
 regular ``chitcpd`` executable, will need a TCP port and a UNIX socket.
-If you are on a machine with multiple users, then more than more
+If you are on a machine with multiple users, then more than one
 user may try to use the default port (23300). As with ``chitcpd``,
 make sure you run the following on any terminal where you run the
 tests:: 
 
    export CHITCPD_PORT=30287  # Substitute for a different number
-   export CHITCPD_SOCK=/tmp/chitcpd.socket.$USER
+
+(the UNIX socket already defaults to a per-user path, ``/tmp/chitcpd.socket.USER``,
+so you do not need to set ``CHITCPD_SOCK``).
 
 
 Echo server and client
@@ -442,7 +456,7 @@ will then see this on the server:
 
 Once you press any key, this will make the server stop listening on port 7.
 
-Finally, both the client will prompt you to press any key to exit:
+Finally, both the client and the server will prompt you to press any key to exit:
 
 ::
 
@@ -458,9 +472,9 @@ on top of how each of them behaves.
 
 So, we have an additional sample program, ``simple-tester``, that runs a server and client simultaneously.
 The client connects to the server, sends a single message, and then both of them initiate
-a simultanous tear-down. This sample program is built along with the echo client/server
-samples. To run it, make sure ``chitcpd`` is running (with option ``-vv`` as suggested earlier) and
-then just run this from the ``samples`` directory::
+a simultaneous tear-down. This sample program is built along with the echo client/server
+samples. To run it, make sure ``chitcpd`` is running (with option ``-vvv`` as suggested earlier) and
+then just run this from the ``build`` directory::
 
     ./simple-tester
 
@@ -511,24 +525,24 @@ you can use this dissector to actually look at the chiTCP traffic.
 
 To install the dissector, follow these steps:
 
-1. Make sure Lua with support for the "bit" library is installed. On
-   Ubuntu, this requires installing the following packages::
+1. Copy the file ``chitcp.lua`` to your personal Lua plugins folder. You can
+   find the location of this folder in Wireshark by going to
+   *Help > About Wireshark > Folders > Personal Lua Plugins* (on Linux, this is
+   usually ``~/.local/lib/wireshark/plugins``). Create the folder if it does
+   not exist, and restart Wireshark after copying the file. No additional Lua
+   libraries are required.
 
-     lua5.2
-     lua-bitop
-
-2. Copy the file ``chitcp.lua`` to ``~/.wireshark/plugins``
-
-3. Lua plugins will not work if Wireshark is run as root. You will need
+2. Lua plugins will not work if Wireshark is run as root. You will need
    to give your user permissions to perform network captures without
-   having root privileges. If you are on a Debian/Ubuntu system, just
-   follow these instructions:
-
-   http://ask.wireshark.org/questions/7523/ubuntu-machine-no-interfaces-listed
+   having root privileges. On Debian/Ubuntu systems, you can do this by
+   running ``sudo dpkg-reconfigure wireshark-common`` (answering "Yes" to
+   allowing non-superusers to capture packets), adding your user to the
+   ``wireshark`` group (``sudo usermod -aG wireshark $USER``), and then
+   logging out and back in.
 
    For other systems, there are general instructions here:
 
-   http://wiki.wireshark.org/CaptureSetup/CapturePrivileges
+   https://wiki.wireshark.org/CaptureSetup/CapturePrivileges
 
 Using the dissector
 ~~~~~~~~~~~~~~~~~~~

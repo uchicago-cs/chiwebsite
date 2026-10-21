@@ -23,7 +23,7 @@ as well as MacOS systems.
 CMake
 ~~~~~
 
-Building the chiTCP code requires `CMake <https://cmake.org/>`__ (version 3.5.1 or higher)
+Building the chiTCP code requires `CMake <https://cmake.org/>`__ (version 3.13 or higher)
 
 On Ubuntu systems, you should be able to install it as follows::
 
@@ -108,7 +108,7 @@ To run the chiTCP daemon, just run the following::
 
 You should see the following output::
 
-   [16:57:26.446948795]    INFO          chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket. TCP socket: 23300
+   [16:57:26.446948795]    INFO          chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket.USER. TCP socket: 23300
 
 Take into account that you won't be able to do much with ``chitcpd`` until you've implemented 
 the ``tcp.c`` file. We do, however, provide a number of mechanisms for you to test your implementation.

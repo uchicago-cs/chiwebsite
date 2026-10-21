@@ -52,7 +52,7 @@ components:
    layer, and is the interface between an application and your TCP
    implementation.
 
--  **The TCP Implementation** (file ``tcp.c``, described in more detail in
+-  **The TCP Implementation** (files ``tcp.c`` and ``tcp.h``, described in more detail in
    the :ref:`Implementation Guide <chitcp-implementing>`). This is the part of the code you will be working on.
 
 -  **The chiTCP Network Layer**: This part of the daemon is responsible for
@@ -64,7 +64,7 @@ The chiTCP Network Layer is actually just regular TCP (i.e., the operating
 system’s TCP, *not* the one you are implementing). So, when chiTCP needs to get
 one of your TCP packets to another host, it does so by establishing a (real)
 TCP connection to that other host’s chiTCP daemon on port 23300.
-THe diagram below shows the packet encapsulation that happens in chiTCP .
+The diagram below shows the packet encapsulation that happens in chiTCP.
 Notice how, from chiTCP’s perspective, (real) TCP is essentially the *Network*
 layer of the protocol stack, while your implementation of TCP is the
 *Transport* layer. If we looked at this from a standard TCP/IP perspective,
