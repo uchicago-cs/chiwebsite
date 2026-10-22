@@ -60,7 +60,7 @@ In some tests, you may also see the following::
    [FAIL] conn_init::3way_states: Timed out. (0.50s)
    
 This means that the test did not finish running by some specified timeout (in this case, 0.5 seconds).
-This usually means your code has gotten stuck somewhere, and is not sending a packet that the
+This usually means your code has gotten stuck somewhere, and is not sending a segment that the
 tests were expecting.
 
 When a test fails or times out, you will need to dig deeper to see what your code is
@@ -135,8 +135,8 @@ Parsing through all the detailed logging at the ``DEBUG`` and ``TRACE`` levels c
 and it can be hard to sift through so much information. You should first try using chiTCP's 
 ``MINIMAL`` logging level (the messages at this level are generated directly by chiTCP; you should
 never call ``chilog`` with this logging level). The ``MINIMAL`` logging level will log any changes 
-of state in a socket, as well as any packets received and sent by a socket (including important information
-about the packet, like its sequence number, the size of the payload, etc.). The format is compact
+of state in a socket, as well as any segments received and sent by a socket (including important information
+about the segment, like its sequence number, the size of the payload, etc.). The format is compact
 and intended to be easy to read.
 
 To run a test with MINIMAL logging, simply include ``LOG=MINIMAL`` before ``./test-tcp``. For example::
@@ -162,15 +162,15 @@ The output of this test (if successful) would look like this::
    [09:55:41.741517438]         test-tcp =========  chiTCP has shut down   =========
 
 You should ignore the column containing ``tcp-socket-0``, ``network-layer-0``, etc. Instead focus on the ``[S0]``, ``[S1]``, etc.
-which tells you what socket is producing this log message. The log message can be either ``SENT`` (the socket sent a packet),
-``RCVD`` (the socket received a packet), a state transition (two states separated by ``->``), or a message indicating that
+which tells you what socket is producing this log message. The log message can be either ``SENT`` (the socket sent a segment),
+``RCVD`` (the socket received a segment), a state transition (two states separated by ``->``), or a message indicating that
 a passive socket has spawned an active socket. In tests that simulate an unreliable network, you may also see
-``DROP_SENT`` or ``DROP_RCVD`` (chiTCP simulated dropping a packet that was being sent or received),
-``RCVD_DELAYED`` (a packet that had been withheld by the test was delivered late), and ``RCVD_DUPLICATE``
-(a duplicate copy of a packet was delivered), as well as ``RETRANSMISSION TIMEOUT`` and ``PERSIST TIMEOUT``
+``DROP_SENT`` or ``DROP_RCVD`` (chiTCP simulated dropping a segment that was being sent or received),
+``RCVD_DELAYED`` (a segment that had been withheld by the test was delivered late), and ``RCVD_DUPLICATE``
+(a duplicate copy of a segment was delivered), as well as ``RETRANSMISSION TIMEOUT`` and ``PERSIST TIMEOUT``
 (a timer has expired).
 
-When a packet is sent or received, the log message will include the source IP and port, the destination IP and port, the
+When a segment is sent or received, the log message will include the source IP and port, the destination IP and port, the
 flags in the TCP header (``S``: SYN, ``F``: FIN, ``.``: ACK), the sequence number, the acknowledgement number,
 the advertised window size, and the payload length. Please note that the sequence numbers are likely to be different
 than shown in the above output, depending on how you set IRS and ISS.
@@ -184,16 +184,16 @@ You should see something like this:
 
 .. image:: minimal-color1.png
 
-In the tests that involve dropping packets, the ``colorize-minimal.sh`` script will highlight dropped
-packets and timeouts in red. For example, if we run this::
+In the tests that involve dropping segments, the ``colorize-minimal.sh`` script will highlight dropped
+segments and timeouts in red. For example, if we run this::
 
-   LOG=MINIMAL ./test-tcp --filter "unreliable_data_transfer/drop_single_packet" | ../tests/colorize-minimal.sh
+   LOG=MINIMAL ./test-tcp --filter "unreliable_data_transfer/drop_single_segment" | ../tests/colorize-minimal.sh
    
 The output will look like this:
 
 .. image:: minimal-color2.png
 
-The ``DROP_RCVD`` message indicates that chiTCP simulated a dropped packet, and ``RETRANSMISSION TIMEOUT`` indicates that
+The ``DROP_RCVD`` message indicates that chiTCP simulated a dropped segment, and ``RETRANSMISSION TIMEOUT`` indicates that
 a retransmission timeout has happened.   
    
 Other logging levels
@@ -209,18 +209,18 @@ Producing a pcap file
 
 Instead of reading through the log output, it can be useful to analyze the packets that were actually
 sent during the test. chiTCP can produce a "pcap" file that can be opened with Wireshark. This can
-help you verify whether all the values in the TCP packets are set to the correct values, since 
-Wireshark will "dissect" your TCP packets just like it would any TCP packet (and will highlight any
+help you verify whether all the values in the TCP segments are set to the correct values, since 
+Wireshark will "dissect" your TCP segments just like it would any TCP segment (and will highlight any
 issues).
 
 To produce a pcap file, simply include ``PCAP=FILENAME`` before ``./test-tcp``, replacing
 ``FILENAME`` with a name for the pcap file. For example, if we ran the following test,
-which has packets arrive out of order::
+which has segments arrive out of order::
 
    PCAP=out_of_order.pcap ./test-tcp --filter "unreliable_out_of_order/out_of_order_1"
    
 And then open ``out_of_order.pcap`` in Wireshark, we can see that it correctly detects
-that one of the packets arrived out of order:
+that one of the segments arrived out of order:
 
 .. image:: out_of_order_wireshark.png
 
@@ -335,9 +335,9 @@ Then, run ``echo-client -s`` and step through the following::
     Press any key to create the socket...
     Press any key to connect to the server... 
 
-As your TCP implementation sends and receives the packets for the three-way
+As your TCP implementation sends and receives the segments for the three-way
 handshake, you should see several messages appear on the ``chitcpd`` log. For
-example, if you are sending the SYN packet correctly from the client to the
+example, if you are sending the SYN segment correctly from the client to the
 server, you should see something like this::
 
      >>> Handling event APPLICATION_CONNECT on state CLOSED
@@ -351,7 +351,7 @@ server, you should see something like this::
              SND.WND:           0       RCV.WND:           0 
          Send Buffer:    0 / 4096   Recv Buffer:    0 / 4096
      
-            Pending packets:    0    Closing? NO
+            Pending segments:    0    Closing? NO
         ......................................................
      <<< TCP data AFTER handling:
         ......................................................
@@ -363,13 +363,13 @@ server, you should see something like this::
              SND.WND:           0       RCV.WND:        4096 
          Send Buffer:    0 / 4096   Recv Buffer:    0 / 4096
      
-            Pending packets:    0    Closing? NO
+            Pending segments:    0    Closing? NO
         ......................................................
 
 Please note that the actual values of the TCP variables will probably be
 different. To make this output even more useful, you may want to use
-``chilog_tcp`` to print out the contents of (1) any TCP packet you send, and
-(2) any TCP packets you extract from the ``pending_packets``. If you do this,
+``chilog_tcp`` to print out the contents of (1) any TCP segment you send, and
+(2) any TCP segments you extract from the ``pending_segments``. If you do this,
 the output of ``chitcpd`` would look like this:
 
 ::
@@ -385,9 +385,9 @@ the output of ``chitcpd`` would look like this:
              SND.WND:           0       RCV.WND:           0 
          Send Buffer:    0 / 4096   Recv Buffer:    0 / 4096
      
-            Pending packets:    0    Closing? NO
+            Pending segments:    0    Closing? NO
         ......................................................
-     Sending TCP packet
+     Sending TCP segment
         ######################################################################
      >  Src: 49152  Dest: 7  Seq: 27  Ack: 0  Doff: 5  Win: 4096
      >  CWR: 0  ECE: 0  URG: 0  ACK: 0  PSH: 0  RST: 0  SYN: 1  FIN: 0
@@ -403,7 +403,7 @@ the output of ``chitcpd`` would look like this:
              SND.WND:           0       RCV.WND:        4096 
          Send Buffer:    0 / 4096   Recv Buffer:    0 / 4096
      
-            Pending packets:    0    Closing? NO
+            Pending segments:    0    Closing? NO
         ......................................................
 
 If the connection is established correctly, you should see this on the echo
@@ -437,7 +437,7 @@ the following message:
     Press any key to close connection...
 
 After pressing a key, an active close will be initiated by the client, which
-will send a ``FIN`` packet to the server. You will then see this on the server
+will send a ``FIN`` segment to the server. You will then see this on the server
 side:
 
 ::
@@ -518,7 +518,7 @@ Wireshark dissector
 We provide a Wireshark dissector, in the ``wireshark_dissector`` directory,
 that you can use to easily see what is *actually* sent through the network 
 during a chiTCP connection. Please note that, if you need to look at the
-packets sent during a given test or communication, producing a pcap
+segments sent during a given test or communication, producing a pcap
 file is generally enough. However, if you need to go further down the
 debugging rabbit hole, and see *exactly* what is being sent on the network,
 you can use this dissector to actually look at the chiTCP traffic.
@@ -548,14 +548,14 @@ Using the dissector
 ~~~~~~~~~~~~~~~~~~~
 
 Since, as far as Wireshark is concerned, the ChiTCP packet is application-level
-data, we need to use a specific port so Wireshark will know what TCP packets
+data, we need to use a specific port so Wireshark will know what TCP segments
 contain ChiTCP packets. The default is 23300, although this can be changed
 in ``chitcp.lua``.
 
 Wireshark should automatically detect the new dissector. If you capture TCP
-packets, it should flag non-empty packets on port 23300 as ChiTCP packets. You
+segments, it should flag non-empty packets on port 23300 as ChiTCP packets. You
 should be able to see the ChiTCP header fields in human-readable format right
-below the TCP packet data. Wireshark will also helpfully dissect *your* TCP packet
+below the TCP segment data. Wireshark will also helpfully dissect *your* TCP segment
 as well as its payload.
 
 For example, this is what wireshark should look like if you use the sample echo
@@ -567,6 +567,6 @@ server/client:
    Wireshark running chiTCP dissector
 
 Note how you can also apply the filter ``chitcp``, and that will show only the
-TCP packets that contain ChiTCP packets.
+TCP segments that contain ChiTCP packets.
 
     

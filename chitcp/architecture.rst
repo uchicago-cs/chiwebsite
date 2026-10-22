@@ -56,19 +56,19 @@ components:
    the :ref:`Implementation Guide <chitcp-implementing>`). This is the part of the code you will be working on.
 
 -  **The chiTCP Network Layer**: This part of the daemon is responsible for
-   getting your TCP packet from one chiTCP daemon to another, the same way
+   getting your TCP segment from one chiTCP daemon to another, the same way
    that, when using your operating system’s TCP/IP stack, IP is responsible for
-   getting your TCP packet from your host to another host.
+   getting your TCP segment from your host to another host.
 
 The chiTCP Network Layer is actually just regular TCP (i.e., the operating
 system’s TCP, *not* the one you are implementing). So, when chiTCP needs to get
-one of your TCP packets to another host, it does so by establishing a (real)
+one of your TCP segments to another host, it does so by establishing a (real)
 TCP connection to that other host’s chiTCP daemon on port 23300.
 The diagram below shows the packet encapsulation that happens in chiTCP.
 Notice how, from chiTCP’s perspective, (real) TCP is essentially the *Network*
 layer of the protocol stack, while your implementation of TCP is the
 *Transport* layer. If we looked at this from a standard TCP/IP perspective,
-your TCP would simply be the payload of a (real) TCP packet.
+your TCP would simply be the payload of a (real) TCP segment.
 
 .. image:: layers.png
    

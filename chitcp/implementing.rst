@@ -46,7 +46,7 @@ So, we can think of TCP as a `state machine <https://en.wikipedia.org/wiki/Finit
    state, an event, *and* a series of TCP variables (SND.NXT, SND.UNA, etc.)
 
 -  Transitions from one TCP state to another result in actions, typically
-   sending a TCP packet with information dependent on the state of the TCP
+   sending a TCP segment with information dependent on the state of the TCP
    variables and the send/receive buffers.
 
 The events defined in
@@ -68,13 +68,13 @@ The events defined in
 
 -  ``STATUS``: Not supported by chiTCP .
 
--  ``SEGMENT ARRIVES``: chiTCP will generate this event when a TCP packet
+-  ``SEGMENT ARRIVES``: chiTCP will generate this event when a TCP segment
    arrives.
 
 -  ``USER TIMEOUT``: Not supported by chiTCP .
 
 -  ``RETRANSMISSION TIMEOUT``: A retransmission timeout (set after sending a
-   packet) has expired, meaning that an ACK for that packet has not been
+   segment) has expired, meaning that an ACK for that segment has not been
    received.
 
 -  ``TIME-WAIT TIMEOUT``: Not supported by chiTCP .
@@ -113,7 +113,7 @@ exactly what state/event combinations you will have to implement. Additionally,
 your implementation should take the following into account:
 
 -  You do not need to support delayed acknowledgements. An acknowledgement
-   packet is sent immediately when data is received, although you can piggyback
+   segment is sent immediately when data is received, although you can piggyback
    any data in the send buffer that is waiting to be sent (but you do not need
    to wait for a timeout to increase the probability that you’ll be able to
    piggyback data on the acknowledgement).
@@ -128,7 +128,7 @@ your implementation should take the following into account:
 
 -  You do not need to support the following flags and variables. This means
    you can ignore any parts of RFC 9293 that depend on checking the value
-   of these flags/variables, or involve sending packets with these flags set,
+   of these flags/variables, or involve sending segments with these flags set,
    or updating these variables.
 
    - ``RST``, ``PSH``, and ``ECE`` flags in the TCP header.
@@ -163,7 +163,7 @@ Implementing the ``tcp.c`` file
 Since TCP is essentially a state machine, chiTCP ’s implementation boils down to
 having a handler function for each of the TCP states (CLOSED, LISTEN,
 SYN\_RCVD, etc.), all contained in the ``src/chitcpd/tcp.c`` file. If an event
-happens (e.g., a packet arrives) while the connection is in a specific state
+happens (e.g., a segment arrives) while the connection is in a specific state
 (e.g., ESTABLISHED), then the handler function for that state is called, along
 with information about the event that just happened. You will only have to
 worry about writing the code inside the handler function; the rest of the
@@ -237,7 +237,7 @@ The parameters to the function are:
       and a connection tear-down should be initiated once all outstanding data
       in the send buffer has been sent.
 
-   -  ``PACKET_ARRIVAL``: A packet has arrived through the network and
+   -  ``SEGMENT_ARRIVAL``: A segment has arrived through the network and
       needs to be processed (RFC 9293 calls this “SEGMENT ARRIVES”)
 
    -  ``TIMEOUT_RTX``: A retransmission timeout has happened.
@@ -251,8 +251,8 @@ The parameters to the function are:
 
 To implement the TCP protocol, you will need to implement the handler functions
 in ``tcp.c``. However, the vast majority of your code will actually reside in
-the ``chitcpd_tcp_handle_packet`` function, which is called from the handler functions
-when a ``PACKET_ARRIVAL`` event is received (i.e., when a new packet arrives).
+the ``chitcpd_tcp_handle_segment`` function, which is called from the handler functions
+when a ``SEGMENT_ARRIVAL`` event is received (i.e., when a new segment arrives).
 
 Finally, please note that most of your code will be in ``tcp.c``. However, you
 will also need to modify ``src/chitcpd/tcp.h``, which defines the ``tcp_data_t``
@@ -272,45 +272,45 @@ are allowed (and, in Assignment 2, expected) to add your own fields to it. If yo
 do, make sure to initialize them in ``tcp_data_init`` and free any resources they
 use in ``tcp_data_free`` (both in ``tcp.c``).
 
-The pending packet queue
+The pending segment queue
     .. code-block:: c
 
-        tcp_packet_list_t *pending_packets;
-        pthread_mutex_t lock_pending_packets;
-        pthread_cond_t cv_pending_packets;
+        tcp_segment_list_t *pending_segments;
+        pthread_mutex_t lock_pending_segments;
+        pthread_cond_t cv_pending_segments;
 
-    As TCP packets arrive through the network, the chiTCP daemon places them
-    in the pending packet queue of the appropriate socket (you do not need to
-    inspect the origin and destination port of the TCP packet; this is taken
+    As TCP segments arrive through the network, the chiTCP daemon places them
+    in the pending segment queue of the appropriate socket (you do not need to
+    inspect the origin and destination port of the TCP segment; this is taken
     care of for you). The queue is implemented as a doubly-linked list where
     the head of the list represents the front of the queue
     and the tail of the list represents the back of the queue. The list nodes
-    contain pointers to ``tcp_packet_t`` structs
+    contain pointers to ``tcp_segment_t`` structs
     (described below) in the heap. It is your responsibility to free this
-    memory when you are done processing a packet.
+    memory when you are done processing a segment.
 
     The list is implemented using `utlist <https://troydhanson.github.io/uthash/utlist.html>`__, 
     which is already included in the chiTCP code. While you can use the utlist macros
-    directly, we also provide some helper functions in ``packet.h`` to manipulate
-    lists of TCP packets. For example, extracting the packet from the head
+    directly, we also provide some helper functions in ``segment.h`` to manipulate
+    lists of TCP segments. For example, extracting the segment from the head
     of the list would be done like this:
 
     .. code-block:: c
 
-        tcp_packet_t *packet = NULL;
-        if(tcp_data->pending_packets)
+        tcp_segment_t *segment = NULL;
+        if(tcp_data->pending_segments)
         {
-            /* tcp_data->pending_packets points to the head node of the list */
-            packet = tcp_data->pending_packets->packet;
+            /* tcp_data->pending_segments points to the head node of the list */
+            segment = tcp_data->pending_segments->segment;
             
             /* This removes the list node at the head of the list */
-            chitcp_packet_list_pop_head(&tcp_data->pending_packets);
+            chitcp_segment_list_pop_head(&tcp_data->pending_segments);
         }
 
-    The ``lock_pending_packets``
-    mutex provides thread-safe access to the queue. The ``cv_pending_packets``
+    The ``lock_pending_segments``
+    mutex provides thread-safe access to the queue. The ``cv_pending_segments``
     condition variable is used to notify other parts of the chiTCP code that
-    there are new packets in the queue; you should not wait or signal this
+    there are new segments in the queue; you should not wait or signal this
     condition variable.
 
 The TCP variables
@@ -356,9 +356,9 @@ The TCP buffers
        send buffer to see if there is any data ready to send, and you must send
        it out if possible (i.e., if allowed by the send window).
 
-    -  When a ``PACKET_ARRIVAL`` event happens (i.e., when the peer sends
-       us data), you must extract the packets from the pending packet queue,
-       extract the data from those packets, verify that the sequence numbers
+    -  When a ``SEGMENT_ARRIVAL`` event happens (i.e., when the peer sends
+       us data), you must extract the segments from the pending segment queue,
+       extract the data from those segments, verify that the sequence numbers
        are correct and, if appropriate, put the data in the receive buffer.
 
     -  When an ``APPLICATION_RECEIVE`` event happens, you do not need to
@@ -366,72 +366,72 @@ The TCP buffers
        the size of the receive window should be adjusted.
 
 
-The ``tcp_packet_t`` struct
----------------------------
+The ``tcp_segment_t`` struct
+----------------------------
 
-The ``tcp_packet_t`` struct is used to store a single TCP packet:
+The ``tcp_segment_t`` struct is used to store a single TCP segment:
 
 .. code-block:: c
 
-    typedef struct tcp_packet
+    typedef struct tcp_segment
     {
         uint8_t *raw;
         size_t  length;
-    } tcp_packet_t;
+    } tcp_segment_t;
 
-This struct simply contains a pointer to the packet in the heap, along with its
+This struct simply contains a pointer to the segment in the heap, along with its
 total length (including the TCP header). You will rarely have to work with the
-TCP packet directly at the bit level. Instead, the ``include/chitcp/packet.h``
+TCP segment directly at the bit level. Instead, the ``include/chitcp/segment.h``
 header defines a number of functions, macros, and structs that you can use to
-more easily work with TCP packets. More specifically:
+more easily work with TCP segments. More specifically:
 
--  Use the ``TCP_PACKET_HEADER`` to extract the header of the packet (with
-   type ``tcphdr_t``, also defined in ``include/chitcp/packet.h``, which
+-  Use the ``TCP_SEGMENT_HEADER`` to extract the header of the segment (with
+   type ``tcphdr_t``, also defined in ``include/chitcp/segment.h``, which
    provides convenient access to all the header fields. Take into account that
    all the values in the header are in network-order: you will need to convert
-   them to host-order before using using (and viceversa when creating a packet
+   them to host-order before using using (and viceversa when creating a segment
    that will be sent to the peer).
 
 -  Use the ``TCP_PAYLOAD_START`` and ``TCP_PAYLOAD_LEN`` macros to obtain a
-   pointer to the packet’s payload and its length, respectively.
+   pointer to the segment’s payload and its length, respectively.
 
 -  Use the ``SEG_SEQ``, ``SEG_ACK``, ``SEG_LEN``, ``SEG_WND``, ``SEG_UP``
    macros to access the ``SEG.``\ \* variables defined in `[RFC9293 3.3.1] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.3.1>`__.
    Take into account that these macros *do* convert the values from network-order to host-order.
 
--  Whenever you need to create a new TCP packet, *always* use the 
-   ``chitcpd_tcp_packet_create`` function defined in ``serverinfo.h``. This
+-  Whenever you need to create a new TCP segment, *always* use the 
+   ``chitcpd_tcp_segment_create`` function defined in ``serverinfo.h``. This
    will initialize certain fields in the TCP header that depend on the
-   socket associated with that TCP packet (e.g., the source/destination ports).
+   socket associated with that TCP segment (e.g., the source/destination ports).
 
-Example: Creating a packet without a payload
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example: Creating a segment without a payload
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following code creates a TCP packet with only the ACK flag set (and no other
+The following code creates a TCP segment with only the ACK flag set (and no other
 flags set), and with sequence number ``1000``, acknowledgement number ``530``, and
 window size ``4096``:
 
 .. code-block:: c
 
-    /* Allocate memory for the packet */
-    tcp_packet_t *packet = calloc(1, sizeof(tcp_packet_t));
+    /* Allocate memory for the segment */
+    tcp_segment_t *segment = calloc(1, sizeof(tcp_segment_t));
 
     /* Used to easily access header fields */
     tcphdr_t *header;
 
-    /* chitcpd_tcp_packet_create will initialize certain fields of the
+    /* chitcpd_tcp_segment_create will initialize certain fields of the
      * header that you do not need to worry about, like the ports.
      * 
      * Note how we pass the 'entry' parameter that is passed to the
      * TCP state handler functions (and which points to the socket entry
-     * for the connection this packet will be sent on)
+     * for the connection this segment will be sent on)
      * 
      * Since there is no payload, we pass NULL as the payload parameter,
      * and specify a payload length of zero */
-    chitcpd_tcp_packet_create(entry, packet, NULL, 0);
+    chitcpd_tcp_segment_create(entry, segment, NULL, 0);
     
     /* Get pointer to header */
-    header = TCP_PACKET_HEADER(packet);
+    header = TCP_SEGMENT_HEADER(segment);
     
     /* Fill in header fields */
     header->seq = chitcp_htonl(1000);
@@ -452,27 +452,27 @@ change the TCP state, you must use this function. For example:
 The ``si`` and ``entry`` parameters are the same ones that are passed to the TCP
 handler function.
 
-The ``chitcpd_send_tcp_packet`` function
-----------------------------------------
+The ``chitcpd_send_tcp_segment`` function
+-----------------------------------------
 
 This function is defined in ``src/chitcpd/connection.h``. Whenever you need to
-send a TCP packet to the socket’s peer, you must use this function. For example:
+send a TCP segment to the socket’s peer, you must use this function. For example:
 
 .. code-block:: c
 
-    tcp_packet_t packet;
+    tcp_segment_t segment;
 
-    /* Initialize values in packet */
+    /* Initialize values in segment */
 
-    chitcpd_send_tcp_packet(si, entry, &packet);
+    chitcpd_send_tcp_segment(si, entry, &segment);
 
 The ``si`` and ``entry`` parameters are the same ones that are passed to the TCP
 handler function.
 
-Take into account that ``chitcpd_send_tcp_packet`` does not free the packet
-(it sends a copy of the packet's contents). The caller remains responsible
-for freeing it when it is no longer needed: ``chitcp_tcp_packet_free`` frees the
-raw contents of the packet (header and payload) and, if the ``tcp_packet_t``
+Take into account that ``chitcpd_send_tcp_segment`` does not free the segment
+(it sends a copy of the segment's contents). The caller remains responsible
+for freeing it when it is no longer needed: ``chitcp_tcp_segment_free`` frees the
+raw contents of the segment (header and payload) and, if the ``tcp_segment_t``
 itself was allocated in the heap, you must also ``free`` it.
 
 The ``chitcpd_timeout`` function
@@ -504,22 +504,22 @@ messages:
 
     chilog(WARNING, "Asked send buffer for %i bytes, but got %i.", nbytes, tosend);
 
-And the ``chilog_tcp()`` function to dump the contents of a TCP packet:
+And the ``chilog_tcp()`` function to dump the contents of a TCP segment:
 
 .. code-block:: c
 
-    tcp_packet_t packet;
+    tcp_segment_t segment;
 
-    /* Initialize values in packet */
+    /* Initialize values in segment */
 
-    chilog(DEBUG, "Sending packet...");
-    chilog_tcp(DEBUG, &packet, LOG_OUTBOUND);
-    chitcpd_send_tcp_packet(si, entry, &packet);
+    chilog(DEBUG, "Sending segment...");
+    chilog_tcp(DEBUG, &segment, LOG_OUTBOUND);
+    chitcpd_send_tcp_segment(si, entry, &segment);
 
 The third parameter of ``chilog_tcp`` can be ``LOG_INBOUND`` or ``LOG_OUTBOUND``
-to designate a packet that is being received or sent, respectively (this
-affects the formatting of the packet in the log). ``LOG_NO_DIRECTION`` can also
-be used to indicate that the packet is neither inbound nor outbound.
+to designate a segment that is being received or sent, respectively (this
+affects the formatting of the segment in the log). ``LOG_NO_DIRECTION`` can also
+be used to indicate that the segment is neither inbound nor outbound.
 
 In both functions, the first parameter is used to specify the log level:
 
@@ -534,7 +534,7 @@ In both functions, the first parameter is used to specify the log level:
    technically an error, could cause one.
    
 -  ``MINIMAL``: Compact information about important events in a socket,
-   as well as one-line summaries of received/sent packets. This log
+   as well as one-line summaries of received/sent segments. This log
    level is described in more detail in :ref:`chitcp-testing`, and you
    should not use it yourself.   
 

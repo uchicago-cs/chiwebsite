@@ -6,8 +6,8 @@ Assignment 2: TCP over an Unreliable Network
 
 In this assignment, you will extend the code you wrote for the previous
 assignment so that it can work over unreliable networks. In
-particular, you must account for the fact that packets could be dropped
-by the network layer, or that some packets could be delayed and arrive
+particular, you must account for the fact that segments could be dropped
+by the network layer, or that some segments could be delayed and arrive
 out of order.
 
 Doing so will require using *timers*. A timer is a mechanism that allows
@@ -82,9 +82,9 @@ We suggest you follow this approach:
 - Add a multitimer to the ``tcp_data_t`` struct (defined in ``src/chitcpd/tcp.h``).
   Initialize it in ``tcp_data_init`` and free it in ``tcp_data_free`` (in ``tcp.c``).
 
-- Add a *retransmission queue* to the ``tcp_data_t`` struct. Every time a packet is sent,
-  add the packet to the retransmission queue, along with any metadata necessary
-  to manage the retransmission (such as the time when the packet was sent). You may
+- Add a *retransmission queue* to the ``tcp_data_t`` struct. Every time a segment is sent,
+  add the segment to the retransmission queue, along with any metadata necessary
+  to manage the retransmission (such as the time when the segment was sent). You may
   also add other fields to ``tcp_data_t``.
   
 - The callback function to the timer must generate a ``TIMEOUT_RTX`` event
@@ -94,24 +94,24 @@ We suggest you follow this approach:
   in your callback function!*.
   
 - Whenever a ``TIMEOUT_RTX`` event happens, go through the retransmission queue to check
-  what packets need to be re-sent. The provided code
+  what segments need to be re-sent. The provided code
   already includes an (empty) ``if (event == TIMEOUT_RTX)`` branch in the handler
   functions where you need to process the ``TIMEOUT_RTX`` event.
 
-- When a packet is acknowledged, don't forget to remove it from the retransmission queue.
-  Since a TCP packet could acknowledge multiple packets at once, you must make
-  sure to traverse the retransmission queue in case there are multiple packets
+- When a segment is acknowledged, don't forget to remove it from the retransmission queue.
+  Since a TCP segment could acknowledge multiple segments at once, you must make
+  sure to traverse the retransmission queue in case there are multiple segments
   that should be removed.
   
-- All the above points focus on the peer that sends a packet which is dropped.
+- All the above points focus on the peer that sends a segment which is dropped.
   In the other peer, you must remember to only acknowledge the latest sequence
-  number *without gaps*. So, if peer A sends packets with sequence numbers 0-99, 
+  number *without gaps*. So, if peer A sends segments with sequence numbers 0-99, 
   100-199, and 200-299, and peer B receives only 0-99 and 200-299, you should
   only acknowledge sequence numbers 0-99.
   
-  In this part of the assignment, you are allowed to silently drop any packets
+  In this part of the assignment, you are allowed to silently drop any segments
   that you cannot immediately acknowledge. So, for example, in the above example,
-  peer B would be allowed to drop packet 200-299 (which would be retransmitted
+  peer B would be allowed to drop segment 200-299 (which would be retransmitted
   by peer A). In the last part of the assignment, you will have to account for
   these "gaps" in the received data.
 
@@ -152,7 +152,7 @@ suggests increasing the persist timer exponentially, we will not do so here.
 We suggest you follow this approach:
 
 - Modify ``tcp_data_init`` (in tcp.c) so your multitimer will have two timers instead of one.
-- Modify your packet arrival handler to set the persist timer when a zero window is received,
+- Modify your segment arrival handler to set the persist timer when a zero window is received,
   and to cancel it when a non-zero window is received.
 - The callback function to the timer must generate a ``TIMEOUT_PST`` event
   by calling ``chitcpd_timeout`` (with the ``type`` parameter set to ``PERSIST``).
@@ -168,12 +168,12 @@ Out-of-order delivery
 
 In this part of the assignment, you must account for the fact that there can be
 *gaps* in the sequence of bytes you receive. When a sequence of bytes is divided
-into multiple packets, these gaps can happen if one or more of the packets are either
+into multiple segments, these gaps can happen if one or more of the segments are either
 dropped or delayed.
 
-The handling of both cases is the same: if you receive a packet that cannot
+The handling of both cases is the same: if you receive a segment that cannot
 be immediately acknowledged (because there are gaps in the sequence), you
-must buffer those packets until the sequence is complete.
+must buffer those segments until the sequence is complete.
 
 We suggest you follow this approach:
 
@@ -185,7 +185,7 @@ We suggest you follow this approach:
   whether there are any contiguous segments. For example, if you receive a segment
   with bytes 100-199, and the head of the list contains a segment with bytes
   200-299, that means the segment in the out-of-order list can now be processed.
-- When this happens, we suggest that you simply remove the packet from the out-of-order
-  list and add it to the pending packets queue. This will result in a ``PACKET_ARRIVAL``
-  event and the out-of-order segment will be processed as usual by your packet arrival
+- When this happens, we suggest that you simply remove the segment from the out-of-order
+  list and add it to the pending segments queue. This will result in a ``SEGMENT_ARRIVAL``
+  event and the out-of-order segment will be processed as usual by your segment arrival
   handler.

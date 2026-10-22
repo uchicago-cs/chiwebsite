@@ -13,7 +13,7 @@ In this assignment, you are allowed to assume that the network is
 completely *reliable*. This means that any TCP segment you send is
 guaranteed to arrive without delay (chiTCP will ensure this under 
 the hood). So, you do not have to worry about retransmissions or
-about packets arriving out of order.
+about segments arriving out of order.
 
 Implementing the TCP 3-way handshake
 ------------------------------------
@@ -25,7 +25,7 @@ In ``tcp.c`` you must implement the following:
    ``OPEN Call`` in the ``CLOSED STATE`` in
    `[RFC9293 3.10.1] <https://datatracker.ietf.org/doc/html/rfc9293#name-open-call>`__.
 
--  Doing an initial implementation of the ``chitcpd_tcp_handle_packet`` function,
+-  Doing an initial implementation of the ``chitcpd_tcp_handle_segment`` function,
    that only covers the arrival of segments in the ``LISTEN``, ``SYN_SENT``, and
    ``SYN_RCVD`` states, as specified in
    `[RFC9293 3.10.7] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
@@ -53,11 +53,11 @@ This involves handling the following events in
    buffer, and you should update the TCP internal variables accordingly.
 
 You will also have to complete the implementation of the
-``chitcpd_tcp_handle_packet`` function, to handle the arrival of segments in
+``chitcpd_tcp_handle_segment`` function, to handle the arrival of segments in
 the ``ESTABLISHED`` state, as specified in
 `[RFC9293 3.10.7] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
-HOwever, at this point, you can ignore the handing of ``FIN`` packets, as well
-as the arrival of packets in the ``FIN_WAIT_1``, ``FIN_WAIT_2``, ``CLOSE_WAIT``,
+HOwever, at this point, you can ignore the handing of ``FIN`` segments, as well
+as the arrival of segments in the ``FIN_WAIT_1``, ``FIN_WAIT_2``, ``CLOSE_WAIT``,
 ``CLOSING``, and ``LAST_ACK`` states.
 
 Connection tear-down
@@ -74,14 +74,14 @@ Both of these correspond to handling the ``CLOSE Call`` in the
 `[RFC9293 3.10.4] <https://datatracker.ietf.org/doc/html/rfc9293#section-3.10.4>`__.
 
 You also need to complete the implementation of the
-``chitcpd_tcp_handle_packet`` function to handle ``FIN`` packets in the
-``ESTABLISHED`` state, as well as the arrival of packets in the ``FIN_WAIT_1``, ``FIN_WAIT_2``, ``CLOSE_WAIT``,
+``chitcpd_tcp_handle_segment`` function to handle ``FIN`` segments in the
+``ESTABLISHED`` state, as well as the arrival of segments in the ``FIN_WAIT_1``, ``FIN_WAIT_2``, ``CLOSE_WAIT``,
 ``CLOSING``, and ``LAST_ACK`` states, as specified in
 `[RFC9293 3.10.7] <https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives>`__.
 
 Take into account that, when the application layer requests that a connection be
 closed, it does not instantly trigger a TCP connection teardown. Instead, the FIN
-packet should be sent *after* all outstanding data in the send buffer has been sent
+segment should be sent *after* all outstanding data in the send buffer has been sent
 *and* acknowledged.
 
 In other words, when the ``APPLICATION_CLOSE`` event is received, the connection
