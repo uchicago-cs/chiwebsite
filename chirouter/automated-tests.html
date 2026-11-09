@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Automated Tests &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="chistributed" href="../chistributed/index.html" />
+    <link rel="prev" title="Testing your Implementation" href="testing.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirouter</a></li>
+            <li class="active">Automated Tests</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="automated-tests">
+<span id="chirouter-automated-tests"></span><h1>Automated Tests<a class="headerlink" href="#automated-tests" title="Link to this heading">¶</a></h1>
+<p>To run the tests, you will need two terminals: one to run chirouter, and
+another to run the Docker container.</p>
+<p>On the chirouter terminal, run chirouter:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirouter
+</pre></div>
+</div>
+<p>(you can also add <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">-vv</span></code> to print more log messages)</p>
+<p>In the docker terminal, run <code class="docutils literal notranslate"><span class="pre">./run-docker</span></code> with no parameters to get a
+root shell on the Docker container:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./run-docker
+root@e37390d6efd7:/chirouter#
+</pre></div>
+</div>
+<p>Then, inside the root shell, run <code class="docutils literal notranslate"><span class="pre">./run-tests</span></code>. This will run all the
+tests:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>================================ test session starts ================================
+platform linux -- Python 3.10.12, pytest-8.2.0, pluggy-1.5.0
+rootdir: /chirouter/src/python/chirouter/tests
+configfile: pytest.ini
+plugins: json-0.4.0
+collected 24 items
+
+src/python/chirouter/tests/test_2router.py .....                              [ 20%]
+src/python/chirouter/tests/test_3router.py ......                             [ 45%]
+src/python/chirouter/tests/test_basic.py .............                        [100%]
+
+------------------- generated json report: /chirouter/tests.json --------------------
+=========================== 24 passed in 98.03s (0:01:38) ===========================
+</pre></div>
+</div>
+<p>In the chirouter terminal, you will see the log messages for each test.</p>
+<p>To get a score report, run <code class="docutils literal notranslate"><span class="pre">./run-grade</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root@89b17fd037b2:/chirouter# ./run-grade
+chirouter
+=========================================================================
+Category                            Passed / Total       Score  / Points
+-------------------------------------------------------------------------
+Responding to ARP requests          1      / 1           5.00   / 5.00
+ICMP requests to router             3      / 3           15.00  / 15.00
+ARP requests and ARP replies        1      / 1           10.00  / 10.00
+IP forwarding                       2      / 2           15.00  / 15.00
+Handling ARP pending requests       1      / 1           10.00  / 10.00
+Timing out pending ARP requests     1      / 1           5.00   / 5.00
+Basic Topology                      4      / 4           15.00  / 15.00
+The Two Router Topology             5      / 5           15.00  / 15.00
+The Three Router Topology           6      / 6           10.00  / 10.00
+-------------------------------------------------------------------------
+                                                 TOTAL = 100.00 / 100
+=========================================================================
+</pre></div>
+</div>
+<section id="test-parameters">
+<h2>Test parameters<a class="headerlink" href="#test-parameters" title="Link to this heading">¶</a></h2>
+<p>You can have greater control on how the tests are run by passing certain
+parameters to <code class="docutils literal notranslate"><span class="pre">run-tests</span></code>. More specifically, you can use the
+following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-x</span></code>: Stop after the first failed test. This can be useful when you’re failing
+multiple tests, and want to focus on debugging one failed test at a time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span></code>: Do not suppress output from successful tests. By default, py.test only
+shows the output produced by chirouter if a test fails. In some cases, you may want
+to look at the log messages of a successful test; use this option to force py.test
+to show the output for that test.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--chirouter-loglevel</span> <span class="pre">N</span></code>: This controls the logging level of the chirouter server run
+by the tests. You can specify the following values for <code class="docutils literal notranslate"><span class="pre">N</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Corresponds to the default level of logging.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Corresponds to calling chirouter with the <code class="docutils literal notranslate"><span class="pre">-v</span></code> option.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Corresponds to calling chirouter with the <code class="docutils literal notranslate"><span class="pre">-vv</span></code> option.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: Corresponds to calling chirouter with the <code class="docutils literal notranslate"><span class="pre">-vvv</span></code> option.</p></li>
+</ul>
+</li>
+</ul>
+<p>If you are familiar with pytest (the testing framework we use to run the tests),
+you can actually pass any parameter accepted by pytest to <code class="docutils literal notranslate"><span class="pre">run-tests</span></code>.</p>
+<section id="running-categories-of-tests">
+<h3>Running categories of tests<a class="headerlink" href="#running-categories-of-tests" title="Link to this heading">¶</a></h3>
+<p>If you want to run only a specific category of tests, you can use the
+<code class="docutils literal notranslate"><span class="pre">--chirouter-category</span></code> parameter. For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-tests --chirouter-category RESPONDING_ARP_REQUESTS
+</pre></div>
+</div>
+<p>To see the exact categories available in each assignment, run the following
+inside your <code class="docutils literal notranslate"><span class="pre">build/</span></code> directory:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make test-categories
+</pre></div>
+</div>
+</section>
+<section id="running-individual-tests">
+<h3>Running individual tests<a class="headerlink" href="#running-individual-tests" title="Link to this heading">¶</a></h3>
+<p>If you want to focus on debugging an individual test that is failing, you can
+run a single test by using the <code class="docutils literal notranslate"><span class="pre">-k</span></code> parameter:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-tests -k test_ping_router
+</pre></div>
+</div>
+<p>The name of each failed test can be found after the <code class="docutils literal notranslate"><span class="pre">FAILURES</span></code> line in the output
+from the tests. For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>===================================== FAILURES =====================================
+_____________________  TestTraceroute.test_traceroute_router _______________________
+</pre></div>
+</div>
+</section>
+</section>
+<section id="debugging-a-test-with-a-debugger">
+<h2>Debugging a test with a debugger<a class="headerlink" href="#debugging-a-test-with-a-debugger" title="Link to this heading">¶</a></h2>
+<p>If you want to debug a test with a debugger, such as gdb, you can run the tests as described above, but using a debugger to run the <code class="docutils literal notranslate"><span class="pre">chirouter</span></code> executable.</p>
+<p>If using gdb, you would have to run chirouter like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gdb --args ./chirouter -vv
+</pre></div>
+</div>
+<p>Don’t forget to then use gdb’s <code class="docutils literal notranslate"><span class="pre">run</span></code> command to actually run chirouter.</p>
+<p>Similarly, if using Valgrind, you would have to run chirouter like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>valgrind ./chirouter -vv
+</pre></div>
+</div>
+<p>In practice, it only makes sense to debug one test at a time, so you must
+make sure to use the <code class="docutils literal notranslate"><span class="pre">-k</span></code> parameter when running the tests:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-tests -k test_ping_router
+</pre></div>
+</div>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="testing.html" title="Previous Chapter: Testing your Implementation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Testing your Implementation</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="../chistributed/index.html" title="Next Chapter: chistributed"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">chistributed &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

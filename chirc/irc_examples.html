@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Example IRC Communications &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installing, Building, and Running chirc" href="installing.html" />
+    <link rel="prev" title="Internet Relay Chat" href="irc.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirc</a></li>
+            <li class="active">Example IRC Communications</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Example IRC Communications</a><ul>
+<li><a class="reference internal" href="#logging-into-an-irc-server">Logging into an IRC server</a></li>
+<li><a class="reference internal" href="#messaging-between-users">Messaging between users</a></li>
+<li><a class="reference internal" href="#joining-talking-in-and-leaving-a-channel">Joining, talking in, and leaving a channel</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="example-irc-communications">
+<span id="chirc-irc-examples"></span><h1>Example IRC Communications<a class="headerlink" href="#example-irc-communications" title="Link to this heading">¶</a></h1>
+<p>In this section, we will describe three example IRC communications.
+Before diving into the IRC RFCs, we suggest you read through these
+examples to get a better sense for what a typical conversation between
+an IRC client and server looks like. These examples will also serve to
+clarify the format of messages, prefixes, and replies.</p>
+<section id="logging-into-an-irc-server">
+<h2>Logging into an IRC server<a class="headerlink" href="#logging-into-an-irc-server" title="Link to this heading">¶</a></h2>
+<figure class="align-default" id="id1">
+<img alt="Connecting to an IRC server" src="../_images/connect.png" />
+<figcaption>
+<p><span class="caption-text">Connecting to an IRC server</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>When an IRC client connects to an IRC server, it must first <em>register</em>
+its connection. This is done by sending two messages: <code class="docutils literal notranslate"><span class="pre">NICK</span></code> and
+<code class="docutils literal notranslate"><span class="pre">USER</span></code> (messages 1 and 2 in the figure above). <code class="docutils literal notranslate"><span class="pre">NICK</span></code> specifies
+the user’s nick (<code class="docutils literal notranslate"><span class="pre">amy</span></code> in this case), and <code class="docutils literal notranslate"><span class="pre">USER</span></code> provides additional
+information about the user. More specifically, <code class="docutils literal notranslate"><span class="pre">USER</span></code> specifies the
+user’s <em>username</em> (<code class="docutils literal notranslate"><span class="pre">amy</span></code>) and the user’s <em>full name</em> (<code class="docutils literal notranslate"><span class="pre">Amy</span> <span class="pre">Pond</span></code>)
+(we will not be implementing the second and third parameters of
+<code class="docutils literal notranslate"><span class="pre">USER</span></code>). The username is typically obtained automatically by the IRC
+client based on the user’s identity. For example, if you’re logged into
+a UNIX machine as user <code class="docutils literal notranslate"><span class="pre">jrandom</span></code>, then most IRC clients will, by
+default, use that as your username. However, there is no requirement
+that your nick must match your username.</p>
+<p>Assuming you’ve chosen a nick that is not already taken, the IRC server
+will send back a <code class="docutils literal notranslate"><span class="pre">RPL_WELCOME</span></code> reply (which is assigned code <code class="docutils literal notranslate"><span class="pre">001</span></code>).
+This reply has the following components:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">:bar.example.com</span></code>: The prefix. Remember that prefixes are used to
+indicate the origin of a message. Since this reply originates in
+server <code class="docutils literal notranslate"><span class="pre">bar.example.com</span></code>, the prefix simply includes that hostname.
+This may seem redundant, given that the client presumably already
+knows it is connected to that server; however, in IRC networks, a
+reply could originate in a server other than the one the client is
+connected to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">001</span></code>: The numeric code for <code class="docutils literal notranslate"><span class="pre">RPL_WELCOME</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">amy</span></code>: The first parameter which, in reply messages, must always be
+the nick of the user this reply is intended for.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:Welcome</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">Internet</span> <span class="pre">Relay</span> <span class="pre">Network</span> <span class="pre">amy!amy&#64;foo.example.com</span></code>:
+The second parameter. The content of this parameter is specified in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-5">[RFC2812 §5]</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>001    RPL_WELCOME
+       &quot;Welcome to the Internet Relay Network
+        &lt;nick&gt;!&lt;user&gt;@&lt;host&gt;&quot;
+</pre></div>
+</div>
+<p>Notice how the specification of replies omits the first parameter,
+which is always the recipient of the reply. So, the specification
+lists the second and subsequent (if any) parameters.</p>
+<p>One of the things sent back in the <code class="docutils literal notranslate"><span class="pre">RPL_WELCOME</span></code> reply is the <em>full
+client identifier</em> (<code class="docutils literal notranslate"><span class="pre">&lt;nick&gt;!&lt;user&gt;&#64;&lt;host&gt;</span></code>), which is also used in
+other types of messages. It is composed of the nick as specified in
+the <code class="docutils literal notranslate"><span class="pre">NICK</span></code> command, the username as specified in the <code class="docutils literal notranslate"><span class="pre">USER</span></code>, and
+the client’s hostname (if the server cannot resolve the client’s
+hostname, the IP address is used).</p>
+</li>
+</ul>
+<p>The following figure shows a variant of the communication described above:</p>
+<figure class="align-default" id="id2">
+<img alt="Connecting to an IRC server when the chosen nick is taken." src="../_images/duplicatenick.png" />
+<figcaption>
+<p><span class="caption-text">Connecting to an IRC server when the chosen nick is taken.</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>If a user tries to register with a nick that is already
+taken, the server will send back an <code class="docutils literal notranslate"><span class="pre">ERR_NICKNAMEINUSE</span></code> reply (code
+<code class="docutils literal notranslate"><span class="pre">433</span></code>). Notice how the parameters in this reply are slightly
+different:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">*</span></code>: The first parameter should be the nick of the user this reply
+is intended for. However, since the user does not yet have a nick,
+the asterisk character is used instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">amy</span></code>: In the <code class="docutils literal notranslate"><span class="pre">ERR_NICKNAMEINUSE</span></code> reply, the second parameter is
+the “offending nick” (i.e., the nick that could not be chosen,
+because it is already taken).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">:Nickname</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">in</span> <span class="pre">use</span></code>: The third parameter simply includes
+a human readable description of the error. IRC clients will typically
+print these out verbatim.</p></li>
+</ul>
+<p>So, notice how there is no uniform set of parameters sent back in all
+replies (other than the first parameter, which is always the recipient
+nick). When implementing a reply, you must consult <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-5">[RFC2812 §5]</a> to determine
+exactly what you should be sending back in the reply.</p>
+</section>
+<section id="messaging-between-users">
+<h2>Messaging between users<a class="headerlink" href="#messaging-between-users" title="Link to this heading">¶</a></h2>
+<figure class="align-default" id="id3">
+<img alt="Sending a message to another user" src="../_images/privmsg.png" />
+<figcaption>
+<p><span class="caption-text">Sending a message to another user</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Once several users are connected, it is possible for them to send
+messages to each other, even in the absence of channels. In fact, most
+of the second assignment focuses on implementing messaging between users,
+whereas the third assignment will focus on adding support for channels.</p>
+<p>To send a message to a specific nick, a user must send a <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> to
+the server. The figure above shows two users, with nicks <code class="docutils literal notranslate"><span class="pre">amy</span></code> and
+<code class="docutils literal notranslate"><span class="pre">rory</span></code>, exchanging three messages. In message 1, user <code class="docutils literal notranslate"><span class="pre">amy</span></code> sends a
+message to <code class="docutils literal notranslate"><span class="pre">rory</span></code>. The parameters for <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> are very simple: the
+first parameter is the nick of the user the message is intended for, and
+the second parameter is the message itself.</p>
+<p>When the server receives that message, and assuming there is a <code class="docutils literal notranslate"><span class="pre">rory</span></code>
+user, it will forward the message to the IRC client that is registered
+with that nick. This is done in message 2, and notice how it is simply a
+verbatim copy of message 1, but prefixed with <code class="docutils literal notranslate"><span class="pre">amy</span></code>’s full client
+identifier (otherwise, the recipient IRC client would have no idea who
+the message was from). Messages 3 and 4 show a similar exchange, except
+going from <code class="docutils literal notranslate"><span class="pre">rory</span></code> to <code class="docutils literal notranslate"><span class="pre">amy</span></code>, and messages 5 and 6 show another
+message going from <code class="docutils literal notranslate"><span class="pre">amy</span></code> to <code class="docutils literal notranslate"><span class="pre">rory</span></code>.</p>
+<p>Notice how all messages are <em>relayed</em> through the IRC server (hence the
+name of the protocol: Internet Relay Chat). Non-relayed messaging is not
+supported in the IRC specification, and we will not be implementing such
+a functionality in this project. However, DCC (Direct Client-to-Client)
+is the <em>de facto</em> standard for non-relayed chat on IRC. Two clients use
+CTCP (the Client-to-Client Protocol) to negotiate a DCC connection; CTCP
+messages are embedded in ordinary <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> messages,
+so they are still relayed through the server, but the DCC connection
+itself is made directly between the two clients. Most IRC clients support
+these extensions, even though they have never been formally specified as
+an RFC (the closest thing to a specification is this document:
+<a class="reference external" href="https://www.irchelp.org/irchelp/rfc/ctcpspec.html">https://www.irchelp.org/irchelp/rfc/ctcpspec.html</a>).</p>
+</section>
+<section id="joining-talking-in-and-leaving-a-channel">
+<h2>Joining, talking in, and leaving a channel<a class="headerlink" href="#joining-talking-in-and-leaving-a-channel" title="Link to this heading">¶</a></h2>
+<figure class="align-default" id="id4">
+<img alt="Joining a channel" src="../_images/channel_join.png" />
+<figcaption>
+<p><span class="caption-text">Joining a channel</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Users connected to an IRC server can join existing channels by using the
+<code class="docutils literal notranslate"><span class="pre">JOIN</span></code> message. The format of the message itself is pretty simple (its
+only parameter is the name of the channel the user wants to join), but
+it results in several replies being sent not just to the user joining
+the channel, but also to all the users currently in the channel.
+The figure above shows what happens when user <code class="docutils literal notranslate"><span class="pre">amy</span></code>
+joins channel <code class="docutils literal notranslate"><span class="pre">#tardis</span></code>, where two users (<code class="docutils literal notranslate"><span class="pre">doctor</span></code> and <code class="docutils literal notranslate"><span class="pre">river</span></code>)
+are already present.</p>
+<p>Message 1 is <code class="docutils literal notranslate"><span class="pre">amy</span></code>’s <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> message to the server. When this
+message is received, the server <em>relays</em> it to the users who are already
+in the channel (<code class="docutils literal notranslate"><span class="pre">doctor</span></code> and <code class="docutils literal notranslate"><span class="pre">river</span></code>) to make them aware that there
+is a new user in the channel (messages 2a and 2b). Notice how the
+relayed <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> is prefixed with <code class="docutils literal notranslate"><span class="pre">amy</span></code>’s full client identifier.
+The <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> is also relayed back to <code class="docutils literal notranslate"><span class="pre">amy</span></code>, as confirmation that she
+successfully joined the channel.</p>
+<p>The following messages (3, 4a, and 4b) provide <code class="docutils literal notranslate"><span class="pre">amy</span></code> with information
+about the channel. Message 3 is a <code class="docutils literal notranslate"><span class="pre">RPL_TOPIC</span></code> reply, providing the
+channel’s <em>topic</em> (this is a description of the channel which can be set
+by certain users; we’ll discuss this in detail later). Messages 4a and
+4b are <code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> and <code class="docutils literal notranslate"><span class="pre">RPL_ENDOFNAMES</span></code> replies, respectively,
+which tell <code class="docutils literal notranslate"><span class="pre">amy</span></code> what users are currently present in the channel.
+Notice how the <code class="docutils literal notranslate"><span class="pre">doctor</span></code> user has an at-sign before his nick; this
+indicates that <code class="docutils literal notranslate"><span class="pre">doctor</span></code> is a <em>channel operator</em> for channel
+<code class="docutils literal notranslate"><span class="pre">#tardis</span></code>. As we’ll see in the third assignment, users can have <em>modes</em> that
+give them special privileges in the server or on individual channels.
+For example, a channel operator is typically the only type of user that
+can change the channel’s topic.</p>
+<figure class="align-default" id="id5">
+<img alt="Sending a message to a channel" src="../_images/channel_privmsg.png" />
+<figcaption>
+<p><span class="caption-text">Sending a message to a channel</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Once a user has joined a channel, sending a message to the channel is
+essentially the same as sending a message to an individual user. The
+difference is that the server will relay the message to all the users in
+the channel, instead of just a single user.
+The figure above shows two messages being sent to
+channel <code class="docutils literal notranslate"><span class="pre">#tardis</span></code>. First, user <code class="docutils literal notranslate"><span class="pre">doctor</span></code> sends a <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> message,
+specifying the channel as the target (and not a nick, as we saw in “Messaging between users”).
+The server then relays this message to <code class="docutils literal notranslate"><span class="pre">river</span></code>
+and <code class="docutils literal notranslate"><span class="pre">amy</span></code>, prefixing the message with <code class="docutils literal notranslate"><span class="pre">doctor</span></code>’s full client
+identifier (messages 1, 2a, and 2b). Similarly, <code class="docutils literal notranslate"><span class="pre">amy</span></code> sends a message
+to the channel, which is relayed to <code class="docutils literal notranslate"><span class="pre">doctor</span></code> and <code class="docutils literal notranslate"><span class="pre">river</span></code>, prefixed
+with <code class="docutils literal notranslate"><span class="pre">amy</span></code>’s full client identifier (messages 3, 4a, and 4b).</p>
+<figure class="align-default" id="id6">
+<img alt="Leaving a channel" src="../_images/channel_part.png" />
+<figcaption>
+<p><span class="caption-text">Leaving a channel</span><a class="headerlink" href="#id6" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>Leaving a channel is accomplished with the <code class="docutils literal notranslate"><span class="pre">PART</span></code> message, which
+follows a similar pattern to joining and talking in the channel: the
+user wishing to leave sends a <code class="docutils literal notranslate"><span class="pre">PART</span></code> message, and this message is
+relayed to everyone in the channel so they are aware that the user has
+left. The server also internally removes that client from the channel,
+which means it will no longer receive any messages directed to that
+channel. The figure above shows an example of what
+this would look like. Notice how the <code class="docutils literal notranslate"><span class="pre">PART</span></code> message includes two
+parameters: the channel the user wants to leave, and a “parting
+message” (which is relayed as part of the <code class="docutils literal notranslate"><span class="pre">PART</span></code> message to all users
+in the channel).</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="irc.html" title="Previous Chapter: Internet Relay Chat"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Internet Relay Chat</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="installing.html" title="Next Chapter: Installing, Building, and Running chirc"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Installing, Building, and Running chirc &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

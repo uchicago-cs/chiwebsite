@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Internet Relay Chat &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example IRC Communications" href="irc_examples.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirc</a></li>
+            <li class="active">Internet Relay Chat</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Internet Relay Chat</a></li>
+<li><a class="reference internal" href="#the-irc-protocol">The IRC Protocol</a><ul>
+<li><a class="reference internal" href="#message-format">Message format</a></li>
+<li><a class="reference internal" href="#replies">Replies</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="internet-relay-chat">
+<span id="chirc-irc"></span><h1>Internet Relay Chat<a class="headerlink" href="#internet-relay-chat" title="Link to this heading">¶</a></h1>
+<p>IRC is one of the earliest network protocols for text messaging and
+multi-participant chatting. It was created in 1988 and, despite the
+emergence of more sophisticated messaging systems (including open
+standards like XMPP and Matrix, and proprietary platforms such as
+Slack, Discord, and WhatsApp), IRC is still in use in certain
+communities, especially the open source software community.</p>
+<figure class="align-default" id="id1">
+<img alt="Basic IRC architecture" src="../_images/architecture1.png" />
+<figcaption>
+<p><span class="caption-text">Basic IRC architecture</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>The basic architecture of IRC, shown in the figure above, is
+fairly straightforward. In the simplest case, there is a single <em>IRC
+server</em> to which multiple <em>IRC clients</em> can connect. An IRC client
+connects to the server with a specific identity. Most notably, each
+client must choose a unique <em>nickname</em>, or “nick”. Once a client is
+connected, it can communicate one-to-one with other users. Additionally,
+clients can run commands to query the server’s state (e.g., to obtain a
+list of connected users, or to obtain additional details about a
+specific nick). IRC also supports the creation of chat rooms called
+<em>channels</em> for one-to-many communication. Users can join channels and
+send messages to the channel; these messages will, in turn, be sent to
+every user in the channel.</p>
+<figure class="align-default" id="id2">
+<img alt="Multi-server IRC architecture" src="../_images/architecture2.png" />
+<figcaption>
+<p><span class="caption-text">Multi-server IRC architecture</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>IRC also supports the formation of <em>server networks</em>, where multiple
+servers form a tree of connections to support more clients and provide
+greater capacity. Servers in the same network share information about
+local events (e.g., a new client connects, a user connected to a given
+server joins a channel, etc.) so that all servers will have a copy of
+the same global state. For most of this project, we will only consider
+the case where there is a single IRC server; server networks will only
+come into play in the fifth assignment.</p>
+</section>
+<section id="the-irc-protocol">
+<h1>The IRC Protocol<a class="headerlink" href="#the-irc-protocol" title="Link to this heading">¶</a></h1>
+<p>The IRC protocol used by IRC servers and clients is a text-based TCP
+protocol. Originally specified in 1993
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc1459">[RFC1459]</a>, it was subsequently
+specified in more detail in 2000 through the following RFCs:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2810">[RFC2810]</a> <strong>Internet Relay
+Chat: Architecture</strong>. This document describes the overall
+architecture of IRC.</p></li>
+<li><p><a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2811">[RFC2811]</a> <strong>Internet Relay
+Chat: Channel Management</strong>. This document describes how channels are
+managed in IRC.</p></li>
+<li><p><a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812">[RFC2812]</a> <strong>Internet Relay
+Chat: Client Protocol</strong>. This document describes the protocol used
+between IRC clients and servers (sometimes referred to as the
+“client-server” protocol).</p></li>
+<li><p><a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2813">[RFC2813]</a> <strong>Internet Relay
+Chat: Server Protocol</strong>. This document describes the “server-server”
+protocol used between IRC servers in the same network.</p></li>
+</ul>
+<p>You are not expected to read all of these documents. More specifically:</p>
+<ul class="simple">
+<li><p>We recommend you do read all of
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2810">[RFC2810]</a>, as it will give
+you a good sense of what the IRC architecture looks like. You may
+want to give it a cursory read at first, and revisit it as you become
+more familiar with the finer points of the IRC protocol.</p></li>
+<li><p>In the second assignment you will implement a subset of
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812">[RFC2812]</a>. We suggest you
+read <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-1">[RFC2812 §1]</a>
+and <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-2">[RFC2812 §2]</a>.
+For the remainder of the RFC, you should only read the sections
+relevant to the parts of the IRC protocol you will be implementing.</p></li>
+<li><p>In the third assignment you will implement a subset of the functionality
+described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2811">[RFC2811]</a>,
+which will require implementing additional parts of
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812">[RFC2812]</a>. We suggest you
+hold off on reading
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2811">[RFC2811]</a> until we reach
+the third assignment; if you do want to read the introductory sections, take
+into account that we will only be supporting “standard channels” in
+the “#” namespace, and that server networks will not be relevant
+until the fifth assignment.</p></li>
+<li><p>In the fifth assignment, you will implement a subset of
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2813">[RFC2813]</a>,
+which will require implementing and updating some parts of
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812">[RFC2812]</a>. You will not be
+dealing with server-to-server connections until the fifth assignment,
+so you can safely skip reading <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2813">[RFC2813]</a>
+until then.</p></li>
+</ul>
+<p>Finally, you should take into account that, although IRC has an official
+specification, most IRC servers and clients do not conform to these
+RFCs. Most (if not all) servers do not implement the full specification
+(and even contradict it in some cases), and there are many features that
+are unique to specific implementations. In this project, we will produce
+an implementation that is partially compliant with these RFCs, and
+sufficiently compliant to work with some of the main IRC clients
+currently available.</p>
+<p>In the remainder of this section, we will see an overview of the message
+format used in IRC. Then, in the next section, we will see several
+example communications (involving multiple messages between a client and
+a server).</p>
+<section id="message-format">
+<h2>Message format<a class="headerlink" href="#message-format" title="Link to this heading">¶</a></h2>
+<p>IRC clients and servers communicate by sending plain ASCII <em>messages</em> to
+each other over TCP. The format of these messages is described in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-2.3">[RFC2812 §2.3]</a>, and
+can be summarized thusly:</p>
+<ul>
+<li><p>The IRC protocol is a <em>text-based</em> protocol, meaning that messages
+are encoded in plain ASCII. Although not as efficient as a pure
+binary format, this has the advantage of being fairly human-readable,
+and easy to debug just by reading the verbatim messages exchanged
+between clients and servers.</p></li>
+<li><p>A single message is a string of characters with a maximum length of
+512 characters. The end of the string is denoted by a CR-LF (Carriage
+Return - Line Feed) pair (i.e., “<code class="docutils literal notranslate"><span class="pre">\r\n</span></code>”). There is no null
+terminator. The 512 character limit includes this delimiter, meaning
+that a message only has space for 510 useful characters.</p></li>
+<li><p>The IRC specification includes no provisions for supporting messages
+longer than 512 characters, although many servers and clients support
+non-standard solutions (including ignoring the 512 limit altogether).
+In our implementation, any message with more than 510 characters (not
+counting the delimiter) will be truncated, with the last two
+characters replaced with “<code class="docutils literal notranslate"><span class="pre">\r\n</span></code>”.</p></li>
+<li><p>A message contains a command, which may be followed by one or more
+command parameters. There may be at most 15 parameters. The command and the
+parameters are all separated by a single ASCII space character. The
+following are examples of valid IRC messages:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NICK amy
+
+WHOIS doctor
+
+MODE amy +o
+
+JOIN #tardis
+
+QUIT
+</pre></div>
+</div>
+</li>
+<li><p>When the last parameter is prefixed with a colon character, the value
+of that parameter will be the remainder of the message (including
+space characters). The following are examples of valid IRC messages
+with a “long parameter”:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>PRIVMSG rory :Hey Rory...
+
+PRIVMSG #cmsc23300 :Hello everybody
+
+QUIT :Done for the day, leaving
+</pre></div>
+</div>
+</li>
+<li><p>Some messages also include a <em>prefix</em> before the command and the
+command parameters. The presence of a prefix is indicated with a
+single leading colon character. The prefix is used to indicate the
+<em>origin</em> of the message. For example, when a user sends a message to
+a channel, the server will forward that message to all the users in
+the channel, and will include a prefix to specify the user that sent
+that message originally. We will explain the use of prefixes in more
+detail in the next section.</p>
+<p>The following are examples of valid IRC messages with prefixes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:borja!borja@polaris.cs.uchicago.edu PRIVMSG #cmsc23300 :Hello everybody
+
+:doctor!doctor@baz.example.org QUIT :Done for the day, leaving
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="replies">
+<h2>Replies<a class="headerlink" href="#replies" title="Link to this heading">¶</a></h2>
+<p>The IRC protocol includes a special type of message called a <em>reply</em>.
+When a client sends a command to a server, the server will send a reply
+(except in a few special commands where a reply should not be expected).
+Replies are used to acknowledge that a command was processed correctly,
+to indicate errors, or to provide information when the command performs
+a server query (e.g., asking for the list of users or channels).</p>
+<p>A reply is a message with the following characteristics:</p>
+<ul class="simple">
+<li><p>It always includes a prefix.</p></li>
+<li><p>The command will be a three-digit code. The full list of possible
+replies is specified in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-5">[RFC2812 §5]</a>.</p></li>
+<li><p>The first parameter is always the target of the reply, typically a
+nick.</p></li>
+</ul>
+<p>The following are examples of valid IRC replies:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:irc.example.com 001 borja :Welcome to the Internet Relay Network borja!borja@polaris.cs.uchicago.edu
+
+:irc.example.com 433 * borja :Nickname is already in use
+
+:irc.example.org 332 borja #cmsc23300 :A channel for CMSC 23300 students
+</pre></div>
+</div>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="intro.html" title="Previous Chapter: Introduction"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Introduction</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="irc_examples.html" title="Next Chapter: Example IRC Communications"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Example IRC Communications &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

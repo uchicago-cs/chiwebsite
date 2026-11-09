@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Assignment 1: TCP over a Reliable Network &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment 2: TCP over an Unreliable Network" href="assignment2.html" />
+    <link rel="prev" title="Implementation Guide" href="implementing.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chiTCP</a></li>
+            <li class="active">Assignment 1: TCP over a Reliable Network</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="assignment-1-tcp-over-a-reliable-network">
+<span id="chitcp-assignment1"></span><h1>Assignment 1: TCP over a Reliable Network<a class="headerlink" href="#assignment-1-tcp-over-a-reliable-network" title="Link to this heading">¶</a></h1>
+<p>This assignment is divided into three main tasks:</p>
+<ul class="simple">
+<li><p>3-way handshake</p></li>
+<li><p>Data transfer</p></li>
+<li><p>Connection tear-down</p></li>
+</ul>
+<p>In this assignment, you are allowed to assume that the network is
+completely <em>reliable</em>. This means that any TCP segment you send is
+guaranteed to arrive without delay (chiTCP will ensure this under
+the hood). So, you do not have to worry about retransmissions or
+about segments arriving out of order.</p>
+<section id="implementing-the-tcp-3-way-handshake">
+<h2>Implementing the TCP 3-way handshake<a class="headerlink" href="#implementing-the-tcp-3-way-handshake" title="Link to this heading">¶</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> you must implement the following:</p>
+<ul class="simple">
+<li><p>Handling event <code class="docutils literal notranslate"><span class="pre">APPLICATION_CONNECT</span></code> in
+<code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_state_handle_CLOSED</span></code>. This corresponds to handling the
+<code class="docutils literal notranslate"><span class="pre">OPEN</span> <span class="pre">Call</span></code> in the <code class="docutils literal notranslate"><span class="pre">CLOSED</span> <span class="pre">STATE</span></code> in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#name-open-call">[RFC9293 3.10.1]</a>.</p></li>
+<li><p>Doing an initial implementation of the <code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_handle_segment</span></code> function,
+that only covers the arrival of segments in the <code class="docutils literal notranslate"><span class="pre">LISTEN</span></code>, <code class="docutils literal notranslate"><span class="pre">SYN_SENT</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">SYN_RCVD</span></code> states, as specified in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives">[RFC9293 3.10.7]</a>.</p></li>
+</ul>
+</section>
+<section id="sending-and-receiving-data">
+<h2>Sending and receiving data<a class="headerlink" href="#sending-and-receiving-data" title="Link to this heading">¶</a></h2>
+<p>This involves handling the following events in
+<code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_state_handle_ESTABLISHED</span></code>:</p>
+<ul class="simple">
+<li><p>Event <code class="docutils literal notranslate"><span class="pre">APPLICATION_SEND</span></code>. This corresponds to handling the <code class="docutils literal notranslate"><span class="pre">SEND</span> <span class="pre">Call</span></code>
+in the <code class="docutils literal notranslate"><span class="pre">ESTABLISHED</span> <span class="pre">STATE</span></code> in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#name-send-call">[RFC9293 3.10.2]</a>. Take into
+account that the chisocket layer already takes care of putting data in the
+send buffer. So, this event notifies your TCP implementation that there is
+new data in the send buffer, and that it should be sent if possible.</p></li>
+<li><p>Event <code class="docutils literal notranslate"><span class="pre">APPLICATION_RECEIVE</span></code>. This corresponds to handling the
+<code class="docutils literal notranslate"><span class="pre">RECEIVE</span> <span class="pre">Call</span></code> in the <code class="docutils literal notranslate"><span class="pre">ESTABLISHED</span> <span class="pre">STATE</span></code> in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#name-receive-call">[RFC9293 3.10.3]</a>. Take into
+account that the chisocket layer already takes care of retrieving data from
+the receive buffer and handing it to the application layer. This event
+notifies your TCP implementation that space has become available in the
+buffer, and you should update the TCP internal variables accordingly.</p></li>
+</ul>
+<p>You will also have to complete the implementation of the
+<code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_handle_segment</span></code> function, to handle the arrival of segments in
+the <code class="docutils literal notranslate"><span class="pre">ESTABLISHED</span></code> state, as specified in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives">[RFC9293 3.10.7]</a>.
+HOwever, at this point, you can ignore the handing of <code class="docutils literal notranslate"><span class="pre">FIN</span></code> segments, as well
+as the arrival of segments in the <code class="docutils literal notranslate"><span class="pre">FIN_WAIT_1</span></code>, <code class="docutils literal notranslate"><span class="pre">FIN_WAIT_2</span></code>, <code class="docutils literal notranslate"><span class="pre">CLOSE_WAIT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CLOSING</span></code>, and <code class="docutils literal notranslate"><span class="pre">LAST_ACK</span></code> states.</p>
+</section>
+<section id="connection-tear-down">
+<h2>Connection tear-down<a class="headerlink" href="#connection-tear-down" title="Link to this heading">¶</a></h2>
+<p>This involves handling the <code class="docutils literal notranslate"><span class="pre">APPLICATION_CLOSE</span></code> event in the following handlers:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_state_handle_ESTABLISHED</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_state_handle_CLOSE_WAIT</span></code></p></li>
+</ul>
+<p>Both of these correspond to handling the <code class="docutils literal notranslate"><span class="pre">CLOSE</span> <span class="pre">Call</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">ESTABLISHED</span> <span class="pre">STATE</span></code> and <code class="docutils literal notranslate"><span class="pre">CLOSE-WAIT</span> <span class="pre">STATE</span></code> in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.10.4">[RFC9293 3.10.4]</a>.</p>
+<p>You also need to complete the implementation of the
+<code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_handle_segment</span></code> function to handle <code class="docutils literal notranslate"><span class="pre">FIN</span></code> segments in the
+<code class="docutils literal notranslate"><span class="pre">ESTABLISHED</span></code> state, as well as the arrival of segments in the <code class="docutils literal notranslate"><span class="pre">FIN_WAIT_1</span></code>, <code class="docutils literal notranslate"><span class="pre">FIN_WAIT_2</span></code>, <code class="docutils literal notranslate"><span class="pre">CLOSE_WAIT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CLOSING</span></code>, and <code class="docutils literal notranslate"><span class="pre">LAST_ACK</span></code> states, as specified in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#name-segment-arrives">[RFC9293 3.10.7]</a>.</p>
+<p>Take into account that, when the application layer requests that a connection be
+closed, it does not instantly trigger a TCP connection teardown. Instead, the FIN
+segment should be sent <em>after</em> all outstanding data in the send buffer has been sent
+<em>and</em> acknowledged.</p>
+<p>In other words, when the <code class="docutils literal notranslate"><span class="pre">APPLICATION_CLOSE</span></code> event is received, the connection
+teardown should happen only if the send buffer is empty. Otherwise, you should
+internally flag the socket as having to be closed once the send buffer is empty.
+This could happen if you have sent data, and the <code class="docutils literal notranslate"><span class="pre">APPLICATION_CLOSE</span></code> event arrives
+while you’re still waiting for that data to be ACK’d.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct already includes a boolean <code class="docutils literal notranslate"><span class="pre">closing</span></code> field, but you
+are allowed to add additional fields to <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> if necessary.</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="implementing.html" title="Previous Chapter: Implementation Guide"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Implementation Guide</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment2.html" title="Next Chapter: Assignment 2: TCP over an Unreliable Network"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment 2: TCP over an Unreliable Network &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Installing, Building, and Running chirouter &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Implementation Guide" href="implementing.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirouter</a></li>
+            <li class="active">Installing, Building, and Running chirouter</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Installing, Building, and Running chirouter</a><ul>
+<li><a class="reference internal" href="#building-chirouter">Building chirouter</a></li>
+<li><a class="reference internal" href="#installing-the-chirouter-docker-container">Installing the chirouter Docker container</a><ul>
+<li><a class="reference internal" href="#macos-linux">MacOS / Linux</a></li>
+<li><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-chirouter">Running chirouter</a><ul>
+<li><a class="reference internal" href="#running-without-a-topology">Running without a topology</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="installing-building-and-running-chirouter">
+<span id="chirouter-installing"></span><h1>Installing, Building, and Running chirouter<a class="headerlink" href="#installing-building-and-running-chirouter" title="Link to this heading">¶</a></h1>
+<p>The source code for chirouter can be found in the following GitHub repository:</p>
+<p><a class="reference external" href="https://github.com/uchicago-cs/chirouter">https://github.com/uchicago-cs/chirouter</a></p>
+<p>To work on the assignments, all you need to do is clone this repository. However,
+please note that your instructor may give you more specific instructions on how
+to get the chirouter code.</p>
+<section id="building-chirouter">
+<h2>Building chirouter<a class="headerlink" href="#building-chirouter" title="Link to this heading">¶</a></h2>
+<p>To build chirouter, the only requirement is <a class="reference external" href="https://cmake.org/">CMake</a> (version 3.21 or higher).</p>
+<p>The first time you download the chirouter code to your machine, you must run the
+following from the root of the chirouter code tree:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cmake -B build/
+</pre></div>
+</div>
+<p>This will generate a number of files necessary to build chirouter.</p>
+<p>Once you have done this, simply run <code class="docutils literal notranslate"><span class="pre">make</span></code> inside the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory
+to build chirouter. This will generate the <code class="docutils literal notranslate"><span class="pre">chirouter</span></code> executable.</p>
+<p>This executable accepts the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">PORT</span></code>: [Optional] Port that chirouter will listen on (the simulated network,
+described below, will connect to this port to send the router its configuration,
+and the Ethernet frames that arrive at the router). Defaults to 23320.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">FILE</span></code>: [Optional] When specified, produces a capture file (in PCAPNG format) with all
+the Ethernet frames sent/received by the routers. This file can be opened in Wireshark for analysis.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code>, <code class="docutils literal notranslate"><span class="pre">-vv</span></code>, or <code class="docutils literal notranslate"><span class="pre">-vvv</span></code>: To control the level of logging. This is described in
+more detail in <a class="reference internal" href="implementing.html#chirouter-implementing"><span class="std std-ref">Implementation Guide</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q</span></code>: Only print error messages.</p></li>
+</ul>
+</section>
+<section id="installing-the-chirouter-docker-container">
+<h2>Installing the chirouter Docker container<a class="headerlink" href="#installing-the-chirouter-docker-container" title="Link to this heading">¶</a></h2>
+<p>chirouter depends on the <a class="reference external" href="http://mininet.org/">mininet</a> network emulator to simulate the conditions of a real network.
+While it is technically possible to install mininet by itself, it is much easier to run a Docker container
+with all the necessary software. We provide such a container, and provide instructions below on how to install
+it and run it. The container works on both Intel/AMD computers and ARM computers (including Macs with Apple
+Silicon); Docker will automatically download the right version for your computer.</p>
+<p>Please note that you will <em>not</em> run chirouter inside the container. Instead, you will run chirouter
+on your computer and the simulated network inside the container, and the simulated network
+will connect to chirouter.</p>
+<p>Before performing these steps, make sure that you have built chirouter as described above.</p>
+<section id="macos-linux">
+<h3>MacOS / Linux<a class="headerlink" href="#macos-linux" title="Link to this heading">¶</a></h3>
+<p>First of all, you will need to install Docker
+Desktop on <a class="reference external" href="https://docs.docker.com/desktop/install/mac-install/">Mac</a>
+or <a class="reference external" href="https://docs.docker.com/desktop/setup/install/linux/">Linux</a> (on Linux,
+you can also use <a class="reference external" href="https://docs.docker.com/engine/install/">Docker Engine</a>
+instead of Docker Desktop). You
+may be prompted to “sign up” for a Docker account. You are welcome to do
+so, but none of the steps below require a Docker account (you can just
+click on “Continue without signing in” when prompted to sign up for an
+account)</p>
+<p>Once you’ve installed Docker Desktop, open it and, on the search bar,
+type in “chirouter”:</p>
+<figure class="align-default">
+<img alt="../_images/docker-mac-1.png" src="../_images/docker-mac-1.png" />
+</figure>
+<p>Click the “Pull” button next to “borjasotomayor/chirouter”</p>
+<p>Once the download is complete, you should see the image appear in the
+“Images” section on Docker Desktop:</p>
+<figure class="align-default">
+<img alt="../_images/docker-mac-2.png" src="../_images/docker-mac-2.png" />
+</figure>
+<p>Alternatively, you can download the image by running the following in a terminal:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker pull borjasotomayor/chirouter
+</pre></div>
+</div>
+<p>Next, open two terminal windows. On the first terminal window, go to the
+<code class="docutils literal notranslate"><span class="pre">build</span></code> directory of your repository, and run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirouter -vv
+</pre></div>
+</div>
+<p>You should see the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:51]   INFO Waiting for connection from Mininet...
+</pre></div>
+</div>
+<p>On the second terminal, run the following from the root of your
+repository:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-docker basic
+</pre></div>
+</div>
+<p>You should see the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>*** Error setting resource limits. Mininet&#39;s performance may be affected.
+*** Creating network
+*** Adding hosts:
+client1 client2 server1 server2
+*** Adding switches:
+r1 s1001 s1002 s1003
+*** Adding links:
+(client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002)
+*** Configuring hosts
+client1 client2 server1 server2
+*** Starting web server on host server1
+*** Starting web server on host server2
+*** Starting controller
+
+*** Starting 4 switches
+r1 s1001 s1002 s1003
+*** Connecting to chirouter at host.docker.internal:23320
+*** Starting CLI:
+mininet&gt;
+</pre></div>
+</div>
+<p>If you look at the first terminal, you should see the following output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:52]   INFO Mininet connected from 10.0.0.3:48054
+[2026-11-03 18:42:52]   INFO Received 1 routers
+[2026-11-03 18:42:52]   INFO --------------------------------------------------------------------------------
+[2026-11-03 18:42:52]   INFO ROUTER r1
+[2026-11-03 18:42:52]   INFO
+[2026-11-03 18:42:52]   INFO eth1 12:A3:1B:8D:52:62 192.168.1.1
+[2026-11-03 18:42:52]   INFO eth2 A6:0B:0F:02:33:92 172.16.0.1
+[2026-11-03 18:42:52]   INFO eth3 7A:46:EC:85:E2:22 10.0.0.1
+[2026-11-03 18:42:52]   INFO
+[2026-11-03 18:42:52]   INFO Destination     Gateway         Mask            Iface
+[2026-11-03 18:42:52]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1
+[2026-11-03 18:42:52]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2
+[2026-11-03 18:42:52]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3
+[2026-11-03 18:42:52]   INFO --------------------------------------------------------------------------------
+</pre></div>
+</div>
+<p>Note: The MAC addresses (and the address Mininet connects from) will be different,
+but everything else should look as it does above.</p>
+<p>To exit the mininet prompt in the second terminal, press Control-D</p>
+<p>Next up, skip to the “Running chirouter” section below.</p>
+</section>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Link to this heading">¶</a></h3>
+<p>First of all, you will need to <a class="reference external" href="https://docs.docker.com/desktop/install/windows-install/">install Docker
+Desktop</a>. You can use
+the default settings (including using WSL2, which you will also need to build and run
+chirouter).</p>
+<p>After Docker Desktop has finished installing (this may include
+restarting your computer), open it. You may be prompted to “sign up” for
+a Docker account. You are welcome to do so, but none of the steps below
+require a Docker account (you can just click on “Continue without
+signing in” when prompted to sign up for an account)</p>
+<p>Next, type in “chirouter” on the Docker Desktop search bar:</p>
+<figure class="align-default">
+<img alt="../_images/docker-windows-2.png" src="../_images/docker-windows-2.png" />
+</figure>
+<p>Click the “Pull” button next to “borjasotomayor/chirouter”</p>
+<p>Once the download is complete, you should see the image appear in the
+“Images” section on Docker Desktop:</p>
+<figure class="align-default">
+<img alt="../_images/docker-windows-3.png" src="../_images/docker-windows-3.png" />
+</figure>
+<p>Next, open two terminals: a WSL2 terminal and a PowerShell terminal.</p>
+<p>On the WSL2 terminal, go to the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory of your repository, and
+run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirouter -vv
+</pre></div>
+</div>
+<p>You should see the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:51]   INFO Waiting for connection from Mininet...
+</pre></div>
+</div>
+<p>Then, on the PowerShell terminal, run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker.exe run -ti --rm --privileged --name chirouter --add-host=host.docker.internal:host-gateway borjasotomayor/chirouter basic
+</pre></div>
+</div>
+<p>Note: To avoid running that command every time, you can also create a
+file called <code class="docutils literal notranslate"><span class="pre">run-docker.ps1</span></code> with the following contents:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker.exe run -ti --rm --privileged --name chirouter --add-host=host.docker.internal:host-gateway borjasotomayor/chirouter $args
+</pre></div>
+</div>
+<p>Then, run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.\run-docker.ps1 basic
+</pre></div>
+</div>
+<p>You should see the following output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>*** Error setting resource limits. Mininet&#39;s performance may be affected.
+*** Creating network
+*** Adding hosts:
+client1 client2 server1 server2
+*** Adding switches:
+r1 s1001 s1002 s1003
+*** Adding links:
+(client1, s1003) (client2, s1003) (r1, s1001) (r1, s1002) (r1, s1003) (server1, s1001) (server2, s1002)
+*** Configuring hosts
+client1 client2 server1 server2
+*** Starting web server on host server1
+*** Starting web server on host server2
+*** Starting controller
+
+*** Starting 4 switches
+r1 s1001 s1002 s1003
+*** Connecting to chirouter at host.docker.internal:23320
+*** Starting CLI:
+mininet&gt;
+</pre></div>
+</div>
+<p>On the WSL2 terminal, you should see the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:52]   INFO Mininet connected from 10.0.0.3:48054
+[2026-11-03 18:42:52]   INFO Received 1 routers
+[2026-11-03 18:42:52]   INFO --------------------------------------------------------------------------------
+[2026-11-03 18:42:52]   INFO ROUTER r1
+[2026-11-03 18:42:52]   INFO
+[2026-11-03 18:42:52]   INFO eth1 12:A3:1B:8D:52:62 192.168.1.1
+[2026-11-03 18:42:52]   INFO eth2 A6:0B:0F:02:33:92 172.16.0.1
+[2026-11-03 18:42:52]   INFO eth3 7A:46:EC:85:E2:22 10.0.0.1
+[2026-11-03 18:42:52]   INFO
+[2026-11-03 18:42:52]   INFO Destination     Gateway         Mask            Iface
+[2026-11-03 18:42:52]   INFO 192.168.0.0     0.0.0.0         255.255.0.0     eth1
+[2026-11-03 18:42:52]   INFO 172.16.0.0      0.0.0.0         255.255.240.0   eth2
+[2026-11-03 18:42:52]   INFO 10.0.0.0        0.0.0.0         255.0.0.0       eth3
+[2026-11-03 18:42:52]   INFO --------------------------------------------------------------------------------
+</pre></div>
+</div>
+<p>Note: The MAC addresses (and the address Mininet connects from) will be different,
+but everything else should look as it does above.</p>
+<p>To exit the mininet prompt in the PowerShell terminal, press Control-D</p>
+<p>Next up, skip to the “Running chirouter” section below.</p>
+</section>
+</section>
+<section id="running-chirouter">
+<h2>Running chirouter<a class="headerlink" href="#running-chirouter" title="Link to this heading">¶</a></h2>
+<p>Running chirouter involves running the <code class="docutils literal notranslate"><span class="pre">chirouter</span></code> executable in one terminal,
+and mininet (using the Docker container) in another terminal. To do this,
+follow the same instructions describe above when installing the Docker container.</p>
+<p>The first parameter to the <code class="docutils literal notranslate"><span class="pre">run-docker</span></code> script specifies the network topology
+we want to simulate:</p>
+<ul>
+<li><p>MacOS/Linux:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-docker basic
+</pre></div>
+</div>
+</li>
+<li><p>Windows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.\run-docker.ps1 basic
+</pre></div>
+</div>
+</li>
+</ul>
+<p>These topologies are described in more detail in the <a class="reference internal" href="testing.html#chirouter-testing"><span class="std std-ref">Testing your Implementation</span></a>
+page but, for now, all we need to know is that the <code class="docutils literal notranslate"><span class="pre">basic</span></code> topology involves
+a single router connecting multiple networks together, each containing some hosts.</p>
+<p>The mininet terminal (which will show a prompt like this: <code class="docutils literal notranslate"><span class="pre">mininet&gt;</span></code>)
+will allow you to run network commands on a specific host of the topology. For example,
+this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mininet&gt; client1 ping -c 4 server1
+</pre></div>
+</div>
+<p>Would run the <code class="docutils literal notranslate"><span class="pre">ping</span></code> command on <code class="docutils literal notranslate"><span class="pre">client1</span></code> (and would specifically
+ping <code class="docutils literal notranslate"><span class="pre">server1</span></code> four times). While the network itself is being simulated
+by Mininet, the commands that are being run are the exact same ones you
+would run on a Linux system.</p>
+<p>Please note that the above command won’t yet work, because you have not
+yet implemented the router. However, to verify that mininet is running correctly,
+you can run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mininet&gt; client1 ping -c 4 client1
+PING 10.0.100.1 (10.0.100.1) 56(84) bytes of data.
+64 bytes from 10.0.100.1: icmp_seq=1 ttl=64 time=0.037 ms
+64 bytes from 10.0.100.1: icmp_seq=2 ttl=64 time=0.025 ms
+64 bytes from 10.0.100.1: icmp_seq=3 ttl=64 time=0.047 ms
+64 bytes from 10.0.100.1: icmp_seq=4 ttl=64 time=0.036 ms
+
+--- 10.0.100.1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3062ms
+rtt min/avg/max/mdev = 0.025/0.036/0.047/0.007 ms
+</pre></div>
+</div>
+<p>The above command just instructs <code class="docutils literal notranslate"><span class="pre">client1</span></code> to ping itself. Since your router isn’t involved in delivering the
+messages, this will run fine even if you haven’t implemented the router yet. On the other hand, the following
+command instructs <code class="docutils literal notranslate"><span class="pre">client1</span></code> to ping <code class="docutils literal notranslate"><span class="pre">10.0.0.1</span></code> (one of the router’s interfaces). Since you have
+not yet implemented your router, it will not reply to the pings (and <code class="docutils literal notranslate"><span class="pre">client1</span></code> will report that
+the router is unreachable, since the router doesn’t reply to its ARP requests either):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mininet&gt; client1 ping -c 4 10.0.0.1
+PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+From 10.0.100.1 icmp_seq=1 Destination Host Unreachable
+From 10.0.100.1 icmp_seq=2 Destination Host Unreachable
+From 10.0.100.1 icmp_seq=3 Destination Host Unreachable
+
+--- 10.0.0.1 ping statistics ---
+4 packets transmitted, 0 received, +3 errors, 100% packet loss, time 3069ms
+</pre></div>
+</div>
+<p>However, if you look at the chirouter logs, you should see that it <em>is</em> receiving ARP requests from <code class="docutils literal notranslate"><span class="pre">client1</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:55]  DEBUG Received Ethernet frame on interface r1-eth3
+[2026-11-03 18:42:55]  DEBUG    ######################################################################
+[2026-11-03 18:42:55]  DEBUG &lt;  Src: 5A:B8:C3:C7:A9:1D
+[2026-11-03 18:42:55]  DEBUG &lt;  Dst: FF:FF:FF:FF:FF:FF
+[2026-11-03 18:42:55]  DEBUG &lt;  Ethertype: 0806 (ARP)
+[2026-11-03 18:42:55]  DEBUG &lt;  Payload (28 bytes):
+[2026-11-03 18:42:55]  DEBUG   0000  00 01 08 00 06 04 00 01 5a b8 c3 c7 a9 1d 0a 00  ........Z.......
+[2026-11-03 18:42:55]  DEBUG   0010  64 01 00 00 00 00 00 00 0a 00 00 01              d...........
+[2026-11-03 18:42:55]  DEBUG    ######################################################################
+</pre></div>
+</div>
+<p>As you develop your router, please note that it is important that you start chirouter and mininet in
+the same order: chirouter first, followed by mininet.</p>
+<section id="running-without-a-topology">
+<h3>Running without a topology<a class="headerlink" href="#running-without-a-topology" title="Link to this heading">¶</a></h3>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">run-docker</span></code> without any parameters, you will instead get a
+root shell in the container:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./run-docker
+root@e37390d6efd7:/chirouter#
+</pre></div>
+</div>
+<p>You will need to do this to run the automated tests, which are described
+later in this documentation.</p>
+<p>Inside this root shell, you can run also run a <code class="docutils literal notranslate"><span class="pre">run-mininet</span></code> command directly
+to start Mininet:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./run-docker
+root@e37390d6efd7:/chirouter# ./run-mininet topologies/basic.json
+*** Error setting resource limits. Mininet&#39;s performance may be affected.
+*** Creating network
+*** Adding hosts:
+client1 client2 server1 server2
+… etc …
+</pre></div>
+</div>
+<p><strong>CAREFUL</strong>: When you exit this root shell, any work you did inside the container
+will be lost. You should only use the container to run mininet or the automated tests;
+you should not be creating and saving any files inside the container.</p>
+<p>Finally, chirouter listens on port 23320 for connections from mininet
+(and mininet will, by default, use that port). Since you will be running
+on your own computer, this should not cause any conflicts but, if you do
+need to use a different port, run chirouter like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirouter -p PORT
+</pre></div>
+</div>
+<p>(where <code class="docutils literal notranslate"><span class="pre">PORT</span></code> is the alternate port you want to use)</p>
+<p>And, from the container’s root shell, run this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-mininet topologies/basic.json --chirouter host.docker.internal:PORT
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="intro.html" title="Previous Chapter: Introduction"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Introduction</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="implementing.html" title="Next Chapter: Implementation Guide"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Implementation Guide &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

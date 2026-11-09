@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Introduction &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The chiTCP Architecture" href="architecture.html" />
+    <link rel="prev" title="chiTCP" href="index.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chiTCP</a></li>
+            <li class="active">Introduction</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
+<p>In this project you will be implementing the Transmission Control Protocol, as
+specified in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293">[RFC9293]</a>. However, instead
+of implementing it inside the operating system itself, you will be implementing
+it inside a system called chiTCP. This system allows you to write socket-based
+applications that rely on your TCP implementation instead of the one included
+in your operating system. To do this, chiTCP provides an alternate socket
+library, chisocket, that provides the same functions as the standard socket
+library (<code class="docutils literal notranslate"><span class="pre">connect</span></code>, <code class="docutils literal notranslate"><span class="pre">send</span></code>, <code class="docutils literal notranslate"><span class="pre">recv</span></code>, etc.). Although the chisocket
+functions have the same expected behaviour as the standard socket functions,
+they do not implement the entire functionality provided by standard sockets
+(e.g., non-blocking sockets are not supported).</p>
+<p>In chiTCP, the socket layer and all the messy details of how TCP interacts with
+the other layers of the protocol stack (including how packets are handed down
+to the network layer, and how data is passed up to the application layer) are
+already implemented for you. In this project, you will focus on implementing
+the TCP protocol itself.</p>
+<p>The chiTCP documentation is divided into the following sections:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="architecture.html#chitcp-architecture"><span class="std std-ref">The chiTCP Architecture</span></a>: Provides an overview of chiTCP’s internal
+architecture.</p></li>
+<li><p><a class="reference internal" href="installing.html#chitcp-installing"><span class="std std-ref">Installing, Building, and Running chiTCP</span></a>: Instructions on how to install, build, and run
+chiTCP.</p></li>
+<li><p><a class="reference internal" href="implementing.html#chitcp-implementing"><span class="std std-ref">Implementation Guide</span></a>: A guide to implementing chiTCP.</p></li>
+<li><p><a class="reference internal" href="assignment1.html#chitcp-assignment1"><span class="std std-ref">Assignment 1: TCP over a Reliable Network</span></a> and <a class="reference internal" href="assignment2.html#chitcp-assignment2"><span class="std std-ref">Assignment 2: TCP over an Unreliable Network</span></a>: The chiTCP
+programming assignments. Please note that your instructor may provide
+additional instructions on how to do these assignments.</p></li>
+<li><p><a class="reference internal" href="testing.html#chitcp-testing"><span class="std std-ref">Testing your Implementation</span></a>: Suggestions and strategies for testing your
+implementation.</p></li>
+</ul>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="index.html" title="Previous Chapter: chiTCP"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; chiTCP</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="architecture.html" title="Next Chapter: The chiTCP Architecture"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">The chiTCP Architecture &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>chiTCP &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Introduction" href="intro.html" />
+    <link rel="prev" title="Testing your Implementation" href="../chirc/testing.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="#">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+            <li class="active">chiTCP</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="chitcp">
+<h1>chiTCP<a class="headerlink" href="#chitcp" title="Link to this heading">¶</a></h1>
+<p>chiTCP is a programming assignment where students have to implement the TCP
+protocol. It provides a framework for students to bypass the operating system’s
+TCP stack and, instead, use a sandboxed and testable TCP stack that runs in
+userspace (instead of kernelspace). All the details of how TCP interacts with
+the other layers of the protocol stack (including how packets are handed down
+to the network layer, and how data is passed up to the application layer) are
+already implemented for the students, who can then focus on implementing the
+TCP protocol itself. Furthermore, chiTCP also allows students to write
+socket-based network applications on top of their TCP implementation (by using
+a “chisocket” library instead of the standard socket library). If two students
+write standard-compliant versions of TCP, their applications will be able to
+communicate over a real network.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">The chiTCP Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing, Building, and Running chiTCP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#software-requirements">Software Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#running">Running</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="implementing.html">Implementation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#implementing-rfc-9293">Implementing RFC 9293</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#implementing-the-tcp-c-file">Implementing the <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#the-tcp-data-t-struct">The <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#the-tcp-segment-t-struct">The <code class="docutils literal notranslate"><span class="pre">tcp_segment_t</span></code> struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#the-chitcpd-update-tcp-state-function">The <code class="docutils literal notranslate"><span class="pre">chitcpd_update_tcp_state</span></code> function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#the-chitcpd-send-tcp-segment-function">The <code class="docutils literal notranslate"><span class="pre">chitcpd_send_tcp_segment</span></code> function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#the-chitcpd-timeout-function">The <code class="docutils literal notranslate"><span class="pre">chitcpd_timeout</span></code> function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="implementing.html#the-logging-functions">The logging functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment1.html">Assignment 1: TCP over a Reliable Network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assignment1.html#implementing-the-tcp-3-way-handshake">Implementing the TCP 3-way handshake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment1.html#sending-and-receiving-data">Sending and receiving data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment1.html#connection-tear-down">Connection tear-down</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment2.html">Assignment 2: TCP over an Unreliable Network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#implementing-a-timer-api">Implementing a Timer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#retransmissions">Retransmissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#persist-timer">Persist timer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#out-of-order-delivery">Out-of-order delivery</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing your Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#automated-tests">Automated tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-and-debugging-individual-tests">Running and debugging individual tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#running-categories-of-tests">Running categories of tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#producing-a-grade-report">Producing a grade report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#echo-server-and-client">Echo server and client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#the-simple-tester">The “simple tester”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#id1">Producing a pcap file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#wireshark-dissector">Wireshark dissector</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="next">
+    <a href="intro.html" title="Next Chapter: Introduction"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Introduction &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

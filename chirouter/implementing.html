@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Implementation Guide &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment: Implementing an IP router" href="assignment.html" />
+    <link rel="prev" title="Installing, Building, and Running chirouter" href="installing.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirouter</a></li>
+            <li class="active">Implementation Guide</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Implementation Guide</a><ul>
+<li><a class="reference internal" href="#chirouter-h">chirouter.h</a></li>
+<li><a class="reference internal" href="#router-c">router.c</a></li>
+<li><a class="reference internal" href="#accessing-creating-protocol-headers">Accessing/Creating Protocol Headers</a></li>
+<li><a class="reference internal" href="#the-chirouter-send-frame-function">The <code class="docutils literal notranslate"><span class="pre">chirouter_send_frame</span></code> function</a></li>
+<li><a class="reference internal" href="#arp-c-arp-h">arp.c / arp.h</a></li>
+<li><a class="reference internal" href="#utils-c-utils-h">utils.c / utils.h</a></li>
+<li><a class="reference internal" href="#the-logging-functions">The logging functions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="implementation-guide">
+<span id="chirouter-implementing"></span><h1>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">¶</a></h1>
+<p>You are provided with a fair amount of scaffolding code, some of which
+you will need to use or modify to implement your router. This page
+provides an overview of the files that you will need to modify or
+be familiar with. Most of the documentation on individual functions
+can be found in the header files themselves.</p>
+<section id="chirouter-h">
+<h2>chirouter.h<a class="headerlink" href="#chirouter-h" title="Link to this heading">¶</a></h2>
+<p>This header file defines the main data structures of an individual router. All these
+data structures are accessible through the <em>router context</em> struct (<code class="docutils literal notranslate"><span class="pre">chirouter_ctx_t</span></code>)
+that is passed to most functions.</p>
+<p>Our code takes care of creating and populating this struct with all the
+information relevant to each router:</p>
+<ul class="simple">
+<li><p>An array of <code class="docutils literal notranslate"><span class="pre">chirouter_interface_t</span></code> structs, each representing an Ethernet
+interface in the router.</p></li>
+<li><p>An array of <code class="docutils literal notranslate"><span class="pre">chirouter_rtable_entry_t</span></code> structs, each representing an entry
+in the routing table. Each entry in the routing table, in turn, contains
+the destination network (specified by an IPv4 address and a subnet mask), the
+gateway for that entry, and the Ethernet interface for that entry (a pointer
+to a <code class="docutils literal notranslate"><span class="pre">chirouter_interface_t</span></code> struct).</p></li>
+<li><p>An ARP cache, represented as an array of <code class="docutils literal notranslate"><span class="pre">chirouter_arpcache_entry_t</span></code> structs.</p></li>
+<li><p>A list of pending ARP requests, representing ARP requests that have been sent
+but for which the router has not received a reply yet. This is explained in more
+detail in <a class="reference internal" href="assignment.html#chirouter-assignment"><span class="std std-ref">Assignment: Implementing an IP router</span></a>.</p></li>
+<li><p>A mutex that must be locked any time the ARP cache or the list of pending ARP requests
+is accessed.</p></li>
+</ul>
+<p>This header file also defines an <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code> struct representing an <em>inbound</em>
+Ethernet frame. This struct contains not just the frame itself, but also a pointer to the
+<code class="docutils literal notranslate"><span class="pre">chirouter_interface_t</span></code> struct corresponding to the Ethernet interface on which the
+frame arrived.</p>
+<p>You should not modify this header file in any way.</p>
+</section>
+<section id="router-c">
+<h2>router.c<a class="headerlink" href="#router-c" title="Link to this heading">¶</a></h2>
+<p>Most of your work will take place in this file. In particular, you must implement the
+<code class="docutils literal notranslate"><span class="pre">chirouter_process_ethernet_frame</span></code> function. This function will get called every
+time an Ethernet frame is received by
+a router.</p>
+<p>Take into account that chirouter can manage multiple routers at once,
+but does so in a single thread. i.e., it is guaranteed that this function
+is always called sequentially, and that there will not be concurrent calls to this
+function. If two routers receive Ethernet frames “at the same time”,
+they will be ordered arbitrarily and processed sequentially, not
+concurrently (and with each call receiving a different router context)</p>
+<p>Your implementation of the <code class="docutils literal notranslate"><span class="pre">chirouter_process_ethernet_frame</span></code> function must
+process the frame meeting the requirements described in <a class="reference internal" href="assignment.html#chirouter-assignment"><span class="std std-ref">Assignment: Implementing an IP router</span></a>.
+You are allowed, and encouraged, to use helper functions to implement <code class="docutils literal notranslate"><span class="pre">chirouter_process_ethernet_frame</span></code>.
+For example, it would make sense to write separate functions to handle ARP messages,
+ICMP messages directed to the router, and IP datagrams.</p>
+</section>
+<section id="accessing-creating-protocol-headers">
+<h2>Accessing/Creating Protocol Headers<a class="headerlink" href="#accessing-creating-protocol-headers" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">chirouter_process_ethernet_frame</span></code> function will receive an <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code> struct
+representing an Ethernet frame arriving at the router. This struct contains the raw contents
+of the Ethernet frame, but you will generally want to access individual fields not just
+in the Ethernet header, but also is other protocol headers (such as ARP, IP, and ICMP) contained within
+the Ethernet frame.</p>
+<p>To access these protocol headers, you should use the structs and macros provided in the
+<code class="docutils literal notranslate"><span class="pre">ethernet.h</span></code>, <code class="docutils literal notranslate"><span class="pre">arp.h</span></code>, <code class="docutils literal notranslate"><span class="pre">ipv4.h</span></code>, and <code class="docutils literal notranslate"><span class="pre">icmp.h</span></code> header files (located in the <code class="docutils literal notranslate"><span class="pre">src/router/protocols</span></code> directory).</p>
+<p>For example, given an inbound Ethernet frame (an <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code> struct) you can access the
+different headers like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Accessing the Ethernet header */
+ethhdr_t* hdr = (ethhdr_t*) frame-&gt;raw;
+
+/* Accessing an ARP message */
+arp_packet_t* arp = (arp_packet_t*) (frame-&gt;raw + sizeof(ethhdr_t));
+
+/* Accessing the IP header */
+iphdr_t* ip_hdr = (iphdr_t*) (frame-&gt;raw + sizeof(ethhdr_t));
+
+/* Accessing an ICMP message */
+icmp_packet_t* icmp = (icmp_packet_t*) (frame-&gt;raw + sizeof(ethhdr_t) + sizeof(iphdr_t));
+</pre></div>
+</div>
+<p>Your router will also create new Ethernet frames to send out. To do this, you will have to
+first allocate enough memory for all the headers (including their payload), and then use
+the structs/macros in <code class="docutils literal notranslate"><span class="pre">ethernet.h</span></code>, <code class="docutils literal notranslate"><span class="pre">arp.h</span></code>, <code class="docutils literal notranslate"><span class="pre">ipv4.h</span></code>, and <code class="docutils literal notranslate"><span class="pre">icmp.h</span></code> to set the correct
+values in each header. For example, creating an ARP reply would look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int frame_len = sizeof(ethhdr_t) + sizeof(arp_packet_t);
+uint8_t out_frame[frame_len];
+memset(arp_reply, 0, sizeof(out_frame));
+
+ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
+/* Use ether_hdr to set the fields in the Ethernet header */
+
+arp_packet_t* arp = (arp_packet_t*) (out_frame + sizeof(ethhdr_t));
+/* Use arp to set the fields in the ARP message */
+</pre></div>
+</div>
+<p>On the other hand, creating an ICMP message would look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* We assume we&#39;ve already computed the size of the ICMP payload, and that
+   it is stored in payload_len */
+int frame_len = sizeof(ethhdr_t) + sizeof(iphdr_t) + ICMP_HDR_SIZE + payload_len;
+uint8_t out_frame[frame_len];
+memset(frame, 0, sizeof(out_frame));
+
+ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
+/* Use ether_hdr to set the fields in the Ethernet header */
+
+iphdr_t* ip_hdr = (iphdr_t*) (out_frame + sizeof(ethhdr_t));
+/* Use ip_hdr to set the fields in the IP header */
+
+icmp_packet_t* icmp = (icmp_packet_t*) (out_frame + sizeof(ethhdr_t) + sizeof(iphdr_t));
+/* Use icmp to set the fields in the ICMP message */
+</pre></div>
+</div>
+</section>
+<section id="the-chirouter-send-frame-function">
+<h2>The <code class="docutils literal notranslate"><span class="pre">chirouter_send_frame</span></code> function<a class="headerlink" href="#the-chirouter-send-frame-function" title="Link to this heading">¶</a></h2>
+<p>Once you’ve crafted an Ethernet frame, you will need to send it through one of the router’s interfaces.
+This is done using the <code class="docutils literal notranslate"><span class="pre">chirouter_send_frame</span></code> function, defined in the <code class="docutils literal notranslate"><span class="pre">chirouter.h</span></code> header file.</p>
+</section>
+<section id="arp-c-arp-h">
+<h2>arp.c / arp.h<a class="headerlink" href="#arp-c-arp-h" title="Link to this heading">¶</a></h2>
+<p>Part of your work will take place in this file. In particular, you must implement the
+<code class="docutils literal notranslate"><span class="pre">chirouter_arp_process_pending_req</span></code> function. Besides the router’s main thread (which
+is in charge of calling <code class="docutils literal notranslate"><span class="pre">chirouter_process_ethernet_frame</span></code> when an Ethernet frame
+arrives), the router has an additional thread, <em>the ARP thread</em>, that runs function <code class="docutils literal notranslate"><span class="pre">chirouter_arp_process</span></code>.
+This thread will wake up every second to purge stale entries in the ARP cache
+(entries that are more than 15 seconds old) and to traverse the list of pending ARP requests.</p>
+<p>For each pending request in the list, it will call <code class="docutils literal notranslate"><span class="pre">chirouter_arp_process_pending_req</span></code>,
+which must either re-send the pending ARP request or cancel the request and send
+ICMP Host Unreachable messages in reply to all the withheld frames (this is
+described in more detail in <a class="reference internal" href="assignment.html#chirouter-assignment"><span class="std std-ref">Assignment: Implementing an IP router</span></a>.).</p>
+<p>Because the main thread and the ARP thread may both need to access the ARP cache or the
+list of pending ARP requests at the same time, you must <em>always</em> lock the <code class="docutils literal notranslate"><span class="pre">lock_arp</span></code> mutex
+(in the router context) before accessing either the ARP cache or the list of pending ARP
+requests (even if you are just reading them).</p>
+<p>You must not modify any code in this file other than <code class="docutils literal notranslate"><span class="pre">chirouter_arp_process_pending_req</span></code>.
+However, this file does provide several functions to access and/or manipulate the
+ARP cache and list of pending ARP requests, which you can use in your implementation.
+Take into account that these functions assume that the <code class="docutils literal notranslate"><span class="pre">lock_arp</span></code> mutex has already been
+locked before the functions are called.</p>
+</section>
+<section id="utils-c-utils-h">
+<h2>utils.c / utils.h<a class="headerlink" href="#utils-c-utils-h" title="Link to this heading">¶</a></h2>
+<p>This module provides two useful functions: one to compute an IP or ICMP checksum, and one to
+compare MAC addresses. If you need to add functions in your implementation that need to
+be shared by <code class="docutils literal notranslate"><span class="pre">router.c</span></code> and <code class="docutils literal notranslate"><span class="pre">arp.c</span></code>, you should add them to this module.</p>
+</section>
+<section id="the-logging-functions">
+<h2>The logging functions<a class="headerlink" href="#the-logging-functions" title="Link to this heading">¶</a></h2>
+<p>chirouter prints out detailed information to standard output using a
+series of logging functions declared in <code class="docutils literal notranslate"><span class="pre">src/router/log.h</span></code>. We encourage you
+to use these logging functions instead of using <code class="docutils literal notranslate"><span class="pre">printf</span></code> directly. More
+specifically, you should use the printf-style <code class="docutils literal notranslate"><span class="pre">chilog()</span></code> function to print
+messages:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chilog</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Received Ethernet frame with unsupported Ethertype: %i)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ntohs</span><span class="p">(</span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>And the <code class="docutils literal notranslate"><span class="pre">chilog_ethernet()</span></code>, <code class="docutils literal notranslate"><span class="pre">chilog_arp()</span></code>, <code class="docutils literal notranslate"><span class="pre">chilog_ip()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">chilog_icmp()</span></code> functions to log the contents of an Ethernet header,
+ARP message, IP header, or ICMP message. For example, suppose we have
+received an Ethernet frame (a <code class="docutils literal notranslate"><span class="pre">frame</span></code> variable of type <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code>) containing
+and ICMP message. We could log each header like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ethhdr_t</span><span class="o">*</span><span class="w"> </span><span class="n">ether_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ethhdr_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="p">;</span>
+<span class="n">iphdr_t</span><span class="o">*</span><span class="w"> </span><span class="n">ip_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">iphdr_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ethhdr_t</span><span class="p">));</span>
+<span class="n">icmp_packet_t</span><span class="o">*</span><span class="w"> </span><span class="n">icmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">icmp_packet_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ethhdr_t</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">iphdr_t</span><span class="p">));</span>
+
+<span class="n">chilog_ethernet</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">ether_hdr</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
+<span class="n">chilog_ip</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">ip_hdr</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
+<span class="n">chilog_icmp</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">icmp</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The last parameter of these functions can be <code class="docutils literal notranslate"><span class="pre">LOG_INBOUND</span></code> or <code class="docutils literal notranslate"><span class="pre">LOG_OUTBOUND</span></code>
+to designate a message that is being received or sent, respectively (this
+affects the formatting of the message in the log). <code class="docutils literal notranslate"><span class="pre">LOG_NO_DIRECTION</span></code> can also
+be used to indicate that the message is neither inbound nor outbound.</p>
+<p>In all the functions, the first parameter is used to specify the log level:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code>: Used for critical errors for which the only solution is to
+exit the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ERROR</span></code>: Used for non-critical errors, which may allow the program to
+continue running, but a specific part of it to fail (e.g., an individual
+socket).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WARNING</span></code>: Used to indicate unexpected situation which, while not
+technically an error, could cause one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INFO</span></code>: Used to print general information about the state of the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>: Used to print detailed information about the state of the
+program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRACE</span></code>: Used to print low-level information, such as function
+entry/exit points, dumps of entire data structures, etc.</p></li>
+</ul>
+<p>The level of logging is controlled by the <code class="docutils literal notranslate"><span class="pre">-v</span></code> argument when running
+<code class="docutils literal notranslate"><span class="pre">chirouter</span></code>:</p>
+<ul class="simple">
+<li><p>No <code class="docutils literal notranslate"><span class="pre">-v</span></code> argument: Print only <code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code> and <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> and <code class="docutils literal notranslate"><span class="pre">INFO</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vvv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">TRACE</span></code> messages.</p></li>
+</ul>
+<p>We recommend running at the <code class="docutils literal notranslate"><span class="pre">-vv</span></code> level, which will print all the inbound
+Ethernet frames. The <code class="docutils literal notranslate"><span class="pre">-vvv</span></code> contains much lower-level information that
+the instructors may need to debug a specific issue, but which is typically
+not relevant in most situations when implementing chirouter.</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="installing.html" title="Previous Chapter: Installing, Building, and Running chirouter"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Installing, Building, and Running chirouter</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment.html" title="Next Chapter: Assignment: Implementing an IP router"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment: Implementing an IP router &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

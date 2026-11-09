@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Assignment 4: Abridged version of Assignments 2 and 3 &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment 5: IRC Networks" href="assignment5.html" />
+    <link rel="prev" title="Assignment 3: Channels and Modes" href="assignment3.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirc</a></li>
+            <li class="active">Assignment 4: Abridged version of Assignments 2 and 3</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="assignment-4-abridged-version-of-assignments-2-and-3">
+<span id="chirc-assignment4"></span><h1>Assignment 4: Abridged version of Assignments 2 and 3<a class="headerlink" href="#assignment-4-abridged-version-of-assignments-2-and-3" title="Link to this heading">¶</a></h1>
+<p>As an alternative to doing Assignments 2 and 3, you can do an abridged version of those assignments that will still implement enough of the functionality required to move on
+to Assignment 5.</p>
+<p>In this assignment, you should follow the instructions provided in Assignments 2 and 3, but can skip the following:</p>
+<ul class="simple">
+<li><p>Do not implement the <code class="docutils literal notranslate"><span class="pre">MOTD</span></code> command. Please note that you still need to send an <code class="docutils literal notranslate"><span class="pre">ERR_NOMOTD</span></code> as part of the welcome messages.</p></li>
+<li><p>Do not implement the <code class="docutils literal notranslate"><span class="pre">TOPIC</span></code> command. You also do not need to support the <code class="docutils literal notranslate"><span class="pre">RPL_TOPIC</span></code> reply in other commands. Please note that you still have to support the <code class="docutils literal notranslate"><span class="pre">t</span></code> mode being set and unset, but will just not do anything differently based on whether that mode is set or not.</p></li>
+<li><p>Do not implement the <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> command. Note that you still need to send the <code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> replies after a <code class="docutils literal notranslate"><span class="pre">JOIN</span></code>, but you can implement that directly in your implementation of <code class="docutils literal notranslate"><span class="pre">JOIN</span></code>.</p></li>
+<li><p>Do not implement the <code class="docutils literal notranslate"><span class="pre">WHO</span></code> command.</p></li>
+<li><p>You do not need to pass the “Robustness” tests, and they will not contribute to your score.</p></li>
+</ul>
+<p>You can also assume that any part of Assignments 2 and 3 that depends on the above commands can be skipped.
+For example, the <code class="docutils literal notranslate"><span class="pre">LIST</span></code> command would ordinarily print the topics of each channel but, since we won’t
+be supporting the <code class="docutils literal notranslate"><span class="pre">TOPIC</span></code> command, you can assume that no topic would be included in the <code class="docutils literal notranslate"><span class="pre">RPL_LIST</span></code> replies.</p>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="assignment3.html" title="Previous Chapter: Assignment 3: Channels and Modes"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Assignment 3: Channels and Modes</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment5.html" title="Next Chapter: Assignment 5: IRC Networks"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment 5: IRC Networks &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

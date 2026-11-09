@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Installing, Building, and Running chirc &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment 1: Basic Message Processing" href="assignment1.html" />
+    <link rel="prev" title="Example IRC Communications" href="irc_examples.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirc</a></li>
+            <li class="active">Installing, Building, and Running chirc</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Installing, Building, and Running chirc</a><ul>
+<li><a class="reference internal" href="#software-requirements">Software Requirements</a></li>
+<li><a class="reference internal" href="#building">Building</a></li>
+<li><a class="reference internal" href="#running">Running</a></li>
+<li><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="installing-building-and-running-chirc">
+<span id="chirc-build"></span><h1>Installing, Building, and Running chirc<a class="headerlink" href="#installing-building-and-running-chirc" title="Link to this heading">¶</a></h1>
+<p>The source code for chirc can be found in the following GitHub repository:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/uchicago-cs/chirc">https://github.com/uchicago-cs/chirc</a></p>
+</div></blockquote>
+<p>To work on the assignments, all you need to do is clone this repository. However,
+please note that your instructor may give you more specific instructions on how
+to get the chirc code.</p>
+<section id="software-requirements">
+<h2>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading">¶</a></h2>
+<p>chirc has the following software requirements:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://cmake.org/">CMake</a> (version 3.21 or higher)</p></li>
+<li><p>Python 3.12 or above</p></li>
+<li><p><a class="reference external" href="https://pytest.org">pytest</a>, including the <code class="docutils literal notranslate"><span class="pre">pytest-json-report</span></code> plugin. The grading script
+additionally depends on the Click library. All of these can be
+installed using pip (<code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">pytest</span> <span class="pre">pytest-json-report</span> <span class="pre">click</span></code>).</p></li>
+</ul>
+</section>
+<section id="building">
+<h2>Building<a class="headerlink" href="#building" title="Link to this heading">¶</a></h2>
+<p>The first time you download the chirc code to your machine, you must run the
+following from the root of the chirc code tree:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cmake -B build/
+</pre></div>
+</div>
+<p>This will create a <code class="docutils literal notranslate"><span class="pre">build</span></code> directory containing several files necessary to build and test chirc.</p>
+<p>Once you have done this, simply run <code class="docutils literal notranslate"><span class="pre">make</span></code> inside the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory
+to build chirc:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd build/
+make
+</pre></div>
+</div>
+<p>This will generate the <code class="docutils literal notranslate"><span class="pre">chirc</span></code> executable.</p>
+<p>You should follow these conventions when modifying the provided code:</p>
+<ul class="simple">
+<li><p>You are allowed to modify the files inside <code class="docutils literal notranslate"><span class="pre">src/</span></code>, as well as the <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+file. Do <em>not</em> modify any other files.</p></li>
+<li><p>If you add <code class="docutils literal notranslate"><span class="pre">.c</span></code> files to the <code class="docutils literal notranslate"><span class="pre">src/</span></code> directory, you must also add that file
+to the list of files specified in the <code class="docutils literal notranslate"><span class="pre">add_executable</span></code> command in the <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file.
+Otherwise, the file will not be compiled and linked.</p></li>
+<li><p>If you want to use third-party libraries, add them inside the <code class="docutils literal notranslate"><span class="pre">lib/</span></code> directory
+(do <em>not</em> add them in the <code class="docutils literal notranslate"><span class="pre">src/</span></code> directory!). If the third-party library has header
+files you need to <code class="docutils literal notranslate"><span class="pre">#include</span></code> in your code, <em>do not</em> copy the header files into
+the <code class="docutils literal notranslate"><span class="pre">src/</span></code> directory. Instead, add the library’s directory to the list
+of directories in the <code class="docutils literal notranslate"><span class="pre">target_include_directories</span></code> command in the <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file.
+This way, you will be able to <code class="docutils literal notranslate"><span class="pre">#include</span></code> header files in those directories.</p></li>
+</ul>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">make</span></code> will only print the names of the files it is building. To
+enable a more verbose output (including the exact commands that make is running
+during the build process), just run <code class="docutils literal notranslate"><span class="pre">make</span></code> like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make VERBOSE=1
+</pre></div>
+</div>
+</section>
+<section id="running">
+<h2>Running<a class="headerlink" href="#running" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">chirc</span></code> executable accepts the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-p</span></code>: The port on which the server will listen (6667 by default).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span></code>: To specify the “operator password”.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n</span></code>: Specifies an IRC network file. This will only be relevant in Assignment 5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span></code>: Specifies which server in the IRC network file (specified with <code class="docutils literal notranslate"><span class="pre">-n</span></code>)
+should be run. This parameter is required when using <code class="docutils literal notranslate"><span class="pre">-n</span></code>, and will only be
+relevant in Assignment 5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q</span></code>, <code class="docutils literal notranslate"><span class="pre">-v</span></code>, or <code class="docutils literal notranslate"><span class="pre">-vv</span></code>: To control the level of logging. See “Logging” section below.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-h</span></code>: Print a usage message and exit.</p></li>
+</ul>
+<p>You need to run the executable with at least the <code class="docutils literal notranslate"><span class="pre">-o</span></code>
+option, although this option will not be relevant until the third assignment. For
+example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirc -o foobar
+</pre></div>
+</div>
+<p>The provided code, however, doesn’t do anything other than process the
+command-line parameters. You should nonetheless verify that it builds
+and runs correctly.</p>
+<p>Note: your code <em>must</em> respect the values specified in the command-line
+parameters. More importantly, if you do not use the port specified in
+the <code class="docutils literal notranslate"><span class="pre">-p</span></code> parameter, your code will fail all the automated tests.</p>
+</section>
+<section id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h2>
+<p>The chirc server prints out messages to standard output using a
+simple logging function called <code class="docutils literal notranslate"><span class="pre">chilog()</span></code>, declared in <code class="docutils literal notranslate"><span class="pre">src/log.h</span></code>.
+If you need to print messages to standard output, you <em>must</em> use the
+<code class="docutils literal notranslate"><span class="pre">chilog()</span></code> function. This is a simple function that expects the
+same parameters as <code class="docutils literal notranslate"><span class="pre">printf</span></code>, plus an additional parameter to specify a logging level.
+For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chilog</span><span class="p">(</span><span class="n">INFO</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;User with nick %s has connected&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nick</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>Do not use printf() directly in your code. Use only chilog() to print messages to standard output.</strong></p>
+<p>The first parameter to <code class="docutils literal notranslate"><span class="pre">chilog()</span></code> is used to specify the log level:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code>: Used for critical errors for which the only solution is to
+exit the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ERROR</span></code>: Used for non-critical errors, which may allow the program to
+continue running, but a specific part of it to fail (e.g., an individual
+socket).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WARNING</span></code>: Used to indicate unexpected situations which, while not
+technically an error, could cause one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INFO</span></code>: Used to print general information about the state of the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>: Used to print detailed information about the state of the
+program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRACE</span></code>: Used to print low-level information, such as function
+entry/exit points, dumps of entire data structures, etc.</p></li>
+</ul>
+<p>The level of logging is controlled by the <code class="docutils literal notranslate"><span class="pre">-q</span></code> and <code class="docutils literal notranslate"><span class="pre">-v</span></code> arguments when running
+<code class="docutils literal notranslate"><span class="pre">chirc</span></code>:</p>
+<ul class="simple">
+<li><p>No <code class="docutils literal notranslate"><span class="pre">-q</span></code> or <code class="docutils literal notranslate"><span class="pre">-v</span></code> argument: Print only <code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code>, <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>, <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> and <code class="docutils literal notranslate"><span class="pre">INFO</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">TRACE</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q</span></code>: Quiet mode. No logging messages will be printed at all.</p></li>
+</ul>
+<p>Using <code class="docutils literal notranslate"><span class="pre">chilog()</span></code> instead of <code class="docutils literal notranslate"><span class="pre">printf()</span></code> will make it easy for you to control the level of
+verbosity in your logging without having to add and/or comment out <code class="docutils literal notranslate"><span class="pre">printf()</span></code> statements.</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="irc_examples.html" title="Previous Chapter: Example IRC Communications"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Example IRC Communications</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment1.html" title="Next Chapter: Assignment 1: Basic Message Processing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment 1: Basic Message Processing &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

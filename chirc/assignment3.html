@@ -1,0 +1,502 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Assignment 3: Channels and Modes &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment 4: Abridged version of Assignments 2 and 3" href="assignment4.html" />
+    <link rel="prev" title="Assignment 2: Supporting Multiple Clients" href="assignment2.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirc</a></li>
+            <li class="active">Assignment 3: Channels and Modes</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Assignment 3: Channels and Modes</a><ul>
+<li><a class="reference internal" href="#join"><code class="docutils literal notranslate"><span class="pre">JOIN</span></code></a></li>
+<li><a class="reference internal" href="#privmsg-and-notice-to-channels"><code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> to channels</a></li>
+<li><a class="reference internal" href="#part"><code class="docutils literal notranslate"><span class="pre">PART</span></code></a></li>
+<li><a class="reference internal" href="#topic"><code class="docutils literal notranslate"><span class="pre">TOPIC</span></code></a></li>
+<li><a class="reference internal" href="#user-and-channel-modes">User and channel modes</a></li>
+<li><a class="reference internal" href="#away"><code class="docutils literal notranslate"><span class="pre">AWAY</span></code></a></li>
+<li><a class="reference internal" href="#names"><code class="docutils literal notranslate"><span class="pre">NAMES</span></code></a></li>
+<li><a class="reference internal" href="#list"><code class="docutils literal notranslate"><span class="pre">LIST</span></code></a></li>
+<li><a class="reference internal" href="#who"><code class="docutils literal notranslate"><span class="pre">WHO</span></code></a></li>
+<li><a class="reference internal" href="#updating-commands-from-the-previous-assignment">Updating commands from the previous assignment</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="assignment-3-channels-and-modes">
+<span id="chirc-assignment3"></span><h1>Assignment 3: Channels and Modes<a class="headerlink" href="#assignment-3-channels-and-modes" title="Link to this heading">¶</a></h1>
+<p>In this part of the project, your main goal will be to add support for
+channels and modes. You will now have to deal with the fact that
+messages may be relayed to multiple users, sometimes across multiple
+channels.</p>
+<p>The parts of this assignment are presented in suggested order of
+implementation. Nonetheless, once you’ve implemented channels (<code class="docutils literal notranslate"><span class="pre">JOIN</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PART</span></code>, and sending messages to channels), implementing modes and the
+remaining messages are all fairly independent of each other.</p>
+<section id="join">
+<h2><code class="docutils literal notranslate"><span class="pre">JOIN</span></code><a class="headerlink" href="#join" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.1">[RFC2812 §3.2.1]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>The command must accept a single parameter: a channel name.</p></li>
+<li><p>You must only support the <code class="docutils literal notranslate"><span class="pre">RPL_TOPIC</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> replies.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul>
+<li><p>You must only send a <code class="docutils literal notranslate"><span class="pre">RPL_TOPIC</span></code> reply if the channel has a topic
+(you will implement the <code class="docutils literal notranslate"><span class="pre">TOPIC</span></code> message later). Otherwise, that
+reply is skipped.</p></li>
+<li><p>Although not stated explicitly in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.1">[RFC2812 §3.2.1]</a>, the
+<code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> reply must be followed by a <code class="docutils literal notranslate"><span class="pre">RPL_ENDOFNAMES</span></code>. Basically, you are
+sending the same replies generated when a <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> message (with
+this channel as a parameter) is received.</p></li>
+<li><p>The first automated tests for <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> will check that the
+<code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> and <code class="docutils literal notranslate"><span class="pre">RPL_ENDOFNAMES</span></code> replies are sent, but won’t
+validate their contents. So, you can get away with just sending the
+following replies (substituting <code class="docutils literal notranslate"><span class="pre">nick</span></code> with the recipient nick):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:hostname 353 nick = #foobar :foobar1 foobar2 foobar3
+:hostname 366 nick #foobar :End of NAMES list
+</pre></div>
+</div>
+<p>Once you implement the <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> message, you can simply substitute
+this with a call to the same code that handles the <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> message.
+Note that, until you implement <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> correctly, most IRC clients
+will show your channels as having the three users in your hardcoded
+<code class="docutils literal notranslate"><span class="pre">NAMES</span></code> reply (<code class="docutils literal notranslate"><span class="pre">foobar1</span></code>, <code class="docutils literal notranslate"><span class="pre">foobar2</span></code>, and <code class="docutils literal notranslate"><span class="pre">foobar3</span></code>)</p>
+</li>
+</ul>
+</section>
+<section id="privmsg-and-notice-to-channels">
+<h2><code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> to channels<a class="headerlink" href="#privmsg-and-notice-to-channels" title="Link to this heading">¶</a></h2>
+<p>Extend your implementation of <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> from the previous assignment
+to support sending messages to a channel.</p>
+<p>Until you implement modes, you will not need to support any additional
+replies in <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code>. However, take into account the following:</p>
+<ul class="simple">
+<li><p>Despite its name, the <code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHNICK</span></code> is also the appropriate reply
+when a non-existent channel is specified.</p></li>
+<li><p>Users cannot send <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> messages to channels
+they have not joined. When this happens, an <code class="docutils literal notranslate"><span class="pre">ERR_CANNOTSENDTOCHAN</span></code>
+reply must be sent back (only in the case of <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> messages).</p></li>
+<li><p>Once you have implemented modes, there may be additional cases where a
+message will be denied if the user has insufficient privileges to
+speak on a channel.</p></li>
+</ul>
+</section>
+<section id="part">
+<h2><code class="docutils literal notranslate"><span class="pre">PART</span></code><a class="headerlink" href="#part" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">PART</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.2">[RFC2812 §3.2.2]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>The command must accept either one parameter (a channel name) or two
+parameters (a channel name and a parting message).</p></li>
+<li><p>You must only support the <code class="docutils literal notranslate"><span class="pre">ERR_NOTONCHANNEL</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHCHANNEL</span></code>, and <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> replies.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>Once all users in a channel have left that channel, the channel must
+be destroyed.</p></li>
+</ul>
+</section>
+<section id="topic">
+<h2><code class="docutils literal notranslate"><span class="pre">TOPIC</span></code><a class="headerlink" href="#topic" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">TOPIC</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.4">[RFC2812 §3.2.4]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>You only need to support the <code class="docutils literal notranslate"><span class="pre">ERR_NOTONCHANNEL</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_NOTOPIC</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RPL_TOPIC</span></code>, and <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> replies.</p></li>
+<li><p>You will not need to support the <code class="docutils literal notranslate"><span class="pre">ERR_CHANOPRIVSNEEDED</span></code> reply until
+you implement modes.</p></li>
+</ul>
+</section>
+<section id="user-and-channel-modes">
+<h2>User and channel modes<a class="headerlink" href="#user-and-channel-modes" title="Link to this heading">¶</a></h2>
+<p>In IRC, users can have certain <em>modes</em> assigned to them. Modes are
+identified by a single letter, and they are binary: a user either has a
+mode, or they don’t. The possible user modes are described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.5">[RFC2812 §3.1.5]</a>, and we
+will be implementing only the following modes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code> – The <em>away</em> mode. Users with this mode are considered to be “away
+from IRC”. Besides being displayed as such on an IRC client, it will
+also affect how certain messages directed to a user will be
+processed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">o</span></code> – The <em>operator</em> mode. Users with this mode have administrative
+privileges on the IRC server, and have access to certain commands
+available only to operators.</p></li>
+</ul>
+<p>The above two modes are global modes: they have effect across the entire
+server. Users can also have channel-specific modes (or <em>member status</em>
+modes, see <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2811#section-4.1">[RFC2811 §4.1]</a>). We will be
+implementing the following member status modes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">o</span></code> – The <em>channel operator</em> mode. Users with this mode on a channel
+have special privileges on that channel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v</span></code> – The <em>voice</em> mode. Users with this mode are able to send messages
+to moderated channels (described below).</p></li>
+</ul>
+<p>Finally, channels themselves can also have modes (see <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2811#section-4">[RFC2811 §4]</a>). We will be
+implementing the following modes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">m</span></code> – The <em>moderated</em> mode. When a channel has this mode, only certain
+users are allowed to send messages to the channel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t</span></code> – The <em>topic</em> mode. When a channel has this mode, only a channel
+operator can set the channel’s topic.</p></li>
+</ul>
+<p>These modes are managed with the <code class="docutils literal notranslate"><span class="pre">OPER</span></code>, <code class="docutils literal notranslate"><span class="pre">MODE</span></code>, and <code class="docutils literal notranslate"><span class="pre">AWAY</span></code>
+commands. For now, we will focus on the first two.</p>
+<p>You must implement the <code class="docutils literal notranslate"><span class="pre">OPER</span></code> message as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.4">[RFC2812 §3.1.4]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>You must only support the <code class="docutils literal notranslate"><span class="pre">RPL_YOUREOPER</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR_PASSWDMISMATCH</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> replies.</p></li>
+</ul>
+<p>Take into account that you should expect a <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;</span></code> parameter but will
+ignore its content; the password expected by the <code class="docutils literal notranslate"><span class="pre">OPER</span></code> command is the
+one specified in the <code class="docutils literal notranslate"><span class="pre">-o</span></code> command-line parameter to the <code class="docutils literal notranslate"><span class="pre">chirc</span></code>
+executable.</p>
+<p>You must implement the <code class="docutils literal notranslate"><span class="pre">MODE</span></code> message as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.1.5">[RFC2812 §3.1.5]</a> (for user
+modes) and <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.3">[RFC2812 §3.2.3]</a> (for member
+status and channel modes), with the following exceptions:</p>
+<ul>
+<li><p>For user modes:</p>
+<ul>
+<li><p>You only need to support two (and only two) parameters: the nick
+and the mode string. The mode string will always be two characters
+long: a plus or minus character, followed by a letter.</p></li>
+<li><p>You only need to support the <code class="docutils literal notranslate"><span class="pre">ERR_UMODEUNKNOWNFLAG</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ERR_USERSDONTMATCH</span></code> replies.</p></li>
+<li><p>If there are no errors, the reply to the <code class="docutils literal notranslate"><span class="pre">MODE</span></code> message will be
+a relay of the message, prefixed by the user’s nick and with the
+mode string in a long parameter. So, if a user sends this message:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>MODE jrandom -o
+</pre></div>
+</div>
+<p>The reply should be:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:jrandom MODE jrandom :-o
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>For channel modes:</p>
+<ul class="simple">
+<li><p>When only a single parameter (a channel name) is used, the only
+error condition you must support is the <code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHCHANNEL</span></code>
+reply (although this is not included in the specification for
+<code class="docutils literal notranslate"><span class="pre">MODE</span></code>). If the command is successful, return a
+<code class="docutils literal notranslate"><span class="pre">RPL_CHANNELMODEIS</span></code> reply (in this reply, the <code class="docutils literal notranslate"><span class="pre">&lt;mode&gt;</span></code>
+parameter must be a plus sign followed by the channel modes; you
+must omit the <code class="docutils literal notranslate"><span class="pre">&lt;mode</span> <span class="pre">params&gt;</span></code> parameter).</p></li>
+<li><p>When two parameters (a channel name and a mode string) are used,
+you must support the following error replies:
+<code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHCHANNEL</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR_CHANOPRIVSNEEDED</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNMODE</span></code>. If the command is successful, the message is
+relayed back to the user and to all the users in the channel.</p></li>
+</ul>
+</li>
+<li><p>For member status modes:</p>
+<ul class="simple">
+<li><p>You only need to support three parameters: the channel, the mode
+string, and the nick.</p></li>
+<li><p>You must support the following error replies:
+<code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHCHANNEL</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR_CHANOPRIVSNEEDED</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNMODE</span></code>, and <code class="docutils literal notranslate"><span class="pre">ERR_USERNOTINCHANNEL</span></code>.</p></li>
+<li><p>If the command is successful, the message is relayed back to the
+user and to all the users in the channel.</p></li>
+</ul>
+</li>
+</ul>
+<p>You must observe the following rules when dealing with modes:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">OPER</span></code> message is the <em>only</em> way for a user to gain operator
+status (the <code class="docutils literal notranslate"><span class="pre">o</span></code> user mode). As indicated in the specification, a
+request for <code class="docutils literal notranslate"><span class="pre">+o</span></code> by a non-operator should be ignored.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">a</span></code> user mode cannot be toggled using the <code class="docutils literal notranslate"><span class="pre">MODE</span></code> command.
+Only the <code class="docutils literal notranslate"><span class="pre">AWAY</span></code> message can manipulate that mode. Requests to
+change it should be ignored.</p></li>
+<li><p>When a channel is created (when the first user enters that channel),
+that user is automatically granted the channel operator mode.</p></li>
+<li><p>In a channel, only a channel operator can change the channel modes.</p></li>
+<li><p>In a channel, only a channel operator can change the member status
+modes of users in that channel.</p></li>
+<li><p>When a channel has the <code class="docutils literal notranslate"><span class="pre">m</span></code> mode, only channel operators and users
+with the <code class="docutils literal notranslate"><span class="pre">v</span></code> member status can send <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code>
+messages to that channel. Other users will receive an
+<code class="docutils literal notranslate"><span class="pre">ERR_CANNOTSENDTOCHAN</span></code> reply.</p></li>
+<li><p>When a channel has the <code class="docutils literal notranslate"><span class="pre">t</span></code> mode, only channel operators can change
+the channel’s topic. Other users will receive an
+<code class="docutils literal notranslate"><span class="pre">ERR_CHANOPRIVSNEEDED</span></code> reply.</p></li>
+<li><p>In terms of permissions, server operators (i.e., with user mode
+<code class="docutils literal notranslate"><span class="pre">o</span></code>) are assumed to have the same privileges as a channel operator.
+However, a server operator <em>does not</em> explicitly receive the <code class="docutils literal notranslate"><span class="pre">o</span></code>
+member status upon joining a channel (the user will simply have,
+implicitly, the same privileges as a channel operator).</p></li>
+</ul>
+</section>
+<section id="away">
+<h2><code class="docutils literal notranslate"><span class="pre">AWAY</span></code><a class="headerlink" href="#away" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">AWAY</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-4.1">[RFC2812 §4.1]</a>.</p>
+</section>
+<section id="names">
+<h2><code class="docutils literal notranslate"><span class="pre">NAMES</span></code><a class="headerlink" href="#names" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.5">[RFC2812 §3.2.5]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>We are not supporting invisible, private, or secret channels, so you
+can consider that all channels are visible to a user sending the
+<code class="docutils literal notranslate"><span class="pre">NAMES</span></code> command.</p></li>
+<li><p>You only need to support <code class="docutils literal notranslate"><span class="pre">NAMES</span></code> messages with no parameters or
+with a single parameter.</p>
+<ul>
+<li><p>When no parameters are specified, you must return a
+<code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> reply for each channel. Since we are not
+supporting invisible users, the final <code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> must
+include the names of all the users who are not on any channel. If
+all connected users are in a channel, this final <code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code>
+is omitted.</p></li>
+<li><p>When a single parameter is specified, that parameter is
+interpreted to be a channel.</p></li>
+</ul>
+</li>
+<li><p>You do not need to support the <code class="docutils literal notranslate"><span class="pre">ERR_TOOMANYMATCHES</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHSERVER</span></code> replies.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>Channels and nicks do not need to be listed in any specific order.</p></li>
+<li><p>When you implement modes, nicks with channel operator privileges on a
+channel must have their nick prefixed by <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">RPL_NAMREPLY</span></code> reply. Similarly, nicks with “voice” privileges must
+have their nick prefixed by <code class="docutils literal notranslate"><span class="pre">+</span></code>.</p></li>
+</ul>
+</section>
+<section id="list">
+<h2><code class="docutils literal notranslate"><span class="pre">LIST</span></code><a class="headerlink" href="#list" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">LIST</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.2.6">[RFC2812 §3.2.6]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>You only need to support <code class="docutils literal notranslate"><span class="pre">LIST</span></code> messages with no parameters (list
+all channels) or with a single parameter (list only the specified
+channel).</p></li>
+<li><p>You do not need to support the <code class="docutils literal notranslate"><span class="pre">ERR_TOOMANYMATCHES</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHSERVER</span></code> replies.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>Channels do not need to be listed in any specific order.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">RPL_LIST</span></code> reply, the <code class="docutils literal notranslate"><span class="pre">&lt;#</span> <span class="pre">visible&gt;</span></code> refers to the total
+number of users on that channel (since we are not supporting
+invisible users, the number of visible users equals the total number
+of users in the channel).</p></li>
+</ul>
+</section>
+<section id="who">
+<h2><code class="docutils literal notranslate"><span class="pre">WHO</span></code><a class="headerlink" href="#who" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">WHO</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.6.1">[RFC2812 §3.6.1]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>If a mask is specified, you only need to support the case where the
+mask is the name of a channel. If such a channel exists, you must
+return a <code class="docutils literal notranslate"><span class="pre">RPL_WHOREPLY</span></code> for each user in that channel.</p></li>
+<li><p>We are not supporting invisible clients so, if no mask is specified
+(or if <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">*</span></code> is specified as a mask), you must return a
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOREPLY</span></code> for each user in the server that doesn’t have a
+common channel with the requesting client.</p></li>
+<li><p>You do not need to support the <code class="docutils literal notranslate"><span class="pre">o</span></code> parameter.</p></li>
+<li><p>You do not need to support the <code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHSERVER</span></code> reply.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul>
+<li><p>When a channel is not specified, the <code class="docutils literal notranslate"><span class="pre">&lt;channel&gt;</span></code> field in the
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOREPLY</span></code> reply must be set to <code class="docutils literal notranslate"><span class="pre">*</span></code>.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">RPL_WHOREPLY</span></code> reply, the <code class="docutils literal notranslate"><span class="pre">&lt;hopcount&gt;</span></code> should be hardcoded
+to <code class="docutils literal notranslate"><span class="pre">0</span></code> (zero).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">RPL_WHOREPLY</span></code> must return a series of flags, which is
+specified as <code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">&quot;H&quot;</span> <span class="pre">/</span> <span class="pre">&quot;G&quot;</span> <span class="pre">&gt;</span> <span class="pre">[&quot;*&quot;]</span> <span class="pre">[</span> <span class="pre">(</span> <span class="pre">&quot;&#64;&quot;</span> <span class="pre">/</span> <span class="pre">&quot;+&quot;</span> <span class="pre">)</span> <span class="pre">]</span></code> without
+explanation (furthermore, the <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> is a typo, and should be a right
+parenthesis). The flags must be constructed thusly, in this order:</p>
+<ul class="simple">
+<li><p>If the user is not away, include <code class="docutils literal notranslate"><span class="pre">H</span></code> (“here”)</p></li>
+<li><p>If the user is away, include <code class="docutils literal notranslate"><span class="pre">G</span></code> (“gone”)</p></li>
+<li><p>If the user is an operator, include <code class="docutils literal notranslate"><span class="pre">*</span></code></p></li>
+<li><p>If the user is a channel operator, include <code class="docutils literal notranslate"><span class="pre">&#64;</span></code></p></li>
+<li><p>If the user has the voice mode in the channel, include <code class="docutils literal notranslate"><span class="pre">+</span></code></p></li>
+</ul>
+<p>When a channel is not specified, the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> and <code class="docutils literal notranslate"><span class="pre">+</span></code> flags are not
+included (regardless of what channel modes that user may have in the
+channels they belong to).</p>
+</li>
+</ul>
+</section>
+<section id="updating-commands-from-the-previous-assignment">
+<h2>Updating commands from the previous assignment<a class="headerlink" href="#updating-commands-from-the-previous-assignment" title="Link to this heading">¶</a></h2>
+<p>Update the implementation of the following commands:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NICK</span></code>: When a user sends this message, and the change of nick is
+successful, it must be relayed to all the channels that user is in.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QUIT</span></code>: When a user sends this message, it must be relayed to all
+the channels that user is in. Take into account that a <code class="docutils literal notranslate"><span class="pre">QUIT</span></code>
+results in that user leaving all the channels they are in.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WHOIS</span></code>: Add support for the <code class="docutils literal notranslate"><span class="pre">RPL_WHOISOPERATOR</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOISCHANNELS</span></code>, and <code class="docutils literal notranslate"><span class="pre">RPL_AWAY</span></code> replies. These are only sent
+if the user is an IRC operator, on at least one channel, or away,
+respectively. The order of all the replies will be:
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOISUSER</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_WHOISCHANNELS</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_WHOISSERVER</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RPL_AWAY</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_WHOISOPERATOR</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_ENDOFWHOIS</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LUSERS</span></code>: The replies need to be updated to show the correct number
+of IRCops and the number of channels.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="assignment2.html" title="Previous Chapter: Assignment 2: Supporting Multiple Clients"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Assignment 2: Supporting Multiple Clients</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment4.html" title="Next Chapter: Assignment 4: Abridged version of Assignments 2 and 3"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment 4: Abridged version of Assignments 2 and 3 &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

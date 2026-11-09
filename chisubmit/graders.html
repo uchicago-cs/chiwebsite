@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>For Graders &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="For Instructors" href="instructors.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chisubmit</a></li>
+            <li class="active">For Graders</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="for-graders">
+<span id="chisubmit-graders"></span><h1>For Graders<a class="headerlink" href="#for-graders" title="Link to this heading">¶</a></h1>
+<p>This page contains instructions on how to use chisubmit specifically for graders.</p>
+<section id="initial-setup">
+<h2>Initial setup<a class="headerlink" href="#initial-setup" title="Link to this heading">¶</a></h2>
+<p>Before you perform any of the instructions discussed in this page, create an empty directory
+to do your grading in (we will refer to this directory as your <em>grading directory</em>).
+Inside that directory, run the following command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>chisubmit init
+</pre></div>
+</div>
+</section>
+<section id="pulling-repositories-to-grade">
+<h2>Pulling repositories to grade<a class="headerlink" href="#pulling-repositories-to-grade" title="Link to this heading">¶</a></h2>
+<p>Once an assignment is ready to grade, you need to create local <em>grading repos</em> to do your grading
+on. These grading repos will have a branch called <code class="docutils literal notranslate"><span class="pre">ASSIGNMENT_ID-grading</span></code>
+(where <code class="docutils literal notranslate"><span class="pre">ASSIGNMENT_ID</span></code> is the assignment being graded; e.g., assignment <code class="docutils literal notranslate"><span class="pre">p1</span></code> would have
+a branch called <code class="docutils literal notranslate"><span class="pre">p1-grading</span></code>).
+<em>All your grading must be done on this branch</em>. <strong>Do not modify any other branch on the repository</strong></p>
+<p>To pull the repositories assigned to you, run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>chisubmit grader pull-grading ASSIGNMENT_ID
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">ASSIGNMENT_ID</span></code> is the assignment identifier.</p>
+<p>The repositories will now be in <code class="docutils literal notranslate"><span class="pre">repositories/COURSE_ID/ASSIGNMENT_ID/</span></code> inside your grading directory.</p>
+<p>If your course uses extensions, you should repeat this step after each extended deadline. Your
+instructor may also notify you that you’ve been assigned additional repositories; you will
+need to repeat these steps to pull the repositories that have been newly assigned to you.</p>
+</section>
+<section id="grading-the-code">
+<h2>Grading the code<a class="headerlink" href="#grading-the-code" title="Link to this heading">¶</a></h2>
+<p>Add comments directly on the code. Use the following format:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/*** GRADER COMMENT: You forgot to initialize variable &#39;foo&#39; */
+
+### GRADER COMMENT: You forgot to initialize variable &#39;foo&#39;
+</pre></div>
+</div>
+<p>Or:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/*** GRADER COMMENT
+ * The following code is wrong for a variety of reasons. Let me tell you why:
+ *  - It hurts my eyes
+ *  - It offends the order of created things
+ *  - It is an aberration unto the Lord
+ */
+
+### GRADER COMMENT
+# The following code is wrong for a variety of reasons. Let me tell you why:
+#  - It hurts my eyes
+#  - It offends the order of created things
+#  - It is an aberration unto the Lord
+</pre></div>
+</div>
+<p>Any time a penalty is assessed, make sure to include it in the comment:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/*** GRADER COMMENT
+ *** PENALTY: -10 points
+ *
+ * ...
+ *
+ */
+
+### GRADER COMMENT
+### PENALTY: -10 points
+#
+# ...
+#
+</pre></div>
+</div>
+<p>If the assignment has a rubric file, there will be a file called <code class="docutils literal notranslate"><span class="pre">ASSIGNMENT_ID.rubric.txt</span></code> at the
+root of the repository. It will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Points:
+    - Tests:
+        Points Possible: 50
+        Points Obtained:
+
+    - Implementing foo():
+        Points Possible: 20
+        Points Obtained:
+
+    - Implementing bar():
+        Points Possible: 20
+        Points Obtained:
+
+    - Code Style:
+        Points Possible: 10
+        Points Obtained:
+
+Total Points: 0 / 100
+
+Comments: &gt;
+    None
+</pre></div>
+</div>
+<p>You must fill out the points, and update <code class="docutils literal notranslate"><span class="pre">Total</span> <span class="pre">Points</span></code> accordingly. To provide comments on the grading,
+do so under <code class="docutils literal notranslate"><span class="pre">Comments:</span> <span class="pre">&gt;</span></code>. Please note that students will see these comments.</p>
+<p>If you need to apply global deductions (i.e., deductions that do not apply to a single section of the rubric),
+you can add the following to the rubric:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Penalties:
+    DEDUCTION_1_DESCRIPTION: DEDUCTION_1_AMOUNT
+    DEDUCTION_2_DESCRIPTION: DEDUCTION_2_AMOUNT
+    ...
+    DEDUCTION_N_DESCRIPTION: DEDUCTION_N_AMOUNT
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Penalties:
+    Submitted code in Word document: -30
+    Uses library we specifically asked you not to use: -5
+</pre></div>
+</div>
+<p>If you need to apply global bonuses (typically an adjustment to the final grade to account
+for something; e.g., if the student worked alone), you can add the following to the rubric:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Bonuses:
+    BONUS_1_DESCRIPTION: BONUS_1_AMOUNT
+    BONUS_2_DESCRIPTION: BONUS_2_AMOUNT
+    ...
+    BONUS_N_DESCRIPTION: BONUS_N_AMOUNT
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Bonuses:
+    Worked alone: 10
+</pre></div>
+</div>
+<p>Note: the above is just an <em>example</em>. In general, you should only apply the penalties and bonuses
+specified by the course instructor(s).</p>
+<p>This is an example of a completed rubric:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Points:
+    - Tests:
+        Points Possible: 50
+        Points Obtained: 45
+
+    - Implementing foo():
+        Points Possible: 20
+        Points Obtained: 10
+
+    - Implementing bar():
+        Points Possible: 20
+        Points Obtained: 20
+
+    - Code Style:
+        Points Possible: 10
+        Points Obtained: 7.5
+
+Penalties:
+    Code comments are written in Old English: -5
+
+Bonuses:
+    Worked alone: 10
+
+Total Points: 87.5 / 100
+
+Comments: &gt;
+    Well done!
+</pre></div>
+</div>
+</section>
+<section id="pushing-your-graded-work">
+<h2>Pushing your graded work<a class="headerlink" href="#pushing-your-graded-work" title="Link to this heading">¶</a></h2>
+<p>Before pushing your graded work to the staging server, make sure that you have committed
+your work. Just commit as you usually would in Git:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git commit -m &quot;Graded&quot;
+</pre></div>
+</div>
+<p>Take into account that chisubmit will already set up the repository so a generic author appears
+on the commit.</p>
+<p>If your course is using rubrics, validate the rubrics with this command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>chisubmit grader validate-rubrics ASSIGNMENT_ID
+</pre></div>
+</div>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">--only</span> <span class="pre">TEAM_ID</span></code> option to validate a single rubric.</p>
+<p>Note: The rubric file will not be added to Git by default. You will have to <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code> it
+to make sure it is included.</p>
+<p>Finally, push your work to the staging server:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>chisubmit grader push-grading ASSIGNMENT_ID
+</pre></div>
+</div>
+<p>Take into account that you do not need to wait until all your repositories are graded before
+running these commands. If you have not yet graded a repository, running the above
+command will have no effect on that repository.</p>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">--only</span> <span class="pre">TEAM_ID</span></code> option to only push a single repository.</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="instructors.html" title="Previous Chapter: For Instructors"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; For Instructors</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

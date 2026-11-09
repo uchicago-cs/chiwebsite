@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Assignment 2: Supporting Multiple Clients &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment 3: Channels and Modes" href="assignment3.html" />
+    <link rel="prev" title="Assignment 1: Basic Message Processing" href="assignment1.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chirc</a></li>
+            <li class="active">Assignment 2: Supporting Multiple Clients</li>
+        </ul>
+    </div>
+</div>
+
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Assignment 2: Supporting Multiple Clients</a><ul>
+<li><a class="reference internal" href="#connection-registration">Connection Registration</a></li>
+<li><a class="reference internal" href="#privmsg-and-notice"><code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code></a></li>
+<li><a class="reference internal" href="#ping-and-pong"><code class="docutils literal notranslate"><span class="pre">PING</span></code> and <code class="docutils literal notranslate"><span class="pre">PONG</span></code></a></li>
+<li><a class="reference internal" href="#motd"><code class="docutils literal notranslate"><span class="pre">MOTD</span></code></a></li>
+<li><a class="reference internal" href="#lusers"><code class="docutils literal notranslate"><span class="pre">LUSERS</span></code></a></li>
+<li><a class="reference internal" href="#whois"><code class="docutils literal notranslate"><span class="pre">WHOIS</span></code></a></li>
+<li><a class="reference internal" href="#err-unknowncommand"><code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNCOMMAND</span></code></a></li>
+<li><a class="reference internal" href="#robustness">Robustness</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+
+    <div class="body col-md-9 content" role="main">
+      
+  <section id="assignment-2-supporting-multiple-clients">
+<span id="chirc-assignment2"></span><h1>Assignment 2: Supporting Multiple Clients<a class="headerlink" href="#assignment-2-supporting-multiple-clients" title="Link to this heading">¶</a></h1>
+<p>In this part of the project, your main goal will be to allow users to
+send messages to each other. You will
+also implement a couple extra messages that will make your server
+compliant enough to test with existing IRC clients.</p>
+<p>Since you will be supporting multiple users, you will now have to spawn
+a new thread for each user that connects to your server. This, in turn,
+may result in race conditions in your code. You must identify the shared
+resources in your server, and make sure they are protected by adequate
+synchronization primitives.</p>
+<p>The messages you have to implement are presented in suggested order of
+implementation. Nonetheless, once you’ve implemented Connection
+Registration, the remaining messages are mostly independent of each
+other.</p>
+<section id="connection-registration">
+<h2>Connection Registration<a class="headerlink" href="#connection-registration" title="Link to this heading">¶</a></h2>
+<p>Implement connection registration, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.1">[RFC2812 §3.1]</a>,
+with the following exceptions:</p>
+<ul>
+<li><p>You must implement the <code class="docutils literal notranslate"><span class="pre">NICK</span></code>, <code class="docutils literal notranslate"><span class="pre">USER</span></code>, and <code class="docutils literal notranslate"><span class="pre">QUIT</span></code> messages. You
+must <em>not</em> implement the <code class="docutils literal notranslate"><span class="pre">PASS</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVICE</span></code>, or <code class="docutils literal notranslate"><span class="pre">SQUIT</span></code>
+messages. You do not need to implement the <code class="docutils literal notranslate"><span class="pre">OPER</span></code> and <code class="docutils literal notranslate"><span class="pre">MODE</span></code>
+messages yet (you will implement them in the next assignment).</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">NICK</span></code> message, you must implement the <code class="docutils literal notranslate"><span class="pre">ERR_NONICKNAMEGIVEN</span></code>
+and <code class="docutils literal notranslate"><span class="pre">ERR_NICKNAMEINUSE</span></code> replies.</p></li>
+<li><p>You can ignore the <code class="docutils literal notranslate"><span class="pre">&lt;mode&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;unused&gt;</span></code> parameters of the
+<code class="docutils literal notranslate"><span class="pre">USER</span></code> message.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">USER</span></code> message, you must implement the <code class="docutils literal notranslate"><span class="pre">ERR_ALREADYREGISTRED</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code>. <strong>Note</strong>: You will need to support the
+<code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> reply in several other messages. It will pay
+off to write a function that validates the number of parameters in a message,
+and returns an <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> reply if the number of parameters
+is insufficient.</p></li>
+<li><p>After a connection has been registered, the <code class="docutils literal notranslate"><span class="pre">RPL_WELCOME</span></code> reply
+must be followed by the <code class="docutils literal notranslate"><span class="pre">RPL_YOURHOST</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_CREATED</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RPL_MYINFO</span></code> replies (in that order). For the <code class="docutils literal notranslate"><span class="pre">RPL_MYINFO</span></code> reply,
+the user modes are <code class="docutils literal notranslate"><span class="pre">ao</span></code> and the channel modes are <code class="docutils literal notranslate"><span class="pre">mtov</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> message sent in reply to a <code class="docutils literal notranslate"><span class="pre">QUIT</span></code> must include this
+error message:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Closing Link: HOSTNAME (MSG)
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">HOSTNAME</span></code> is the user’s hostname and <code class="docutils literal notranslate"><span class="pre">MSG</span></code> is the <code class="docutils literal notranslate"><span class="pre">&lt;Quit</span> <span class="pre">Message&gt;</span></code>
+parameter provided in the <code class="docutils literal notranslate"><span class="pre">QUIT</span></code> message. If none is provided, the
+default is <code class="docutils literal notranslate"><span class="pre">Client</span> <span class="pre">Quit</span></code>.</p>
+</li>
+</ul>
+<p>Take into account the following:</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">NICK</span></code> and <code class="docutils literal notranslate"><span class="pre">USER</span></code> messages can be received in any order, and
+a connection is not <em>fully</em> registered until both messages have been
+received (and neither contains any errors).</p></li>
+<li><p>If you receive any message other than <code class="docutils literal notranslate"><span class="pre">NICK</span></code> or <code class="docutils literal notranslate"><span class="pre">USER</span></code> before the
+connection registration is complete, you must send an <code class="docutils literal notranslate"><span class="pre">ERR_NOTREGISTERED</span></code>
+reply if that message contained a supported command (i.e., one of the
+commands we are asking you to implement in this project).
+Otherwise, you should just silently ignore that message. Take into account
+that, once registration is complete, this behavior will change (see
+<code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNCOMMAND</span></code> below).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">NICK</span></code> command can also be used <em>after</em> the connection
+registration to change a user’s nick.</p></li>
+<li><p>You can safely skip the <code class="docutils literal notranslate"><span class="pre">QUIT</span></code> command and revisit it later, as no
+other commands depend on it.</p></li>
+<li><p>Most IRC servers send the replies corresponding to the <code class="docutils literal notranslate"><span class="pre">MOTD</span></code> and
+<code class="docutils literal notranslate"><span class="pre">LUSERS</span></code> messages after the welcome messages are sent. Most of our
+tests expect this but, until you implement <code class="docutils literal notranslate"><span class="pre">MOTD</span></code> and <code class="docutils literal notranslate"><span class="pre">LUSERS</span></code>,
+you can get away with simply sending the following replies verbatim:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:hostname 251 user1 :There are 1 users and 0 services on 1 servers
+:hostname 252 user1 0 :operator(s) online
+:hostname 253 user1 0 :unknown connection(s)
+:hostname 254 user1 0 :channels formed
+:hostname 255 user1 :I have 1 clients and 0 servers
+:hostname 422 user1 :MOTD File is missing
+</pre></div>
+</div>
+<p>This will be enough to pass the connection registration tests (they
+check that the correct replies are sent, but don’t actually check
+whether they contain accurate information).</p>
+</li>
+</ul>
+</section>
+<section id="privmsg-and-notice">
+<h2><code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code><a class="headerlink" href="#privmsg-and-notice" title="Link to this heading">¶</a></h2>
+<p>Implement messaging between users, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.3">[RFC2812 §3.3]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>The only supported <code class="docutils literal notranslate"><span class="pre">&lt;msgtarget&gt;</span></code> is nicknames.</p></li>
+<li><p>You must implement the <code class="docutils literal notranslate"><span class="pre">ERR_NORECIPIENT</span></code>, <code class="docutils literal notranslate"><span class="pre">ERR_NOTEXTTOSEND</span></code>, and <code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHNICK</span></code> replies.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>If user <code class="docutils literal notranslate"><span class="pre">user1</span></code> sends a sequence of <code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> messages to
+<code class="docutils literal notranslate"><span class="pre">user2</span></code>, then <code class="docutils literal notranslate"><span class="pre">user2</span></code> <em>must</em> receive them in the same order that
+<code class="docutils literal notranslate"><span class="pre">user1</span></code> sent them.</p></li>
+<li><p>If users <code class="docutils literal notranslate"><span class="pre">user1</span></code> and <code class="docutils literal notranslate"><span class="pre">user2</span></code> each send a single message to
+<code class="docutils literal notranslate"><span class="pre">user3</span></code>, the messages are not expected to arrive in the same order
+that <code class="docutils literal notranslate"><span class="pre">user1</span></code> and <code class="docutils literal notranslate"><span class="pre">user2</span></code> sent them.</p></li>
+</ul>
+</section>
+<section id="ping-and-pong">
+<h2><code class="docutils literal notranslate"><span class="pre">PING</span></code> and <code class="docutils literal notranslate"><span class="pre">PONG</span></code><a class="headerlink" href="#ping-and-pong" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">PING</span></code> and <code class="docutils literal notranslate"><span class="pre">PONG</span></code> commands, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.2">[RFC2812 §3.7.2]</a>
+and <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.3">[RFC2812 §3.7.3]</a>,
+with the following exceptions:</p>
+<ul>
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">PING</span></code> message includes a parameter (which we will refer to as
+the <em>token</em>), the <code class="docutils literal notranslate"><span class="pre">PONG</span></code> response must include that same token as its
+last parameter. For example, if your server (<code class="docutils literal notranslate"><span class="pre">irc.example.com</span></code>)
+receives <code class="docutils literal notranslate"><span class="pre">PING</span> <span class="pre">abc123</span></code>, it must reply with:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:irc.example.com PONG irc.example.com :abc123
+</pre></div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">PING</span></code> has no parameters, simply reply with
+<code class="docutils literal notranslate"><span class="pre">:irc.example.com</span> <span class="pre">PONG</span> <span class="pre">irc.example.com</span></code>. You can ignore any other
+parameters in the <code class="docutils literal notranslate"><span class="pre">PING</span></code>.</p>
+</li>
+<li><p>You must silently drop any <code class="docutils literal notranslate"><span class="pre">PONG</span></code> messages you receive (do <em>not</em>
+send an <code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNCOMMAND</span></code> reply).</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>Implementing <code class="docutils literal notranslate"><span class="pre">PING</span></code> and <code class="docutils literal notranslate"><span class="pre">PONG</span></code> is essential to testing your
+server with real IRC clients. IRC clients will send <code class="docutils literal notranslate"><span class="pre">PING</span></code> messages
+periodically and, if they do not receive a <code class="docutils literal notranslate"><span class="pre">PONG</span></code> message back,
+they will close the connection. Although <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.7.2">[RFC2812 §3.7.2]</a>
+does not explicitly require the <code class="docutils literal notranslate"><span class="pre">PONG</span></code> to repeat the token, all modern
+IRC servers do this, and many IRC clients (such as HexChat) rely on it to
+match each <code class="docutils literal notranslate"><span class="pre">PONG</span></code> with the <code class="docutils literal notranslate"><span class="pre">PING</span></code> it replies to (e.g., to measure lag).</p></li>
+</ul>
+</section>
+<section id="motd">
+<h2><code class="docutils literal notranslate"><span class="pre">MOTD</span></code><a class="headerlink" href="#motd" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">MOTD</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.4.1">[RFC2812 §3.4.1]</a>,
+with the following exceptions:</p>
+<ul class="simple">
+<li><p>You can ignore the <code class="docutils literal notranslate"><span class="pre">&lt;target&gt;</span></code> parameter.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>Your server should read the “Message Of The Day” from a file called
+<code class="docutils literal notranslate"><span class="pre">motd.txt</span></code> in the directory from where you ran the server.</p></li>
+<li><p>If the file does not exist, you must return an <code class="docutils literal notranslate"><span class="pre">ERR_NOMOTD</span></code> reply.</p></li>
+</ul>
+</section>
+<section id="lusers">
+<h2><code class="docutils literal notranslate"><span class="pre">LUSERS</span></code><a class="headerlink" href="#lusers" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">LUSERS</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.4.2">[RFC2812 §3.4.2]</a>,
+with the following exceptions:</p>
+<ul class="simple">
+<li><p>You can ignore the <code class="docutils literal notranslate"><span class="pre">&lt;mask&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;target&gt;</span></code> parameters.</p></li>
+<li><p>You must return the replies in the following order:
+<code class="docutils literal notranslate"><span class="pre">RPL_LUSERCLIENT</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_LUSEROP</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_LUSERUNKNOWN</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RPL_LUSERCHANNELS</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_LUSERME</span></code>.</p></li>
+<li><p>You do not need to support the <code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHSERVER</span></code> reply.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>You must send the replies even when they are reporting a zero value
+(i.e., ignore this from <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-5.1">[RFC2812 §5.1]</a>: “When
+replying, a server MUST send back RPL_LUSERCLIENT and RPL_LUSERME.
+The other replies are only sent back if a non-zero count is found for
+them.”)</p></li>
+<li><p>An “unknown connection” is any connected client for which we cannot yet
+tell whether the connection corresponds to a user (or, starting in
+Assignment 5, another server). Once a connection receives either
+a <code class="docutils literal notranslate"><span class="pre">NICK</span></code> or a <code class="docutils literal notranslate"><span class="pre">USER</span></code> command, we can assume that it corresponds
+to a user connection.</p></li>
+<li><p>The number of users in the <code class="docutils literal notranslate"><span class="pre">RPL_LUSERCLIENT</span></code> reply is the number of
+registered users (i.e., connections that have successfully sent both
+<code class="docutils literal notranslate"><span class="pre">NICK</span></code> and <code class="docutils literal notranslate"><span class="pre">USER</span></code> and have completed their registration).</p></li>
+<li><p>The number of clients in the <code class="docutils literal notranslate"><span class="pre">RPL_LUSERME</span></code> reply is the total
+number of connections, <em>not</em> including unknown connections.</p></li>
+</ul>
+</section>
+<section id="whois">
+<h2><code class="docutils literal notranslate"><span class="pre">WHOIS</span></code><a class="headerlink" href="#whois" title="Link to this heading">¶</a></h2>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">WHOIS</span></code> command, as described in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc2812#section-3.6.2">[RFC2812 §3.6.2]</a>, with the
+following exceptions:</p>
+<ul class="simple">
+<li><p>The command must accept a single parameter: a nick (i.e., there is
+only a single <code class="docutils literal notranslate"><span class="pre">&lt;mask&gt;</span></code>, and it must be a nick; ignore the
+<code class="docutils literal notranslate"><span class="pre">&lt;target&gt;</span></code> parameter).</p></li>
+<li><p>Ordinarily, the <code class="docutils literal notranslate"><span class="pre">WHOIS</span></code> command can be used without parameters, so
+the RFC does <em>not</em> require an <code class="docutils literal notranslate"><span class="pre">ERR_NEEDMOREPARAMS</span></code> reply in this case.
+However, since we do not support <code class="docutils literal notranslate"><span class="pre">WHOIS</span></code> without parameters, if you
+receive such a message you should silently ignore it (i.e., don’t send any
+reply back at all).</p></li>
+<li><p>You must only send back the following replies, in this order:
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOISUSER</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_WHOISSERVER</span></code>, <code class="docutils literal notranslate"><span class="pre">RPL_ENDOFWHOIS</span></code>.</p></li>
+<li><p>You must supply a value for parameter <code class="docutils literal notranslate"><span class="pre">&lt;server</span> <span class="pre">info&gt;</span></code> in
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOISSERVER</span></code>, but we won’t be checking its contents.</p></li>
+<li><p>You must support the <code class="docutils literal notranslate"><span class="pre">ERR_NOSUCHNICK</span></code> reply.</p></li>
+</ul>
+<p>Take into account the following:</p>
+<ul class="simple">
+<li><p>You will be implementing <code class="docutils literal notranslate"><span class="pre">RPL_WHOISOPERATOR</span></code>,
+<code class="docutils literal notranslate"><span class="pre">RPL_WHOISCHANNELS</span></code>, and <code class="docutils literal notranslate"><span class="pre">RPL_AWAY</span></code> in the next assignment.</p></li>
+</ul>
+</section>
+<section id="err-unknowncommand">
+<h2><code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNCOMMAND</span></code><a class="headerlink" href="#err-unknowncommand" title="Link to this heading">¶</a></h2>
+<p>If, after registering correctly, your server receives any message not described here
+(or in the next assignment), you must return an <code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNCOMMAND</span></code> reply.</p>
+</section>
+<section id="robustness">
+<h2>Robustness<a class="headerlink" href="#robustness" title="Link to this heading">¶</a></h2>
+<p>Your code must pass the “Robustness” suite of tests (see <a class="reference internal" href="testing.html#chirc-testing"><span class="std std-ref">Testing your Implementation</span></a> for instructions
+on how to run the tests). These tests check that your code
+does not crash in certain corner cases (e.g., when using messages that are 511, 512, or 513 bytes long),
+and when commands include arbitrary amounts of whitespace. This is not specified in the RFC,
+but most production IRC servers are able to deal with the kind of messages sent by the
+“Robustness” tests.</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="assignment1.html" title="Previous Chapter: Assignment 1: Basic Message Processing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Assignment 1: Basic Message Processing</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment3.html" title="Next Chapter: Assignment 3: Channels and Modes"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment 3: Channels and Modes &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

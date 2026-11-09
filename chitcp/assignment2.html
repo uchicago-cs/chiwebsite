@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Assignment 2: TCP over an Unreliable Network &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Testing your Implementation" href="testing.html" />
+    <link rel="prev" title="Assignment 1: TCP over a Reliable Network" href="assignment1.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chiTCP</a></li>
+            <li class="active">Assignment 2: TCP over an Unreliable Network</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="assignment-2-tcp-over-an-unreliable-network">
+<span id="chitcp-assignment2"></span><h1>Assignment 2: TCP over an Unreliable Network<a class="headerlink" href="#assignment-2-tcp-over-an-unreliable-network" title="Link to this heading">¶</a></h1>
+<p>In this assignment, you will extend the code you wrote for the previous
+assignment so that it can work over unreliable networks. In
+particular, you must account for the fact that segments could be dropped
+by the network layer, or that some segments could be delayed and arrive
+out of order.</p>
+<p>Doing so will require using <em>timers</em>. A timer is a mechanism that allows
+a certain action to be scheduled to happen at some point in the future
+(when this happens, the timer is said to “expire” or “time out”, and the action
+associated with that timer will be performed). TCP relies on several
+timers to deal with unreliable networks, but we will focus only on two:</p>
+<ul class="simple">
+<li><p>The <em>retransmission timer</em>. This timer will expire whenever so much time
+has passed since sending a segment (and not receiving an ACK for that
+segment) that we can consider that segment effectively dropped. When
+this happens, the segment will need to be retransmitted.</p></li>
+<li><p>The <em>persist timer</em>. This timer is used to periodically send “probe segments”
+to a host that is advertising a window of size zero, to force that
+host to send the latest value of its window.</p></li>
+</ul>
+<p>So, this assignment is divided into four parts:</p>
+<ul class="simple">
+<li><p>Implementing a timer API</p></li>
+<li><p>Managing a retransmission timer</p></li>
+<li><p>Sending probe segments with a persist timer</p></li>
+<li><p>Out-of-order delivery</p></li>
+</ul>
+<section id="implementing-a-timer-api">
+<h2>Implementing a Timer API<a class="headerlink" href="#implementing-a-timer-api" title="Link to this heading">¶</a></h2>
+<p>Before we can implement the TCP timers, we will implement a general-purpose
+timer mechanism. More specifically, we have defined an API in <code class="docutils literal notranslate"><span class="pre">include/chitcp/multitimer.h</span></code>
+with the operations required to manage multiple timers (since we will have to
+work with two timers in TCP: the retransmission timer and the persist timer).
+We have also provided an extensive set of tests for this API.</p>
+<p>You must implement the API’s functions in the <code class="docutils literal notranslate"><span class="pre">src/libchitcp/multitimer.c</span></code> file,
+ensuring they behave as described in the function headers for each API function.
+While implementing these functions, please note the following:</p>
+<ul class="simple">
+<li><p>You cannot use busy waiting or the <code class="docutils literal notranslate"><span class="pre">sleep</span></code> or <code class="docutils literal notranslate"><span class="pre">usleep</span></code> functions to implement
+the timer mechanism. We recommend you use condition variables instead.</p></li>
+<li><p>While a “multitimer” supports multiple timers, your implementation must use a
+<em>single</em> thread to manage all the timers. You cannot create a separate thread
+per timer.</p></li>
+<li><p>Furthermore, while this thread can be blocked (e.g., by waiting on a condition
+variable), it should not exit until the multitimer is freed. In other words,
+you should never have to kill and re-create your timer thread.</p></li>
+<li><p>You are allowed to add fields to the <code class="docutils literal notranslate"><span class="pre">single_timer_t</span></code> and <code class="docutils literal notranslate"><span class="pre">multi_timer_t</span></code> structs.
+Do not remove or rename any of the fields already included in <code class="docutils literal notranslate"><span class="pre">single_timer_t</span></code>.</p></li>
+<li><p>You are allowed to add additional functions to the API, but please note that the functions
+included in the API should already be enough to implement retransmission timers and
+persist timers in TCP. In particular, take into account that “resetting” a timer is
+effectively just a cancel operation followed by setting the timer again.</p></li>
+<li><p>You are not required to implement <code class="docutils literal notranslate"><span class="pre">mt_chilog</span></code> or <code class="docutils literal notranslate"><span class="pre">mt_chilog_single_timer</span></code>, but
+we encourage you to do so, as these functions will come in handy when debugging your code.</p></li>
+</ul>
+</section>
+<section id="retransmissions">
+<h2>Retransmissions<a class="headerlink" href="#retransmissions" title="Link to this heading">¶</a></h2>
+<p>You will use the Timer API to manage a retransmission timer in the manner described in <a class="reference external" href="https://tools.ietf.org/html/rfc6298#section-5">[RFC6298 § 5]</a>.
+The RTO (Retransmission TimeOut) should be computed as specified in  <a class="reference external" href="https://tools.ietf.org/html/rfc6298#section-2">[RFC6298 § 2-4]</a>.</p>
+<p>Please note the following:</p>
+<ul class="simple">
+<li><p>We will assume a clock granularity of 50 milliseconds. Furthermore, while the RFC requires
+that the RTO always be at least one second, we will instead use a minimum RTO of 200 milliseconds.</p></li>
+<li><p>You must implement go-back-N so, in <a class="reference external" href="https://tools.ietf.org/html/rfc6298#section-5">[RFC6298 § 5.4]</a>,
+you should retransmit the earliest segment that has not been acknowledged,
+<em>and</em> all subsequent unacknowledged segments.</p></li>
+<li><p>You do not need to implement section 5.7</p></li>
+</ul>
+<p>We suggest you follow this approach:</p>
+<ul>
+<li><p>Add a multitimer to the <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct (defined in <code class="docutils literal notranslate"><span class="pre">src/chitcpd/tcp.h</span></code>).
+Initialize it in <code class="docutils literal notranslate"><span class="pre">tcp_data_init</span></code> and free it in <code class="docutils literal notranslate"><span class="pre">tcp_data_free</span></code> (in <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code>).</p></li>
+<li><p>Add a <em>retransmission queue</em> to the <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct. Every time a segment is sent,
+add the segment to the retransmission queue, along with any metadata necessary
+to manage the retransmission (such as the time when the segment was sent). You may
+also add other fields to <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code>.</p></li>
+<li><p>The callback function to the timer must generate a <code class="docutils literal notranslate"><span class="pre">TIMEOUT_RTX</span></code> event
+by calling <code class="docutils literal notranslate"><span class="pre">chitcpd_timeout</span></code> (with the <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter set to <code class="docutils literal notranslate"><span class="pre">RETRANSMISSION</span></code>).
+The handling of the timeout should happen
+in your TCP state handlers; <em>do not implement the retransmission logic
+in your callback function!</em>.</p></li>
+<li><p>Whenever a <code class="docutils literal notranslate"><span class="pre">TIMEOUT_RTX</span></code> event happens, go through the retransmission queue to check
+what segments need to be re-sent. The provided code
+already includes an (empty) <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(event</span> <span class="pre">==</span> <span class="pre">TIMEOUT_RTX)</span></code> branch in the handler
+functions where you need to process the <code class="docutils literal notranslate"><span class="pre">TIMEOUT_RTX</span></code> event.</p></li>
+<li><p>When a segment is acknowledged, don’t forget to remove it from the retransmission queue.
+Since a TCP segment could acknowledge multiple segments at once, you must make
+sure to traverse the retransmission queue in case there are multiple segments
+that should be removed.</p></li>
+<li><p>All the above points focus on the peer that sends a segment which is dropped.
+In the other peer, you must remember to only acknowledge the latest sequence
+number <em>without gaps</em>. So, if peer A sends segments with sequence numbers 0-99,
+100-199, and 200-299, and peer B receives only 0-99 and 200-299, you should
+only acknowledge sequence numbers 0-99.</p>
+<p>In this part of the assignment, you are allowed to silently drop any segments
+that you cannot immediately acknowledge. So, for example, in the above example,
+peer B would be allowed to drop segment 200-299 (which would be retransmitted
+by peer A). In the last part of the assignment, you will have to account for
+these “gaps” in the received data.</p>
+</li>
+</ul>
+</section>
+<section id="persist-timer">
+<h2>Persist timer<a class="headerlink" href="#persist-timer" title="Link to this heading">¶</a></h2>
+<p>When a receiving host advertises a window of size zero,
+the sending host cannot send anything until the advertised window becomes
+non-zero. While the receiving host can send an ACK with an updated window
+value whenever its window becomes non-zero, that ACK could be dropped in
+an unreliable network.</p>
+<p>So, the proper way to deal with this is by periodically sending a <em>probe segment</em>
+to the receiving host, meant to elicit an ACK that provides the latest
+window value. This process is described, at a high level, in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.8.6.1">[RFC9293 3.8.6.1]</a>.
+You will implement the sending of probe segments by using a <em>persist timer</em>
+that will operate as follows:</p>
+<ul class="simple">
+<li><p>When a segment is received with SEG.WND=0 (i.e., the advertised window is zero),
+set the persist timer to expire after RTO seconds.</p></li>
+<li><p>If a segment is received with SEG.WND&gt;0 <em>before</em> the timer expires, then
+cancel the timer.</p></li>
+<li><p>If the timer expires, and there is currently no data to send (i.e., if the
+send buffer is empty), reset the timer to expire after RTO seconds.</p></li>
+<li><p>If the timer expires, and there is data to send, then send a probe segment with
+a single byte of data from the send buffer. Reset the timer to expire after
+RTO seconds. Careful: you must still update SND.NXT.</p></li>
+<li><p>If the timer expires again, you must send a probe segment with the same byte of
+data. While you could use the retransmission queue for this, we suggest you manage
+this probe segment separately (in other words, we recommend you do <em>not</em> add the
+probe segments to the retransmission queue)</p></li>
+</ul>
+<p>Note: While <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.8.6.1">[RFC9293 3.8.6.1]</a>
+suggests increasing the persist timer exponentially, we will not do so here.</p>
+<p>We suggest you follow this approach:</p>
+<ul class="simple">
+<li><p>Modify <code class="docutils literal notranslate"><span class="pre">tcp_data_init</span></code> (in tcp.c) so your multitimer will have two timers instead of one.</p></li>
+<li><p>Modify your segment arrival handler to set the persist timer when a zero window is received,
+and to cancel it when a non-zero window is received.</p></li>
+<li><p>The callback function to the timer must generate a <code class="docutils literal notranslate"><span class="pre">TIMEOUT_PST</span></code> event
+by calling <code class="docutils literal notranslate"><span class="pre">chitcpd_timeout</span></code> (with the <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter set to <code class="docutils literal notranslate"><span class="pre">PERSIST</span></code>).
+The handling of the timeout should happen
+in your TCP state handlers; <em>do not implement the persist timer logic
+in your callback function!</em>.</p></li>
+<li><p>Whenever a <code class="docutils literal notranslate"><span class="pre">TIMEOUT_PST</span></code> event happens, perform the actions described above
+(when the timer expires)</p></li>
+</ul>
+</section>
+<section id="out-of-order-delivery">
+<h2>Out-of-order delivery<a class="headerlink" href="#out-of-order-delivery" title="Link to this heading">¶</a></h2>
+<p>In this part of the assignment, you must account for the fact that there can be
+<em>gaps</em> in the sequence of bytes you receive. When a sequence of bytes is divided
+into multiple segments, these gaps can happen if one or more of the segments are either
+dropped or delayed.</p>
+<p>The handling of both cases is the same: if you receive a segment that cannot
+be immediately acknowledged (because there are gaps in the sequence), you
+must buffer those segments until the sequence is complete.</p>
+<p>We suggest you follow this approach:</p>
+<ul class="simple">
+<li><p>Since the circular buffer will not allow you to write data in arbitrary locations (and
+only after the last byte of data in the buffer), you should store any out-of-order
+segments in a new list in the <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct. This list should be sorted by
+increasing sequence number.</p></li>
+<li><p>Whenever a new segment arrives, check the head of the out-of-order list to see
+whether there are any contiguous segments. For example, if you receive a segment
+with bytes 100-199, and the head of the list contains a segment with bytes
+200-299, that means the segment in the out-of-order list can now be processed.</p></li>
+<li><p>When this happens, we suggest that you simply remove the segment from the out-of-order
+list and add it to the pending segments queue. This will result in a <code class="docutils literal notranslate"><span class="pre">SEGMENT_ARRIVAL</span></code>
+event and the out-of-order segment will be processed as usual by your segment arrival
+handler.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="assignment1.html" title="Previous Chapter: Assignment 1: TCP over a Reliable Network"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Assignment 1: TCP over a Reliable Network</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="testing.html" title="Next Chapter: Testing your Implementation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Testing your Implementation &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

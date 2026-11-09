@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>The chiTCP Architecture &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installing, Building, and Running chiTCP" href="installing.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chiTCP</a></li>
+            <li class="active">The chiTCP Architecture</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="the-chitcp-architecture">
+<span id="chitcp-architecture"></span><h1>The chiTCP Architecture<a class="headerlink" href="#the-chitcp-architecture" title="Link to this heading">¶</a></h1>
+<p>When using chiTCP in place of the operating system’s TCP/IP stack, applications
+use chisocket functions to perform standard socket operations, like
+<code class="docutils literal notranslate"><span class="pre">connect</span></code>, <code class="docutils literal notranslate"><span class="pre">send</span></code>, <code class="docutils literal notranslate"><span class="pre">recv</span></code>, etc. Instead of including the <code class="docutils literal notranslate"><span class="pre">socket.h</span></code>
+system header, a chiTCP header must be included:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;chitcp/socket.h&quot;</span>
+</pre></div>
+</div>
+<p>The functions provided by the chisocket library are the same as the ones in the
+standard socket library, except they are prefixed with <code class="docutils literal notranslate"><span class="pre">chisocket_</span></code>. They
+provide essentially the same functionality, although they do not support every
+possible flag and error code. However, this is enough to write simple clients
+and servers. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chisocket_socket</span><span class="p">(</span><span class="n">PF_INET</span><span class="p">,</span><span class="w">       </span><span class="c1">// Family: IPv4</span>
+<span class="w">                                </span><span class="n">SOCK_STREAM</span><span class="p">,</span><span class="w">   </span><span class="c1">// Type: Full-duplex stream (reliable)</span>
+<span class="w">                                </span><span class="n">IPPROTO_TCP</span><span class="p">);</span><span class="w">  </span><span class="c1">// Protocol: TCP;</span>
+
+<span class="n">chitcp_addr_construct</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serverAddr</span><span class="p">);</span>
+
+<span class="n">chisocket_connect</span><span class="p">(</span><span class="n">clientSocket</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">sockaddr</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serverAddr</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">sockaddr_in</span><span class="p">));</span>
+
+<span class="n">chisocket_send</span><span class="p">(</span><span class="n">clientSocket</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Hello!&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="n">chisocket_close</span><span class="p">(</span><span class="n">clientSocket</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For a host to be able to use chiTCP or, more specifically, to be able to write
+servers and clients based on the chisocket library instead of the regular
+socket library, that host must run a <em>chiTCP daemon</em> (called <code class="docutils literal notranslate"><span class="pre">chitcpd</span></code>). This
+daemon is where your implementation of TCP will reside, with the chisocket
+library performing the standard socket operations (connect, send, recv, etc.)
+through the chiTCP daemon, instead of accessing the operating system’s TCP/IP
+stack directly.</p>
+<img alt="The chiTCP architecture" src="../_images/architecture.png" />
+<p>The figure above summarizes the chiTCP architecture. Applications that
+want to use chiTCP call the socket functions in the chisocket library, which
+communicates with the chiTCP daemon. This daemon includes three important
+components:</p>
+<ul class="simple">
+<li><p><strong>The chisocket Handlers</strong>: This contains the implementation of the socket
+layer, and is the interface between an application and your TCP
+implementation.</p></li>
+<li><p><strong>The TCP Implementation</strong> (files <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> and <code class="docutils literal notranslate"><span class="pre">tcp.h</span></code>, described in more detail in
+the <a class="reference internal" href="implementing.html#chitcp-implementing"><span class="std std-ref">Implementation Guide</span></a>). This is the part of the code you will be working on.</p></li>
+<li><p><strong>The chiTCP Network Layer</strong>: This part of the daemon is responsible for
+getting your TCP segment from one chiTCP daemon to another, the same way
+that, when using your operating system’s TCP/IP stack, IP is responsible for
+getting your TCP segment from your host to another host.</p></li>
+</ul>
+<p>The chiTCP Network Layer is actually just regular TCP (i.e., the operating
+system’s TCP, <em>not</em> the one you are implementing). So, when chiTCP needs to get
+one of your TCP segments to another host, it does so by establishing a (real)
+TCP connection to that other host’s chiTCP daemon on port 23300.
+The diagram below shows the packet encapsulation that happens in chiTCP.
+Notice how, from chiTCP’s perspective, (real) TCP is essentially the <em>Network</em>
+layer of the protocol stack, while your implementation of TCP is the
+<em>Transport</em> layer. If we looked at this from a standard TCP/IP perspective,
+your TCP would simply be the payload of a (real) TCP segment.</p>
+<img alt="../_images/layers.png" src="../_images/layers.png" />
+<p>(*) chiTCP inserts a special header between the two TCP headers that contains chiTCP-specific information.</p>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="intro.html" title="Previous Chapter: Introduction"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Introduction</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="installing.html" title="Next Chapter: Installing, Building, and Running chiTCP"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Installing, Building, and Running chiTCP &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

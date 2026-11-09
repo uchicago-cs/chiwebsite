@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Installing, Building, and Running chiTCP &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Implementation Guide" href="implementing.html" />
+    <link rel="prev" title="The chiTCP Architecture" href="architecture.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chiTCP</a></li>
+            <li class="active">Installing, Building, and Running chiTCP</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="installing-building-and-running-chitcp">
+<span id="chitcp-installing"></span><h1>Installing, Building, and Running chiTCP<a class="headerlink" href="#installing-building-and-running-chitcp" title="Link to this heading">¶</a></h1>
+<p>The source code for chiTCP can be found in the following GitHub repository:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/uchicago-cs/chitcp">https://github.com/uchicago-cs/chitcp</a></p>
+</div></blockquote>
+<p>To work on the assignments, all you need to do is clone this repository. However,
+please note that your instructor may give you more specific instructions on how
+to get the chiTCP code.</p>
+<section id="software-requirements">
+<h2>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading">¶</a></h2>
+<p>chiTCP has a number of software requirements. If you are doing the chiTCP assignments
+as part of a class, it’s likely that this software is already installed on your
+school’s computers. If so, you can skip this section, unless you want to run chiTCP
+on your own computer. chiTCP has been tested on Linux systems (including WSL under Windows),
+as well as MacOS systems.</p>
+<section id="cmake">
+<h3>CMake<a class="headerlink" href="#cmake" title="Link to this heading">¶</a></h3>
+<p>Building the chiTCP code requires <a class="reference external" href="https://cmake.org/">CMake</a> (version 3.13 or higher)</p>
+<p>On Ubuntu systems, you should be able to install it as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo apt install cmake
+</pre></div>
+</div>
+<p>On a Mac system, you should be able to install it with <a class="reference external" href="https://brew.sh/">Homebrew</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>brew install cmake
+</pre></div>
+</div>
+</section>
+<section id="protobuf-and-protobuf-c">
+<h3><code class="docutils literal notranslate"><span class="pre">protobuf</span></code> and <code class="docutils literal notranslate"><span class="pre">protobuf-c</span></code><a class="headerlink" href="#protobuf-and-protobuf-c" title="Link to this heading">¶</a></h3>
+<p>chiTCP requires <code class="docutils literal notranslate"><span class="pre">protobuf</span></code> 3.x or higher and <code class="docutils literal notranslate"><span class="pre">protobuf-c</span></code> 1.x or higher.</p>
+<p>On Ubuntu systems, you should be able to install them as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo apt install protobuf-c-compiler libprotobuf-c1 libprotobuf-c-dev
+</pre></div>
+</div>
+<p>On a Mac system, you should be able to install these libraries with <a class="reference external" href="https://brew.sh/">Homebrew</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>brew install protobuf-c
+</pre></div>
+</div>
+<p>On other systems, you will need
+to install them from source following the <a class="reference external" href="https://github.com/protocolbuffers/protobuf/blob/main/src/README.md">protobuf instructions</a>
+and the <a class="reference external" href="https://github.com/protobuf-c/protobuf-c/blob/master/README.md">protobuf-c instructions</a>.</p>
+</section>
+<section id="criterion-unit-testing-framework">
+<h3>Criterion Unit Testing Framework<a class="headerlink" href="#criterion-unit-testing-framework" title="Link to this heading">¶</a></h3>
+<p>chiTCP requires the <a class="reference external" href="https://github.com/Snaipe/Criterion">Criterion unit testing framework</a>
+(version 2.3 or higher).</p>
+<p>On Ubuntu systems, you should be able to install them as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo apt install libcriterion-dev
+</pre></div>
+</div>
+<p>On a Mac system, you should be able to install these libraries with <a class="reference external" href="https://brew.sh/">Homebrew</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>brew install criterion
+</pre></div>
+</div>
+<p>On other systems, you must install the framework manually following their <a class="reference external" href="https://criterion.readthedocs.io/en/latest/setup.html#installation">installation instructions</a>.</p>
+</section>
+</section>
+<section id="building">
+<span id="chitcp-building"></span><h2>Building<a class="headerlink" href="#building" title="Link to this heading">¶</a></h2>
+<p>The first time you download the chiTCP code to your machine, you must run the
+following from the root of the chiTCP code tree:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cmake -B build/
+</pre></div>
+</div>
+<p>This will verify whether you have the necessary tools to build chiTCP and will
+also generate a number of files required to build chiTCP. You should only
+need to rerun the above commands if you modify CMake’s <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+(which you should not need to do as part of this project).</p>
+<p>Once you have done this, simply run <code class="docutils literal notranslate"><span class="pre">make</span></code> inside the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory
+to build chiTCP. This will generate the chiTCP daemon (<code class="docutils literal notranslate"><span class="pre">chitcpd</span></code>), some
+sample programs, as well as the test executables (all starting with <code class="docutils literal notranslate"><span class="pre">test-</span></code>).
+Take into account that you must run these programs from inside the <code class="docutils literal notranslate"><span class="pre">build</span></code>
+directory.</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">make</span></code> will only print the names of the files it is building. To
+enable a more verbose output (including the exact commands that make is running
+during the build process), just run <code class="docutils literal notranslate"><span class="pre">make</span></code> like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make VERBOSE=1
+</pre></div>
+</div>
+</section>
+<section id="running">
+<h2>Running<a class="headerlink" href="#running" title="Link to this heading">¶</a></h2>
+<p>To run the chiTCP daemon, just run the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chitcpd -vv
+</pre></div>
+</div>
+<p>You should see the following output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[16:57:26.446948795]    INFO          chitcpd chitcpd running. UNIX socket: /tmp/chitcpd.socket.USER. TCP socket: 23300
+</pre></div>
+</div>
+<p>Take into account that you won’t be able to do much with <code class="docutils literal notranslate"><span class="pre">chitcpd</span></code> until you’ve implemented
+the <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> file. We do, however, provide a number of mechanisms for you to test your implementation.
+These are described in <a class="reference internal" href="testing.html#chitcp-testing"><span class="std std-ref">Testing your Implementation</span></a></p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">chitcpd</span></code> listens on TCP port 23300. If you are running <code class="docutils literal notranslate"><span class="pre">chitcpd</span></code> on a shared machine,
+this default value will likely conflict with other users running
+on that same machine. To specify an alternate port, you need to set the following environment
+variable on <em>every</em> terminal in which you are running chitcp programs (including <code class="docutils literal notranslate"><span class="pre">chitcpd</span></code> and any application
+that uses the chisocket library):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>export CHITCPD_PORT=30287  # Substitute for a different number
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">chitcpd</span></code> also creates a UNIX socket on <code class="docutils literal notranslate"><span class="pre">/tmp/chitcpd.socket.USER</span></code> (where <code class="docutils literal notranslate"><span class="pre">USER</span></code> is your UNIX username).
+It is unlikely that this will conflict with other users but, if you need to specify an alternate location
+and name for this UNIX socket, just set the <code class="docutils literal notranslate"><span class="pre">CHITCPD_SOCK</span></code> environment variable to the absolute path
+of the UNIX socket (and remember to do this on every terminal in which you are running chitcp programs)</p>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="architecture.html" title="Previous Chapter: The chiTCP Architecture"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; The chiTCP Architecture</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="implementing.html" title="Next Chapter: Implementation Guide"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Implementation Guide &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

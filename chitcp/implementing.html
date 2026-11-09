@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Implementation Guide &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Assignment 1: TCP over a Reliable Network" href="assignment1.html" />
+    <link rel="prev" title="Installing, Building, and Running chiTCP" href="installing.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chirc/index.html">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+          <li><a href="index.html">chiTCP</a></li>
+            <li class="active">Implementation Guide</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="implementation-guide">
+<span id="chitcp-implementing"></span><h1>Implementation Guide<a class="headerlink" href="#implementation-guide" title="Link to this heading">¶</a></h1>
+<p>As you’ll see, you are provided with a <em>lot</em> of code. Fortunately, you will
+only have to interact with a small portion of it. Most of the provided code
+is scaffolding for the chiTCP architecture, which will allow you to focus
+on implementing the TCP protocol on a single file: the <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> file.</p>
+<p>This implementation guide provides a roadmap for implementing TCP, as well
+as a description of header files and functions that you will need to be aware
+of as you implement your version of TCP. As a rule of thumb, if a function
+is not described here, you probably should not use it in your code.</p>
+<section id="implementing-rfc-9293">
+<h2>Implementing RFC 9293<a class="headerlink" href="#implementing-rfc-9293" title="Link to this heading">¶</a></h2>
+<p>In this project, you are going to implement a substantial portion of
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293">[RFC9293]</a>. In particular, you will be
+focusing on <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.10">[RFC9293 § 3.10]</a>
+(Event Processing), which provides a detailed description of how TCP should
+behave (whereas the preceding sections focus more on describing use cases,
+header specifications, example communications, etc.). The second paragraph of
+this section sums up pretty nicely how a TCP implementation should behave:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The activity of the TCP endpoint can be characterized as responding
+to events. The events that occur can be cast into three categories:
+user calls, arriving segments, and timeouts. This section describes
+the processing the TCP endpoint does in response to each of the
+events. In many cases, the processing required depends on the state
+of the connection.
+</pre></div>
+</div>
+<p>So, we can think of TCP as a <a class="reference external" href="https://en.wikipedia.org/wiki/Finite-state_machine">state machine</a> where:</p>
+<ul class="simple">
+<li><p>The states are CLOSED, LISTEN, SYN_SENT, etc.</p></li>
+<li><p>The inputs are a series of events defined in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293">[RFC9293]</a> (we describe these in more
+detail below)</p></li>
+<li><p>The transition from one TCP state to another is based on the current
+state, an event, <em>and</em> a series of TCP variables (SND.NXT, SND.UNA, etc.)</p></li>
+<li><p>Transitions from one TCP state to another result in actions, typically
+sending a TCP segment with information dependent on the state of the TCP
+variables and the send/receive buffers.</p></li>
+</ul>
+<p>The events defined in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.10">[RFC9293 § 3.10]</a> are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">OPEN</span></code>: chiTCP will generate this event when the application layer calls
+<code class="docutils literal notranslate"><span class="pre">chisocket_connect</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SEND</span></code>: chiTCP will generate this event when the application layer calls
+<code class="docutils literal notranslate"><span class="pre">chisocket_send</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RECEIVE</span></code>: chiTCP will generate this event when the application layer
+calls <code class="docutils literal notranslate"><span class="pre">chisocket_recv</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>: chiTCP will generate this event when the application layer
+calls <code class="docutils literal notranslate"><span class="pre">chisocket_close</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ABORT</span></code>: Not supported by chiTCP .</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATUS</span></code>: Not supported by chiTCP .</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SEGMENT</span> <span class="pre">ARRIVES</span></code>: chiTCP will generate this event when a TCP segment
+arrives.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">USER</span> <span class="pre">TIMEOUT</span></code>: Not supported by chiTCP .</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RETRANSMISSION</span> <span class="pre">TIMEOUT</span></code>: A retransmission timeout (set after sending a
+segment) has expired, meaning that an ACK for that segment has not been
+received.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIME-WAIT</span> <span class="pre">TIMEOUT</span></code>: Not supported by chiTCP .</p></li>
+</ul>
+<p>As described in the next section, your work in chiTCP will center mostly on a
+file called <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> where you are provided with functions that handle events
+in given TCP states. These functions are initially mostly empty, and it is up
+to you to write the code that will handle each event in each state.</p>
+<p>Of course, a TCP implementation would have to consider every possible
+combination of states and events. However, many of these are actually invalid
+combinations. For example,
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.10">[RFC9293 § 3.10]</a> specifies that
+that if the <code class="docutils literal notranslate"><span class="pre">SEND</span></code> event happens in the following states:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>FIN-WAIT-1 STATE
+FIN-WAIT-2 STATE
+CLOSING STATE
+LAST-ACK STATE
+TIME-WAIT STATE
+</pre></div>
+</div>
+<p>Then the following action must be taken:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Return &quot;error:  connection closing&quot; and do not service request.
+</pre></div>
+</div>
+<p>Actions like this are actually handled in the chisocket layer, and you will not
+have to worry about them. For example, in the above case, the
+<code class="docutils literal notranslate"><span class="pre">chisocket_send</span></code> function will set <code class="docutils literal notranslate"><span class="pre">errno</span></code> to <code class="docutils literal notranslate"><span class="pre">ENOTCONN</span></code>.</p>
+<p>Sections <a class="reference internal" href="assignment1.html#chitcp-assignment1"><span class="std std-ref">Assignment 1: TCP over a Reliable Network</span></a> and <a class="reference internal" href="assignment2.html#chitcp-assignment2"><span class="std std-ref">Assignment 2: TCP over an Unreliable Network</span></a> carve out
+exactly what state/event combinations you will have to implement. Additionally,
+your implementation should take the following into account:</p>
+<ul>
+<li><p>You do not need to support delayed acknowledgements. An acknowledgement
+segment is sent immediately when data is received, although you can piggyback
+any data in the send buffer that is waiting to be sent (but you do not need
+to wait for a timeout to increase the probability that you’ll be able to
+piggyback data on the acknowledgement).</p></li>
+<li><p>You do not need to implement algorithms for Silly Window Syndrome Avoidance.
+This means that the sender is always allowed to send data, as long as that
+data falls within the effective window, and the receiver always sends the
+current size of the receive window (i.e., the amount of available space
+in the receive buffer).</p></li>
+<li><p>You do not need to implement any TCP Congestion Control mechanisms.</p></li>
+<li><p>You do not need to support the following flags and variables. This means
+you can ignore any parts of RFC 9293 that depend on checking the value
+of these flags/variables, or involve sending segments with these flags set,
+or updating these variables.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RST</span></code>, <code class="docutils literal notranslate"><span class="pre">PSH</span></code>, and <code class="docutils literal notranslate"><span class="pre">ECE</span></code> flags in the TCP header.</p></li>
+<li><p>Urgent Pointer field or the <code class="docutils literal notranslate"><span class="pre">URG</span></code> bit in the TCP header,
+as well as the <code class="docutils literal notranslate"><span class="pre">SND.UP</span></code>, <code class="docutils literal notranslate"><span class="pre">RCV.UP</span></code>, or <code class="docutils literal notranslate"><span class="pre">SEG.UP</span></code> variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SND.WL1</span></code> and <code class="docutils literal notranslate"><span class="pre">SND.WL2</span></code> variables.</p></li>
+</ul>
+</li>
+<li><p>You can ignore any references to checking the “security/compartment” of a segment
+or TCB.</p></li>
+<li><p>You do not need to support the checksum field of the TCP header</p></li>
+<li><p>You do not need to support TCP options.</p></li>
+<li><p>You do not need to support the <code class="docutils literal notranslate"><span class="pre">TIME_WAIT</span></code> timeout. You should still
+update the TCP state to <code class="docutils literal notranslate"><span class="pre">TIME_WAIT</span></code> when required by the RFC, but do not have to
+implement a timeout.</p>
+<p>In other words, if the RFC specifies that you must transition to <code class="docutils literal notranslate"><span class="pre">TIME_WAIT</span></code>,
+you should do so and, after doing so, you must immediately transition to <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code>
+(in a sense, we are setting the <code class="docutils literal notranslate"><span class="pre">TIME_WAIT</span></code> timeout to zero seconds)</p>
+</li>
+<li><p>You do not need to support simultaneous opens (i.e., the transition from
+<code class="docutils literal notranslate"><span class="pre">SYN_SENT</span></code> to <code class="docutils literal notranslate"><span class="pre">SYN_RCVD</span></code>).</p></li>
+</ul>
+</section>
+<section id="implementing-the-tcp-c-file">
+<h2>Implementing the <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code> file<a class="headerlink" href="#implementing-the-tcp-c-file" title="Link to this heading">¶</a></h2>
+<p>Since TCP is essentially a state machine, chiTCP ’s implementation boils down to
+having a handler function for each of the TCP states (CLOSED, LISTEN,
+SYN_RCVD, etc.), all contained in the <code class="docutils literal notranslate"><span class="pre">src/chitcpd/tcp.c</span></code> file. If an event
+happens (e.g., a segment arrives) while the connection is in a specific state
+(e.g., ESTABLISHED), then the handler function for that state is called, along
+with information about the event that just happened. You will only have to
+worry about writing the code inside the handler function; the rest of the
+scaffolding (the socket library, the actual dispatching of events to the state
+machine, etc.) is already provided for you.</p>
+<p>Each handler function has the following prototype:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">chitcpd_tcp_state_handle_STATENAME</span><span class="p">(</span><span class="n">serverinfo_t</span><span class="w"> </span><span class="o">*</span><span class="n">si</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">chisocketentry_t</span><span class="w"> </span><span class="o">*</span><span class="n">entry</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">tcp_event_type_t</span><span class="w"> </span><span class="n">event</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The parameters to the function are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">si</span></code> is a pointer to a struct with the chiTCP daemon’s runtime
+information (e.g., the socket table, etc.). You should not need to access or
+modify any of the data in that struct, but you will need the <code class="docutils literal notranslate"><span class="pre">si</span></code> pointer
+to call certain auxiliary functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">entry</span></code> is a pointer to the socket entry for the connection that is
+being handled. The socket entry contains the actual TCP data (variables,
+buffers, etc.), which can be accessed like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">tcp_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">tcp_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">socket_state</span><span class="p">.</span><span class="n">active</span><span class="p">.</span><span class="n">tcp_data</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The contents of the <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct are described below.</p>
+<p><code class="docutils literal notranslate"><span class="pre">entry</span></code> also contains the value of the TCP state (SYN_SENT, ESTABLISHED, etc.)
+in the <code class="docutils literal notranslate"><span class="pre">tcp_state</span></code> variable:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">tcp_state_t</span><span class="w"> </span><span class="n">tcp_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">tcp_state</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Since each handler function corresponds to a specific state, you ordinarily
+will not need to access this variable. However, if you write an auxiliary
+function that needs to check a socket’s current state, you can obtain the
+state via the <code class="docutils literal notranslate"><span class="pre">tcp_state</span></code> variable. Take into account that you should
+<em>never</em> modify that variable directly. You should only modify it using the
+<code class="docutils literal notranslate"><span class="pre">chitcpd_update_tcp_state</span></code> function described below.</p>
+<p>Other than the TCP data and the TCP state, you should
+not access or modify any other information in <code class="docutils literal notranslate"><span class="pre">entry</span></code>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event</span></code> is the event that is being handled. The list of possible events
+corresponds roughly to the ones specified in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.10">[RFC9293 § 3.10]</a>. They are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">APPLICATION_CONNECT</span></code>: Application has called
+<code class="docutils literal notranslate"><span class="pre">chisocket_connect()</span></code> and a three-way handshake must be initiated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">APPLICATION_SEND</span></code>: Application has called <code class="docutils literal notranslate"><span class="pre">chisocket_send()</span></code>.
+The socket layer (which is already implemented for you) already takes
+care of placing the data in the socket’s TCP send buffer. This event is a
+notification that there may be new data in the send buffer, which should
+be sent if possible.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">APPLICATION_RECEIVE</span></code>: Application has called
+<code class="docutils literal notranslate"><span class="pre">chisocket_recv()</span></code>. The socket layer already takes care of extracting
+the data from the socket’s TCP receive buffer. This event is a
+notification that there may now be additional space available in the
+receive buffer, which would require updating the socket’s receive window
+(and the advertised window).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">APPLICATION_CLOSE</span></code>: Application has called <code class="docutils literal notranslate"><span class="pre">chisocket_close()</span></code>
+and a connection tear-down should be initiated once all outstanding data
+in the send buffer has been sent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SEGMENT_ARRIVAL</span></code>: A segment has arrived through the network and
+needs to be processed (RFC 9293 calls this “SEGMENT ARRIVES”)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMEOUT_RTX</span></code>: A retransmission timeout has happened.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TIMEOUT_PST</span></code>: The persist timer has timed out.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLEANUP</span></code>: The socket has reached the <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code> state and is about
+to be freed. This event is only delivered to the <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code> state
+handler, and gives you a chance to release any additional resources
+associated with the socket.</p></li>
+</ul>
+</li>
+</ul>
+<p>To implement the TCP protocol, you will need to implement the handler functions
+in <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code>. However, the vast majority of your code will actually reside in
+the <code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_handle_segment</span></code> function, which is called from the handler functions
+when a <code class="docutils literal notranslate"><span class="pre">SEGMENT_ARRIVAL</span></code> event is received (i.e., when a new segment arrives).</p>
+<p>Finally, please note that most of your code will be in <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code>. However, you
+will also need to modify <code class="docutils literal notranslate"><span class="pre">src/chitcpd/tcp.h</span></code>, which defines the <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code>
+struct (see below), and any other files an assignment specifically tells you
+to modify. You should not need to modify any other files, but you will
+need to use a number of functions and structs defined elsewhere,
+which we describe below.</p>
+</section>
+<section id="the-tcp-data-t-struct">
+<h2>The <code class="docutils literal notranslate"><span class="pre">tcp_data_t</span></code> struct<a class="headerlink" href="#the-tcp-data-t-struct" title="Link to this heading">¶</a></h2>
+<p>This struct is defined in <code class="docutils literal notranslate"><span class="pre">src/chitcpd/tcp.h</span></code>, and contains all the TCP data
+for a given socket. It is also useful to
+think of this struct as the “Transmission Control Block” for a given connection.
+The struct already includes the fields you will need for Assignment 1, but you
+are allowed (and, in Assignment 2, expected) to add your own fields to it. If you
+do, make sure to initialize them in <code class="docutils literal notranslate"><span class="pre">tcp_data_init</span></code> and free any resources they
+use in <code class="docutils literal notranslate"><span class="pre">tcp_data_free</span></code> (both in <code class="docutils literal notranslate"><span class="pre">tcp.c</span></code>).</p>
+<dl>
+<dt>The pending segment queue</dt><dd><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">tcp_segment_list_t</span><span class="w"> </span><span class="o">*</span><span class="n">pending_segments</span><span class="p">;</span>
+<span class="n">pthread_mutex_t</span><span class="w"> </span><span class="n">lock_pending_segments</span><span class="p">;</span>
+<span class="n">pthread_cond_t</span><span class="w"> </span><span class="n">cv_pending_segments</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>As TCP segments arrive through the network, the chiTCP daemon places them
+in the pending segment queue of the appropriate socket (you do not need to
+inspect the origin and destination port of the TCP segment; this is taken
+care of for you). The queue is implemented as a doubly-linked list where
+the head of the list represents the front of the queue
+and the tail of the list represents the back of the queue. The list nodes
+contain pointers to <code class="docutils literal notranslate"><span class="pre">tcp_segment_t</span></code> structs
+(described below) in the heap. It is your responsibility to free this
+memory when you are done processing a segment.</p>
+<p>The list is implemented using <a class="reference external" href="https://troydhanson.github.io/uthash/utlist.html">utlist</a>,
+which is already included in the chiTCP code. While you can use the utlist macros
+directly, we also provide some helper functions in <code class="docutils literal notranslate"><span class="pre">segment.h</span></code> to manipulate
+lists of TCP segments. For example, extracting the segment from the head
+of the list would be done like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">tcp_segment_t</span><span class="w"> </span><span class="o">*</span><span class="n">segment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">tcp_data</span><span class="o">-&gt;</span><span class="n">pending_segments</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* tcp_data-&gt;pending_segments points to the head node of the list */</span>
+<span class="w">    </span><span class="n">segment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tcp_data</span><span class="o">-&gt;</span><span class="n">pending_segments</span><span class="o">-&gt;</span><span class="n">segment</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* This removes the list node at the head of the list */</span>
+<span class="w">    </span><span class="n">chitcp_segment_list_pop_head</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tcp_data</span><span class="o">-&gt;</span><span class="n">pending_segments</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">lock_pending_segments</span></code>
+mutex provides thread-safe access to the queue. The <code class="docutils literal notranslate"><span class="pre">cv_pending_segments</span></code>
+condition variable is used to notify other parts of the chiTCP code that
+there are new segments in the queue; you should not wait or signal this
+condition variable.</p>
+</dd>
+<dt>The TCP variables</dt><dd><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Send sequence variables */</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">ISS</span><span class="p">;</span><span class="w">      </span><span class="cm">/* Initial send sequence number */</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">SND_UNA</span><span class="p">;</span><span class="w">  </span><span class="cm">/* First byte sent but not acknowledged */</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">SND_NXT</span><span class="p">;</span><span class="w">  </span><span class="cm">/* Next sendable byte */</span>
+<span class="kt">uint16_t</span><span class="w"> </span><span class="n">SND_WND</span><span class="p">;</span><span class="w">  </span><span class="cm">/* Send Window */</span>
+
+<span class="cm">/* Receive sequence variables */</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">IRS</span><span class="p">;</span><span class="w">      </span><span class="cm">/* Initial receive sequence number */</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">RCV_NXT</span><span class="p">;</span><span class="w">  </span><span class="cm">/* Next byte expected */</span>
+<span class="kt">uint16_t</span><span class="w"> </span><span class="n">RCV_WND</span><span class="p">;</span><span class="w">  </span><span class="cm">/* Receive Window */</span>
+</pre></div>
+</div>
+<p>These are the TCP sequence variables as specified in
+<a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.3.1">[RFC9293 3.3.1]</a>.</p>
+</dd>
+<dt>The TCP buffers</dt><dd><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">circular_buffer_t</span><span class="w"> </span><span class="n">send</span><span class="p">;</span>
+<span class="n">circular_buffer_t</span><span class="w"> </span><span class="n">recv</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>These are the TCP send and receive buffers for this socket. The
+<code class="docutils literal notranslate"><span class="pre">circular_buffer_t</span></code> type is defined in the <code class="docutils literal notranslate"><span class="pre">include/chitcp/buffer.h</span></code>
+and <code class="docutils literal notranslate"><span class="pre">src/libchitcp/buffer.c</span></code> files.</p>
+<p>The management of these buffers is already partially implemented:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">chisocket_send()</span></code> function places data in the send buffer
+and generates an <code class="docutils literal notranslate"><span class="pre">APPLICATION_SEND</span></code> event.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">chisocket_recv()</span></code> function extracts data from the receive
+buffer and generates an <code class="docutils literal notranslate"><span class="pre">APPLICATION_RECEIVE</span></code> event.</p></li>
+</ul>
+<p>In other words, you do not need to implement the above functionality; it
+is already implemented for you. On the other hand, you will be responsible
+for the following:</p>
+<ul class="simple">
+<li><p>When an <code class="docutils literal notranslate"><span class="pre">APPLICATION_SEND</span></code> event happens, you must check the
+send buffer to see if there is any data ready to send, and you must send
+it out if possible (i.e., if allowed by the send window).</p></li>
+<li><p>When a <code class="docutils literal notranslate"><span class="pre">SEGMENT_ARRIVAL</span></code> event happens (i.e., when the peer sends
+us data), you must extract the segments from the pending segment queue,
+extract the data from those segments, verify that the sequence numbers
+are correct and, if appropriate, put the data in the receive buffer.</p></li>
+<li><p>When an <code class="docutils literal notranslate"><span class="pre">APPLICATION_RECEIVE</span></code> event happens, you do not need to
+modify the receive buffer in any way, but you do need to check whether
+the size of the receive window should be adjusted.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="the-tcp-segment-t-struct">
+<h2>The <code class="docutils literal notranslate"><span class="pre">tcp_segment_t</span></code> struct<a class="headerlink" href="#the-tcp-segment-t-struct" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">tcp_segment_t</span></code> struct is used to store a single TCP segment:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">tcp_segment</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">raw</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w">  </span><span class="n">length</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">tcp_segment_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This struct simply contains a pointer to the segment in the heap, along with its
+total length (including the TCP header). You will rarely have to work with the
+TCP segment directly at the bit level. Instead, the <code class="docutils literal notranslate"><span class="pre">include/chitcp/segment.h</span></code>
+header defines a number of functions, macros, and structs that you can use to
+more easily work with TCP segments. More specifically:</p>
+<ul class="simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">TCP_SEGMENT_HEADER</span></code> to extract the header of the segment (with
+type <code class="docutils literal notranslate"><span class="pre">tcphdr_t</span></code>, also defined in <code class="docutils literal notranslate"><span class="pre">include/chitcp/segment.h</span></code>, which
+provides convenient access to all the header fields. Take into account that
+all the values in the header are in network-order: you will need to convert
+them to host-order before using using (and viceversa when creating a segment
+that will be sent to the peer).</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">TCP_PAYLOAD_START</span></code> and <code class="docutils literal notranslate"><span class="pre">TCP_PAYLOAD_LEN</span></code> macros to obtain a
+pointer to the segment’s payload and its length, respectively.</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">SEG_SEQ</span></code>, <code class="docutils literal notranslate"><span class="pre">SEG_ACK</span></code>, <code class="docutils literal notranslate"><span class="pre">SEG_LEN</span></code>, <code class="docutils literal notranslate"><span class="pre">SEG_WND</span></code>, <code class="docutils literal notranslate"><span class="pre">SEG_UP</span></code>
+macros to access the <code class="docutils literal notranslate"><span class="pre">SEG.</span></code>* variables defined in <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc9293#section-3.3.1">[RFC9293 3.3.1]</a>.
+Take into account that these macros <em>do</em> convert the values from network-order to host-order.</p></li>
+<li><p>Whenever you need to create a new TCP segment, <em>always</em> use the
+<code class="docutils literal notranslate"><span class="pre">chitcpd_tcp_segment_create</span></code> function defined in <code class="docutils literal notranslate"><span class="pre">serverinfo.h</span></code>. This
+will initialize certain fields in the TCP header that depend on the
+socket associated with that TCP segment (e.g., the source/destination ports).</p></li>
+</ul>
+<section id="example-creating-a-segment-without-a-payload">
+<h3>Example: Creating a segment without a payload<a class="headerlink" href="#example-creating-a-segment-without-a-payload" title="Link to this heading">¶</a></h3>
+<p>The following code creates a TCP segment with only the ACK flag set (and no other
+flags set), and with sequence number <code class="docutils literal notranslate"><span class="pre">1000</span></code>, acknowledgement number <code class="docutils literal notranslate"><span class="pre">530</span></code>, and
+window size <code class="docutils literal notranslate"><span class="pre">4096</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Allocate memory for the segment */</span>
+<span class="n">tcp_segment_t</span><span class="w"> </span><span class="o">*</span><span class="n">segment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">tcp_segment_t</span><span class="p">));</span>
+
+<span class="cm">/* Used to easily access header fields */</span>
+<span class="n">tcphdr_t</span><span class="w"> </span><span class="o">*</span><span class="n">header</span><span class="p">;</span>
+
+<span class="cm">/* chitcpd_tcp_segment_create will initialize certain fields of the</span>
+<span class="cm"> * header that you do not need to worry about, like the ports.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Note how we pass the &#39;entry&#39; parameter that is passed to the</span>
+<span class="cm"> * TCP state handler functions (and which points to the socket entry</span>
+<span class="cm"> * for the connection this segment will be sent on)</span>
+<span class="cm"> *</span>
+<span class="cm"> * Since there is no payload, we pass NULL as the payload parameter,</span>
+<span class="cm"> * and specify a payload length of zero */</span>
+<span class="n">chitcpd_tcp_segment_create</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">segment</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="cm">/* Get pointer to header */</span>
+<span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TCP_SEGMENT_HEADER</span><span class="p">(</span><span class="n">segment</span><span class="p">);</span>
+
+<span class="cm">/* Fill in header fields */</span>
+<span class="n">header</span><span class="o">-&gt;</span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chitcp_htonl</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="n">header</span><span class="o">-&gt;</span><span class="n">ack_seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chitcp_htonl</span><span class="p">(</span><span class="mi">530</span><span class="p">);</span>
+<span class="n">header</span><span class="o">-&gt;</span><span class="n">win</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chitcp_htons</span><span class="p">(</span><span class="mi">4096</span><span class="p">);</span>
+<span class="n">header</span><span class="o">-&gt;</span><span class="n">ack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="the-chitcpd-update-tcp-state-function">
+<h2>The <code class="docutils literal notranslate"><span class="pre">chitcpd_update_tcp_state</span></code> function<a class="headerlink" href="#the-chitcpd-update-tcp-state-function" title="Link to this heading">¶</a></h2>
+<p>This function is defined in <code class="docutils literal notranslate"><span class="pre">src/chitcpd/serverinfo.h</span></code>. Whenever you need to
+change the TCP state, you must use this function. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chitcpd_update_tcp_state</span><span class="p">(</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">ESTABLISHED</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">si</span></code> and <code class="docutils literal notranslate"><span class="pre">entry</span></code> parameters are the same ones that are passed to the TCP
+handler function.</p>
+</section>
+<section id="the-chitcpd-send-tcp-segment-function">
+<h2>The <code class="docutils literal notranslate"><span class="pre">chitcpd_send_tcp_segment</span></code> function<a class="headerlink" href="#the-chitcpd-send-tcp-segment-function" title="Link to this heading">¶</a></h2>
+<p>This function is defined in <code class="docutils literal notranslate"><span class="pre">src/chitcpd/connection.h</span></code>. Whenever you need to
+send a TCP segment to the socket’s peer, you must use this function. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">tcp_segment_t</span><span class="w"> </span><span class="n">segment</span><span class="p">;</span>
+
+<span class="cm">/* Initialize values in segment */</span>
+
+<span class="n">chitcpd_send_tcp_segment</span><span class="p">(</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">segment</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">si</span></code> and <code class="docutils literal notranslate"><span class="pre">entry</span></code> parameters are the same ones that are passed to the TCP
+handler function.</p>
+<p>Take into account that <code class="docutils literal notranslate"><span class="pre">chitcpd_send_tcp_segment</span></code> does not free the segment
+(it sends a copy of the segment’s contents). The caller remains responsible
+for freeing it when it is no longer needed: <code class="docutils literal notranslate"><span class="pre">chitcp_tcp_segment_free</span></code> frees the
+raw contents of the segment (header and payload) and, if the <code class="docutils literal notranslate"><span class="pre">tcp_segment_t</span></code>
+itself was allocated in the heap, you must also <code class="docutils literal notranslate"><span class="pre">free</span></code> it.</p>
+</section>
+<section id="the-chitcpd-timeout-function">
+<h2>The <code class="docutils literal notranslate"><span class="pre">chitcpd_timeout</span></code> function<a class="headerlink" href="#the-chitcpd-timeout-function" title="Link to this heading">¶</a></h2>
+<p>This function is defined in <code class="docutils literal notranslate"><span class="pre">src/chitcpd/serverinfo.h</span></code>. This function will
+generate a timeout event for a given socket. Its third parameter is the type of
+timer that has expired (<code class="docutils literal notranslate"><span class="pre">RETRANSMISSION</span></code> or <code class="docutils literal notranslate"><span class="pre">PERSIST</span></code>, defined in
+<code class="docutils literal notranslate"><span class="pre">src/chitcpd/tcp.h</span></code>), which will generate a <code class="docutils literal notranslate"><span class="pre">TIMEOUT_RTX</span></code> or <code class="docutils literal notranslate"><span class="pre">TIMEOUT_PST</span></code>
+event, respectively:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chitcpd_timeout</span><span class="p">(</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">RETRANSMISSION</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">si</span></code> and <code class="docutils literal notranslate"><span class="pre">entry</span></code> parameters are the same ones that are passed to the TCP
+handler function.</p>
+</section>
+<section id="the-logging-functions">
+<h2>The logging functions<a class="headerlink" href="#the-logging-functions" title="Link to this heading">¶</a></h2>
+<p>The chiTCP daemon prints out detailed information to standard output using a
+series of logging functions declared in <code class="docutils literal notranslate"><span class="pre">include/chitcp/log.h</span></code>. We encourage you
+to use these logging functions instead of using <code class="docutils literal notranslate"><span class="pre">printf</span></code> directly. More
+specifically, you should use the printf-style <code class="docutils literal notranslate"><span class="pre">chilog()</span></code> function to print
+messages:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chilog</span><span class="p">(</span><span class="n">WARNING</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Asked send buffer for %i bytes, but got %i.&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nbytes</span><span class="p">,</span><span class="w"> </span><span class="n">tosend</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And the <code class="docutils literal notranslate"><span class="pre">chilog_tcp()</span></code> function to dump the contents of a TCP segment:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">tcp_segment_t</span><span class="w"> </span><span class="n">segment</span><span class="p">;</span>
+
+<span class="cm">/* Initialize values in segment */</span>
+
+<span class="n">chilog</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sending segment...&quot;</span><span class="p">);</span>
+<span class="n">chilog_tcp</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">segment</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
+<span class="n">chitcpd_send_tcp_segment</span><span class="p">(</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">segment</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The third parameter of <code class="docutils literal notranslate"><span class="pre">chilog_tcp</span></code> can be <code class="docutils literal notranslate"><span class="pre">LOG_INBOUND</span></code> or <code class="docutils literal notranslate"><span class="pre">LOG_OUTBOUND</span></code>
+to designate a segment that is being received or sent, respectively (this
+affects the formatting of the segment in the log). <code class="docutils literal notranslate"><span class="pre">LOG_NO_DIRECTION</span></code> can also
+be used to indicate that the segment is neither inbound nor outbound.</p>
+<p>In both functions, the first parameter is used to specify the log level:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code>: Used for critical errors for which the only solution is to
+exit the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ERROR</span></code>: Used for non-critical errors, which may allow the program to
+continue running, but a specific part of it to fail (e.g., an individual
+socket).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WARNING</span></code>: Used to indicate unexpected situation which, while not
+technically an error, could cause one.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MINIMAL</span></code>: Compact information about important events in a socket,
+as well as one-line summaries of received/sent segments. This log
+level is described in more detail in <a class="reference internal" href="testing.html#chitcp-testing"><span class="std std-ref">Testing your Implementation</span></a>, and you
+should not use it yourself.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INFO</span></code>: Used to print general information about the state of the program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>: Used to print detailed information about the state of the
+program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRACE</span></code>: Used to print low-level information, such as function
+entry/exit points, dumps of entire data structures, etc.</p></li>
+</ul>
+<p>The level of logging is controlled by the <code class="docutils literal notranslate"><span class="pre">-v</span></code> argument when running
+<code class="docutils literal notranslate"><span class="pre">chitcpd</span></code>:</p>
+<ul class="simple">
+<li><p>No <code class="docutils literal notranslate"><span class="pre">-v</span></code> argument: Print only <code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code> and <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> and <code class="docutils literal notranslate"><span class="pre">MINIMAL</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">INFO</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vvv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-vvvv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">TRACE</span></code> messages.</p></li>
+</ul>
+</section>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="previous">
+    <a href="installing.html" title="Previous Chapter: Installing, Building, and Running chiTCP"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Installing, Building, and Running chiTCP</span>
+    </a>
+    </li>
+    <li class="next">
+    <a href="assignment1.html" title="Next Chapter: Assignment 1: TCP over a Reliable Network"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Assignment 1: TCP over a Reliable Network &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

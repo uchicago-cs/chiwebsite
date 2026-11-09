@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>chirc &#8212; The UChicago χ-Projects</title>
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css?v=284a2d1d" />
+    <link rel="stylesheet" type="text/css" href="../_static/chiweb.css?v=95aedf88" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Introduction" href="intro.html" />
+    <link rel="prev" title="The chidb Shell" href="../chidb/shell.html" />
+
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27880910-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          The UChicago χ-Projects</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../about.html">About</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Projects <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc">
+      
+      <li class="toctree-l1"><a class="reference internal" href="../chidb/index.html">chidb</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="#">chirc</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chitcp/index.html">chiTCP</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chirouter/index.html">chirouter</a></li> 
+      <li class="toctree-l1"><a class="reference internal" href="../chistributed/index.html">chistributed</a></li>
+      <li class="toctree-l1"><a class="reference internal" href="../chisubmit/index.html">chisubmit</a></li>      
+  </ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+<div class="row">
+    <div class="col-md-12">
+        <ul class="breadcrumb">
+          <li><a href="../index.html">The UChicago χ-Projects</a></li>
+            <li class="active">chirc</li>
+        </ul>
+    </div>
+</div>
+
+
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="chirc">
+<h1>chirc<a class="headerlink" href="#chirc" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="irc.html">Internet Relay Chat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="irc.html#the-irc-protocol">The IRC Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="irc.html#message-format">Message format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="irc.html#replies">Replies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="irc_examples.html">Example IRC Communications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="irc_examples.html#logging-into-an-irc-server">Logging into an IRC server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="irc_examples.html#messaging-between-users">Messaging between users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="irc_examples.html#joining-talking-in-and-leaving-a-channel">Joining, talking in, and leaving a channel</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing, Building, and Running chirc</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#software-requirements">Software Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#running">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installing.html#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment1.html">Assignment 1: Basic Message Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment2.html">Assignment 2: Supporting Multiple Clients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#connection-registration">Connection Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#privmsg-and-notice"><code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#ping-and-pong"><code class="docutils literal notranslate"><span class="pre">PING</span></code> and <code class="docutils literal notranslate"><span class="pre">PONG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#motd"><code class="docutils literal notranslate"><span class="pre">MOTD</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#lusers"><code class="docutils literal notranslate"><span class="pre">LUSERS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#whois"><code class="docutils literal notranslate"><span class="pre">WHOIS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#err-unknowncommand"><code class="docutils literal notranslate"><span class="pre">ERR_UNKNOWNCOMMAND</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment2.html#robustness">Robustness</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment3.html">Assignment 3: Channels and Modes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#join"><code class="docutils literal notranslate"><span class="pre">JOIN</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#privmsg-and-notice-to-channels"><code class="docutils literal notranslate"><span class="pre">PRIVMSG</span></code> and <code class="docutils literal notranslate"><span class="pre">NOTICE</span></code> to channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#part"><code class="docutils literal notranslate"><span class="pre">PART</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#topic"><code class="docutils literal notranslate"><span class="pre">TOPIC</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#user-and-channel-modes">User and channel modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#away"><code class="docutils literal notranslate"><span class="pre">AWAY</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#names"><code class="docutils literal notranslate"><span class="pre">NAMES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#list"><code class="docutils literal notranslate"><span class="pre">LIST</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#who"><code class="docutils literal notranslate"><span class="pre">WHO</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment3.html#updating-commands-from-the-previous-assignment">Updating commands from the previous assignment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assignment4.html">Assignment 4: Abridged version of Assignments 2 and 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assignment5.html">Assignment 5: IRC Networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assignment5.html#the-network-specification-file">The network specification file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment5.html#pass-and-server"><code class="docutils literal notranslate"><span class="pre">PASS</span></code> and <code class="docutils literal notranslate"><span class="pre">SERVER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment5.html#nick"><code class="docutils literal notranslate"><span class="pre">NICK</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment5.html#connect"><code class="docutils literal notranslate"><span class="pre">CONNECT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment5.html#relaying-commands">Relaying Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assignment5.html#querying-the-network-s-state">Querying the Network’s State</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing your Implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#using-the-automated-tests">Using the automated tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#manually-logging-into-your-irc-server">Manually logging into your IRC server</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+    </div>
+    
+    <div class="row">
+    <div class="col-md-12">
+<nav class="related">
+  <ul class="pager">
+    <li class="next">
+    <a href="intro.html" title="Next Chapter: Introduction"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Introduction &raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+    </div>
+
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2010-2022, The University of Chicago.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
