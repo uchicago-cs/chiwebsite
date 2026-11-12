@@ -134,35 +134,37 @@ root@e37390d6efd7:/chirouter#
 </div>
 <p>Then, inside the root shell, run <code class="docutils literal notranslate"><span class="pre">./run-tests</span></code>. This will run all the
 tests:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>================================ test session starts ================================
-platform linux -- Python 3.10.12, pytest-8.2.0, pluggy-1.5.0
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0
 rootdir: /chirouter/src/python/chirouter/tests
 configfile: pytest.ini
-plugins: json-0.4.0
-collected 24 items
+plugins: json-report-1.5.0, metadata-3.1.1
+collected 31 items
 
-src/python/chirouter/tests/test_2router.py .....                              [ 20%]
-src/python/chirouter/tests/test_3router.py ......                             [ 45%]
-src/python/chirouter/tests/test_basic.py .............                        [100%]
+src/python/chirouter/tests/test_2router.py .....                         [ 16%]
+src/python/chirouter/tests/test_3router.py ......                        [ 35%]
+src/python/chirouter/tests/test_basic.py ....................            [100%]
 
-------------------- generated json report: /chirouter/tests.json --------------------
-=========================== 24 passed in 98.03s (0:01:38) ===========================
+--------------------------------- JSON report ----------------------------------
+report saved to: tests.json
+======================== 31 passed in 89.17s (0:01:29) =========================
 </pre></div>
 </div>
-<p>In the chirouter terminal, you will see the log messages for each test.</p>
+<p>In the chirouter terminal, you will see the log messages for each test (if you
+ran chirouter with <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">-vv</span></code>).</p>
 <p>To get a score report, run <code class="docutils literal notranslate"><span class="pre">./run-grade</span></code>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root@89b17fd037b2:/chirouter# ./run-grade
 chirouter
 =========================================================================
 Category                            Passed / Total       Score  / Points
 -------------------------------------------------------------------------
-Responding to ARP requests          1      / 1           5.00   / 5.00
-ICMP requests to router             3      / 3           15.00  / 15.00
+Responding to ARP requests          2      / 2           5.00   / 5.00
+ICMP requests to router             6      / 6           15.00  / 15.00
 ARP requests and ARP replies        1      / 1           10.00  / 10.00
-IP forwarding                       2      / 2           15.00  / 15.00
+IP forwarding                       3      / 3           15.00  / 15.00
 Handling ARP pending requests       1      / 1           10.00  / 10.00
-Timing out pending ARP requests     1      / 1           5.00   / 5.00
-Basic Topology                      4      / 4           15.00  / 15.00
+Timing out pending ARP requests     2      / 2           5.00   / 5.00
+Basic Topology                      5      / 5           15.00  / 15.00
 The Two Router Topology             5      / 5           15.00  / 15.00
 The Three Router Topology           6      / 6           10.00  / 10.00
 -------------------------------------------------------------------------
@@ -178,19 +180,11 @@ following parameters:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-x</span></code>: Stop after the first failed test. This can be useful when you’re failing
 multiple tests, and want to focus on debugging one failed test at a time.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-s</span></code>: Do not suppress output from successful tests. By default, py.test only
-shows the output produced by chirouter if a test fails. In some cases, you may want
-to look at the log messages of a successful test; use this option to force py.test
-to show the output for that test.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--chirouter-loglevel</span> <span class="pre">N</span></code>: This controls the logging level of the chirouter server run
-by the tests. You can specify the following values for <code class="docutils literal notranslate"><span class="pre">N</span></code>:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Corresponds to the default level of logging.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Corresponds to calling chirouter with the <code class="docutils literal notranslate"><span class="pre">-v</span></code> option.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Corresponds to calling chirouter with the <code class="docutils literal notranslate"><span class="pre">-vv</span></code> option.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: Corresponds to calling chirouter with the <code class="docutils literal notranslate"><span class="pre">-vvv</span></code> option.</p></li>
-</ul>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span></code>: Do not suppress output from successful tests. By default, pytest only
+shows the output of a test if the test fails; use this option to see the output
+of every test. Note that chirouter’s log messages are not part of this output:
+they always appear in the terminal where you are running chirouter (so, if you
+want more detailed log messages, run chirouter with <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">-vv</span></code>).</p></li>
 </ul>
 <p>If you are familiar with pytest (the testing framework we use to run the tests),
 you can actually pass any parameter accepted by pytest to <code class="docutils literal notranslate"><span class="pre">run-tests</span></code>.</p>
@@ -201,7 +195,7 @@ you can actually pass any parameter accepted by pytest to <code class="docutils 
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-tests --chirouter-category RESPONDING_ARP_REQUESTS
 </pre></div>
 </div>
-<p>To see the exact categories available in each assignment, run the following
+<p>To see the exact categories available, run the following
 inside your <code class="docutils literal notranslate"><span class="pre">build/</span></code> directory:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make test-categories
 </pre></div>

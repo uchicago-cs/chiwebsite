@@ -145,7 +145,14 @@ please note that your instructor may give you more specific instructions on how
 to get the chirouter code.</p>
 <section id="building-chirouter">
 <h2>Building chirouter<a class="headerlink" href="#building-chirouter" title="Link to this heading">¶</a></h2>
-<p>To build chirouter, the only requirement is <a class="reference external" href="https://cmake.org/">CMake</a> (version 3.21 or higher).</p>
+<p>To build chirouter, you need a C compiler, <code class="docutils literal notranslate"><span class="pre">make</span></code>, and <a class="reference external" href="https://cmake.org/">CMake</a> (version 3.21 or higher).
+These may not be installed by default (in particular, a new Ubuntu installation on WSL2
+does not include them). On Ubuntu (including Ubuntu on WSL2), you can install them
+by running the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo apt update
+sudo apt install build-essential cmake
+</pre></div>
+</div>
 <p>The first time you download the chirouter code to your machine, you must run the
 following from the root of the chirouter code tree:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cmake -B build/
@@ -163,13 +170,13 @@ and the Ethernet frames that arrive at the router). Defaults to 23320.</p></li>
 the Ethernet frames sent/received by the routers. This file can be opened in Wireshark for analysis.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code>, <code class="docutils literal notranslate"><span class="pre">-vv</span></code>, or <code class="docutils literal notranslate"><span class="pre">-vvv</span></code>: To control the level of logging. This is described in
 more detail in <a class="reference internal" href="implementing.html#chirouter-implementing"><span class="std std-ref">Implementation Guide</span></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-q</span></code>: Only print error messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q</span></code>: Do not print any log messages.</p></li>
 </ul>
 </section>
 <section id="installing-the-chirouter-docker-container">
 <h2>Installing the chirouter Docker container<a class="headerlink" href="#installing-the-chirouter-docker-container" title="Link to this heading">¶</a></h2>
-<p>chirouter depends on the <a class="reference external" href="http://mininet.org/">mininet</a> network emulator to simulate the conditions of a real network.
-While it is technically possible to install mininet by itself, it is much easier to run a Docker container
+<p>chirouter depends on the <a class="reference external" href="http://mininet.org/">Mininet</a> network emulator to simulate the conditions of a real network.
+While it is technically possible to install Mininet by itself, it is much easier to run a Docker container
 with all the necessary software. We provide such a container, and provide instructions below on how to install
 it and run it. The container works on both Intel/AMD computers and ARM computers (including Macs with Apple
 Silicon); Docker will automatically download the right version for your computer.</p>
@@ -240,7 +247,7 @@ mininet&gt;
 </pre></div>
 </div>
 <p>If you look at the first terminal, you should see the following output:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:52]   INFO Mininet connected from 10.0.0.3:48054
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:52]   INFO Mininet connected from 172.17.0.2:48054
 [2026-11-03 18:42:52]   INFO Received 1 routers
 [2026-11-03 18:42:52]   INFO --------------------------------------------------------------------------------
 [2026-11-03 18:42:52]   INFO ROUTER r1
@@ -258,7 +265,7 @@ mininet&gt;
 </div>
 <p>Note: The MAC addresses (and the address Mininet connects from) will be different,
 but everything else should look as it does above.</p>
-<p>To exit the mininet prompt in the second terminal, press Control-D</p>
+<p>To exit the Mininet prompt in the second terminal, press Control-D.</p>
 <p>Next up, skip to the “Running chirouter” section below.</p>
 </section>
 <section id="windows">
@@ -282,9 +289,17 @@ signing in” when prompted to sign up for an account)</p>
 <figure class="align-default">
 <img alt="../_images/docker-windows-3.png" src="../_images/docker-windows-3.png" />
 </figure>
-<p>Next, open two terminals: a WSL2 terminal and a PowerShell terminal.</p>
-<p>On the WSL2 terminal, go to the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory of your repository, and
-run the following:</p>
+<p>Alternatively, you can download the image by running the following in a WSL2 terminal:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker pull borjasotomayor/chirouter
+</pre></div>
+</div>
+<p>Docker Desktop makes the <code class="docutils literal notranslate"><span class="pre">docker</span></code> command available in WSL2. If the <code class="docutils literal notranslate"><span class="pre">docker</span></code>
+command is not found, or you get an error like <code class="docutils literal notranslate"><span class="pre">Cannot</span> <span class="pre">connect</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">Docker</span> <span class="pre">daemon</span>
+<span class="pre">at</span> <span class="pre">unix:///var/run/docker.sock</span></code>, open Docker Desktop’s Settings, go to “Resources” and then
+“WSL integration”, and make sure integration is enabled for your Ubuntu distribution.
+You will run all the commands below in WSL2, not in PowerShell or the Command Prompt.</p>
+<p>Next, open two WSL2 terminals. On the first terminal, go to the <code class="docutils literal notranslate"><span class="pre">build</span></code>
+directory of your repository, and run the following:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirouter -vv
 </pre></div>
 </div>
@@ -292,17 +307,9 @@ run the following:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:51]   INFO Waiting for connection from Mininet...
 </pre></div>
 </div>
-<p>Then, on the PowerShell terminal, run the following:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker.exe run -ti --rm --privileged --name chirouter --add-host=host.docker.internal:host-gateway borjasotomayor/chirouter basic
-</pre></div>
-</div>
-<p>Note: To avoid running that command every time, you can also create a
-file called <code class="docutils literal notranslate"><span class="pre">run-docker.ps1</span></code> with the following contents:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>docker.exe run -ti --rm --privileged --name chirouter --add-host=host.docker.internal:host-gateway borjasotomayor/chirouter $args
-</pre></div>
-</div>
-<p>Then, run the following:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.\run-docker.ps1 basic
+<p>On the second terminal, run the following from the root of your
+repository:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-docker basic
 </pre></div>
 </div>
 <p>You should see the following output:</p>
@@ -327,8 +334,8 @@ r1 s1001 s1002 s1003
 mininet&gt;
 </pre></div>
 </div>
-<p>On the WSL2 terminal, you should see the following:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:52]   INFO Mininet connected from 10.0.0.3:48054
+<p>On the first terminal, you should see the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:52]   INFO Mininet connected from 172.17.0.2:48054
 [2026-11-03 18:42:52]   INFO Received 1 routers
 [2026-11-03 18:42:52]   INFO --------------------------------------------------------------------------------
 [2026-11-03 18:42:52]   INFO ROUTER r1
@@ -345,34 +352,27 @@ mininet&gt;
 </pre></div>
 </div>
 <p>Note: The MAC addresses (and the address Mininet connects from) will be different,
-but everything else should look as it does above.</p>
-<p>To exit the mininet prompt in the PowerShell terminal, press Control-D</p>
+but everything else should look as it does above. On Windows, Mininet will usually
+connect from <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>.</p>
+<p>To exit the Mininet prompt in the second terminal, press Control-D.</p>
 <p>Next up, skip to the “Running chirouter” section below.</p>
 </section>
 </section>
 <section id="running-chirouter">
 <h2>Running chirouter<a class="headerlink" href="#running-chirouter" title="Link to this heading">¶</a></h2>
 <p>Running chirouter involves running the <code class="docutils literal notranslate"><span class="pre">chirouter</span></code> executable in one terminal,
-and mininet (using the Docker container) in another terminal. To do this,
-follow the same instructions describe above when installing the Docker container.</p>
+and Mininet (using the Docker container) in another terminal. To do this,
+follow the same instructions described above when installing the Docker container.</p>
 <p>The first parameter to the <code class="docutils literal notranslate"><span class="pre">run-docker</span></code> script specifies the network topology
 we want to simulate:</p>
-<ul>
-<li><p>MacOS/Linux:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./run-docker basic
 </pre></div>
 </div>
-</li>
-<li><p>Windows:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.\run-docker.ps1 basic
-</pre></div>
-</div>
-</li>
-</ul>
+<p>(on Windows, remember to run this in a WSL2 terminal)</p>
 <p>These topologies are described in more detail in the <a class="reference internal" href="testing.html#chirouter-testing"><span class="std std-ref">Testing your Implementation</span></a>
 page but, for now, all we need to know is that the <code class="docutils literal notranslate"><span class="pre">basic</span></code> topology involves
 a single router connecting multiple networks together, each containing some hosts.</p>
-<p>The mininet terminal (which will show a prompt like this: <code class="docutils literal notranslate"><span class="pre">mininet&gt;</span></code>)
+<p>The Mininet terminal (which will show a prompt like this: <code class="docutils literal notranslate"><span class="pre">mininet&gt;</span></code>)
 will allow you to run network commands on a specific host of the topology. For example,
 this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mininet&gt; client1 ping -c 4 server1
@@ -383,7 +383,7 @@ ping <code class="docutils literal notranslate"><span class="pre">server1</span>
 by Mininet, the commands that are being run are the exact same ones you
 would run on a Linux system.</p>
 <p>Please note that the above command won’t yet work, because you have not
-yet implemented the router. However, to verify that mininet is running correctly,
+yet implemented the router. However, to verify that Mininet is running correctly,
 you can run the following:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mininet&gt; client1 ping -c 4 client1
 PING 10.0.100.1 (10.0.100.1) 56(84) bytes of data.
@@ -412,6 +412,7 @@ From 10.0.100.1 icmp_seq=3 Destination Host Unreachable
 4 packets transmitted, 0 received, +3 errors, 100% packet loss, time 3069ms
 </pre></div>
 </div>
+<p>(Depending on timing, you may see four <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">Host</span> <span class="pre">Unreachable</span></code> lines instead of three.)</p>
 <p>However, if you look at the chirouter logs, you should see that it <em>is</em> receiving ARP requests from <code class="docutils literal notranslate"><span class="pre">client1</span></code>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[2026-11-03 18:42:55]  DEBUG Received Ethernet frame on interface r1-eth3
 [2026-11-03 18:42:55]  DEBUG    ######################################################################
@@ -424,8 +425,13 @@ From 10.0.100.1 icmp_seq=3 Destination Host Unreachable
 [2026-11-03 18:42:55]  DEBUG    ######################################################################
 </pre></div>
 </div>
-<p>As you develop your router, please note that it is important that you start chirouter and mininet in
-the same order: chirouter first, followed by mininet.</p>
+<p>As you develop your router, please note that it is important that you start chirouter and Mininet in
+the same order: chirouter first, followed by Mininet.</p>
+<p>You should always exit Mininet by pressing Control-D at the <code class="docutils literal notranslate"><span class="pre">mininet&gt;</span></code> prompt.
+If you close the terminal instead, the container may keep running in the background.
+You can see the running containers with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code> (or in the “Containers” section
+of Docker Desktop), and stop a container with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">rm</span> <span class="pre">-f</span> <span class="pre">CONTAINER</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">CONTAINER</span></code> is the container ID or name shown by <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code>.</p>
 <section id="running-without-a-topology">
 <h3>Running without a topology<a class="headerlink" href="#running-without-a-topology" title="Link to this heading">¶</a></h3>
 <p>If you run <code class="docutils literal notranslate"><span class="pre">run-docker</span></code> without any parameters, you will instead get a
@@ -436,7 +442,7 @@ root@e37390d6efd7:/chirouter#
 </div>
 <p>You will need to do this to run the automated tests, which are described
 later in this documentation.</p>
-<p>Inside this root shell, you can run also run a <code class="docutils literal notranslate"><span class="pre">run-mininet</span></code> command directly
+<p>Inside this root shell, you can also run a <code class="docutils literal notranslate"><span class="pre">run-mininet</span></code> command directly
 to start Mininet:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./run-docker
 root@e37390d6efd7:/chirouter# ./run-mininet topologies/basic.json
@@ -448,10 +454,10 @@ client1 client2 server1 server2
 </pre></div>
 </div>
 <p><strong>CAREFUL</strong>: When you exit this root shell, any work you did inside the container
-will be lost. You should only use the container to run mininet or the automated tests;
+will be lost. You should only use the container to run Mininet or the automated tests;
 you should not be creating and saving any files inside the container.</p>
-<p>Finally, chirouter listens on port 23320 for connections from mininet
-(and mininet will, by default, use that port). Since you will be running
+<p>Finally, chirouter listens on port 23320 for connections from Mininet
+(and Mininet will, by default, use that port). Since you will be running
 on your own computer, this should not cause any conflicts but, if you do
 need to use a different port, run chirouter like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./chirouter -p PORT

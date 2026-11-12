@@ -191,10 +191,10 @@ ICMP messages directed to the router, and IP datagrams.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">chirouter_process_ethernet_frame</span></code> function will receive an <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code> struct
 representing an Ethernet frame arriving at the router. This struct contains the raw contents
 of the Ethernet frame, but you will generally want to access individual fields not just
-in the Ethernet header, but also is other protocol headers (such as ARP, IP, and ICMP) contained within
+in the Ethernet header, but also in other protocol headers (such as ARP, IP, and ICMP) contained within
 the Ethernet frame.</p>
 <p>To access these protocol headers, you should use the structs and macros provided in the
-<code class="docutils literal notranslate"><span class="pre">ethernet.h</span></code>, <code class="docutils literal notranslate"><span class="pre">arp.h</span></code>, <code class="docutils literal notranslate"><span class="pre">ipv4.h</span></code>, and <code class="docutils literal notranslate"><span class="pre">icmp.h</span></code> header files (located in the <code class="docutils literal notranslate"><span class="pre">src/router/protocols</span></code> directory).</p>
+<code class="docutils literal notranslate"><span class="pre">ethernet.h</span></code>, <code class="docutils literal notranslate"><span class="pre">arp.h</span></code>, <code class="docutils literal notranslate"><span class="pre">ipv4.h</span></code>, and <code class="docutils literal notranslate"><span class="pre">icmp.h</span></code> header files (located in the <code class="docutils literal notranslate"><span class="pre">src/c/protocols</span></code> directory).</p>
 <p>For example, given an inbound Ethernet frame (an <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code> struct) you can access the
 different headers like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Accessing the Ethernet header */
@@ -216,7 +216,7 @@ the structs/macros in <code class="docutils literal notranslate"><span class="pr
 values in each header. For example, creating an ARP reply would look something like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int frame_len = sizeof(ethhdr_t) + sizeof(arp_packet_t);
 uint8_t out_frame[frame_len];
-memset(arp_reply, 0, sizeof(out_frame));
+memset(out_frame, 0, sizeof(out_frame));
 
 ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
 /* Use ether_hdr to set the fields in the Ethernet header */
@@ -230,7 +230,7 @@ arp_packet_t* arp = (arp_packet_t*) (out_frame + sizeof(ethhdr_t));
    it is stored in payload_len */
 int frame_len = sizeof(ethhdr_t) + sizeof(iphdr_t) + ICMP_HDR_SIZE + payload_len;
 uint8_t out_frame[frame_len];
-memset(frame, 0, sizeof(out_frame));
+memset(out_frame, 0, sizeof(out_frame));
 
 ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
 /* Use ether_hdr to set the fields in the Ethernet header */
@@ -246,7 +246,7 @@ icmp_packet_t* icmp = (icmp_packet_t*) (out_frame + sizeof(ethhdr_t) + sizeof(ip
 <section id="the-chirouter-send-frame-function">
 <h2>The <code class="docutils literal notranslate"><span class="pre">chirouter_send_frame</span></code> function<a class="headerlink" href="#the-chirouter-send-frame-function" title="Link to this heading">¶</a></h2>
 <p>Once you’ve crafted an Ethernet frame, you will need to send it through one of the router’s interfaces.
-This is done using the <code class="docutils literal notranslate"><span class="pre">chirouter_send_frame</span></code> function, defined in the <code class="docutils literal notranslate"><span class="pre">chirouter.h</span></code> header file.</p>
+This is done using the <code class="docutils literal notranslate"><span class="pre">chirouter_send_frame</span></code> function, declared (and documented) in the <code class="docutils literal notranslate"><span class="pre">chirouter.h</span></code> header file.</p>
 </section>
 <section id="arp-c-arp-h">
 <h2>arp.c / arp.h<a class="headerlink" href="#arp-c-arp-h" title="Link to this heading">¶</a></h2>
@@ -259,7 +259,7 @@ This thread will wake up every second to purge stale entries in the ARP cache
 <p>For each pending request in the list, it will call <code class="docutils literal notranslate"><span class="pre">chirouter_arp_process_pending_req</span></code>,
 which must either re-send the pending ARP request or cancel the request and send
 ICMP Host Unreachable messages in reply to all the withheld frames (this is
-described in more detail in <a class="reference internal" href="assignment.html#chirouter-assignment"><span class="std std-ref">Assignment: Implementing an IP router</span></a>.).</p>
+described in more detail in <a class="reference internal" href="assignment.html#chirouter-assignment"><span class="std std-ref">Assignment: Implementing an IP router</span></a>).</p>
 <p>Because the main thread and the ARP thread may both need to access the ARP cache or the
 list of pending ARP requests at the same time, you must <em>always</em> lock the <code class="docutils literal notranslate"><span class="pre">lock_arp</span></code> mutex
 (in the router context) before accessing either the ARP cache or the list of pending ARP
@@ -272,32 +272,35 @@ locked before the functions are called.</p>
 </section>
 <section id="utils-c-utils-h">
 <h2>utils.c / utils.h<a class="headerlink" href="#utils-c-utils-h" title="Link to this heading">¶</a></h2>
-<p>This module provides two useful functions: one to compute an IP or ICMP checksum, and one to
-compare MAC addresses. If you need to add functions in your implementation that need to
-be shared by <code class="docutils literal notranslate"><span class="pre">router.c</span></code> and <code class="docutils literal notranslate"><span class="pre">arp.c</span></code>, you should add them to this module.</p>
+<p>This module provides a few useful functions: <code class="docutils literal notranslate"><span class="pre">cksum</span></code> (to compute an IP or ICMP checksum),
+<code class="docutils literal notranslate"><span class="pre">ethernet_addr_is_equal</span></code> (to compare MAC addresses), and <code class="docutils literal notranslate"><span class="pre">xmalloc</span></code>/<code class="docutils literal notranslate"><span class="pre">xcalloc</span></code>
+(versions of <code class="docutils literal notranslate"><span class="pre">malloc</span></code>/<code class="docutils literal notranslate"><span class="pre">calloc</span></code> that exit the program if memory cannot be allocated).
+If you need to add functions in your implementation that need to be shared by
+<code class="docutils literal notranslate"><span class="pre">router.c</span></code> and <code class="docutils literal notranslate"><span class="pre">arp.c</span></code>, you should add them to this module.</p>
 </section>
 <section id="the-logging-functions">
 <h2>The logging functions<a class="headerlink" href="#the-logging-functions" title="Link to this heading">¶</a></h2>
 <p>chirouter prints out detailed information to standard output using a
-series of logging functions declared in <code class="docutils literal notranslate"><span class="pre">src/router/log.h</span></code>. We encourage you
+series of logging functions declared in <code class="docutils literal notranslate"><span class="pre">src/c/log.h</span></code>. We encourage you
 to use these logging functions instead of using <code class="docutils literal notranslate"><span class="pre">printf</span></code> directly. More
 specifically, you should use the printf-style <code class="docutils literal notranslate"><span class="pre">chilog()</span></code> function to print
 messages:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chilog</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Received Ethernet frame with unsupported Ethertype: %i)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ntohs</span><span class="p">(</span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">));</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">chilog</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Received Ethernet frame with unsupported Ethertype: %i&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ntohs</span><span class="p">(</span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">));</span>
 </pre></div>
 </div>
 <p>And the <code class="docutils literal notranslate"><span class="pre">chilog_ethernet()</span></code>, <code class="docutils literal notranslate"><span class="pre">chilog_arp()</span></code>, <code class="docutils literal notranslate"><span class="pre">chilog_ip()</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">chilog_icmp()</span></code> functions to log the contents of an Ethernet header,
-ARP message, IP header, or ICMP message. For example, suppose we have
+ARP message, IP header, or ICMP message (note that <code class="docutils literal notranslate"><span class="pre">chilog_ethernet()</span></code> takes
+the entire frame and its length, and prints the frame’s payload too). There is also
+a <code class="docutils literal notranslate"><span class="pre">chilog_hex()</span></code> function to print arbitrary data in hexdump format. For example, suppose we have
 received an Ethernet frame (a <code class="docutils literal notranslate"><span class="pre">frame</span></code> variable of type <code class="docutils literal notranslate"><span class="pre">ethernet_frame_t</span></code>) containing
-and ICMP message. We could log each header like this:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ethhdr_t</span><span class="o">*</span><span class="w"> </span><span class="n">ether_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ethhdr_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="p">;</span>
-<span class="n">iphdr_t</span><span class="o">*</span><span class="w"> </span><span class="n">ip_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">iphdr_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ethhdr_t</span><span class="p">));</span>
+an ICMP message. We could log each header like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">iphdr_t</span><span class="o">*</span><span class="w"> </span><span class="n">ip_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">iphdr_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ethhdr_t</span><span class="p">));</span>
 <span class="n">icmp_packet_t</span><span class="o">*</span><span class="w"> </span><span class="n">icmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">icmp_packet_t</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ethhdr_t</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">iphdr_t</span><span class="p">));</span>
 
-<span class="n">chilog_ethernet</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">ether_hdr</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
-<span class="n">chilog_ip</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">ip_hdr</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
-<span class="n">chilog_icmp</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">icmp</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_OUTBOUND</span><span class="p">);</span>
+<span class="n">chilog_ethernet</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">raw</span><span class="p">,</span><span class="w"> </span><span class="n">frame</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_INBOUND</span><span class="p">);</span>
+<span class="n">chilog_ip</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">ip_hdr</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_INBOUND</span><span class="p">);</span>
+<span class="n">chilog_icmp</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span><span class="w"> </span><span class="n">icmp</span><span class="p">,</span><span class="w"> </span><span class="n">LOG_INBOUND</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>The last parameter of these functions can be <code class="docutils literal notranslate"><span class="pre">LOG_INBOUND</span></code> or <code class="docutils literal notranslate"><span class="pre">LOG_OUTBOUND</span></code>
@@ -311,7 +314,7 @@ exit the program.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ERROR</span></code>: Used for non-critical errors, which may allow the program to
 continue running, but a specific part of it to fail (e.g., an individual
 socket).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">WARNING</span></code>: Used to indicate unexpected situation which, while not
+<li><p><code class="docutils literal notranslate"><span class="pre">WARNING</span></code>: Used to indicate unexpected situations which, while not
 technically an error, could cause one.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">INFO</span></code>: Used to print general information about the state of the program.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>: Used to print detailed information about the state of the
@@ -328,7 +331,7 @@ entry/exit points, dumps of entire data structures, etc.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-vvv</span></code>: Also print <code class="docutils literal notranslate"><span class="pre">TRACE</span></code> messages.</p></li>
 </ul>
 <p>We recommend running at the <code class="docutils literal notranslate"><span class="pre">-vv</span></code> level, which will print all the inbound
-Ethernet frames. The <code class="docutils literal notranslate"><span class="pre">-vvv</span></code> contains much lower-level information that
+Ethernet frames. The <code class="docutils literal notranslate"><span class="pre">-vvv</span></code> level prints much lower-level information that
 the instructors may need to debug a specific issue, but which is typically
 not relevant in most situations when implementing chirouter.</p>
 </section>
