@@ -14,14 +14,30 @@ help:
 
 # For the deploy target to work, a worktree must be created
 # in _build/html that tracks the gh-pages branch. You can do
-# so by running this from a freshly cloned version of the repo:
+# so by running this from the root of a freshly cloned version
+# of the repo:
 #
 #   git worktree add -B gh-pages _build/html origin/gh-pages
+#
+# If you move the repo to a different directory, run this from
+# the root of the repo to update the worktree's paths:
+#
+#   git worktree repair _build/html
+#
+# Since the site is rebuilt from scratch every time, the deploy target
+# moves the gh-pages branch to the latest remote commit (keeping the
+# freshly built files) before committing, so that deploying from a
+# checkout whose gh-pages branch is out of date doesn't fail.
 
-deploy:
-	git -C $(BUILDDIR)/html add -A .
-	git -C $(BUILDDIR)/html commit -m"Updated website"
-	git -C $(BUILDDIR)/html push origin gh-pages
+GHP = git -C $(BUILDDIR)/html
+
+deploy: html
+	rm -f $(BUILDDIR)/html/.buildinfo.bak
+	$(GHP) fetch origin gh-pages
+	$(GHP) reset --soft FETCH_HEAD
+	$(GHP) add -A .
+	$(GHP) diff --cached --quiet || $(GHP) commit -m "Updated website"
+	$(GHP) push origin HEAD:gh-pages
 
 # Note: we don't use Sphinx's "clean" target because it would remove
 # the gh-pages worktree in _build/html
