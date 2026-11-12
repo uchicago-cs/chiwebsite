@@ -12,7 +12,7 @@ functionality before you can actually start routing IP datagrams:
 * Your code must process the raw Ethernet frames that arrive through the router's
   interfaces.
 * Because you will be working at the Ethernet level, you will need to use ARP to map
-  Ethernet addresses to IP addresses.  
+  IP addresses to Ethernet addresses.  
 * Your router will need to support a small subset of the ICMP protocol so
   you can use tools like ping and traceroute, and to notify hosts of certain errors
   (e.g., if the router is given an IP datagram it cannot forward).
@@ -25,6 +25,7 @@ The chirouter documentation is divided into the following sections:
 * :ref:`chirouter-assignment`: The work you must complete in this assignment.
 * :ref:`chirouter-testing`: Suggestions and strategies for testing your
   implementation.
+* :ref:`chirouter-automated-tests`: How to run the automated tests.
    
 Acknowledgements
 ----------------

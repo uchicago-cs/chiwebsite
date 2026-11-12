@@ -68,11 +68,11 @@ Accessing/Creating Protocol Headers
 The ``chirouter_process_ethernet_frame`` function will receive an ``ethernet_frame_t`` struct
 representing an Ethernet frame arriving at the router. This struct contains the raw contents
 of the Ethernet frame, but you will generally want to access individual fields not just
-in the Ethernet header, but also is other protocol headers (such as ARP, IP, and ICMP) contained within
+in the Ethernet header, but also in other protocol headers (such as ARP, IP, and ICMP) contained within
 the Ethernet frame.
 
 To access these protocol headers, you should use the structs and macros provided in the
-``ethernet.h``, ``arp.h``, ``ipv4.h``, and ``icmp.h`` header files (located in the ``src/router/protocols`` directory).
+``ethernet.h``, ``arp.h``, ``ipv4.h``, and ``icmp.h`` header files (located in the ``src/c/protocols`` directory).
 
 For example, given an inbound Ethernet frame (an ``ethernet_frame_t`` struct) you can access the
 different headers like this::
@@ -97,7 +97,7 @@ values in each header. For example, creating an ARP reply would look something l
 
     int frame_len = sizeof(ethhdr_t) + sizeof(arp_packet_t);
     uint8_t out_frame[frame_len];
-    memset(arp_reply, 0, sizeof(out_frame));
+    memset(out_frame, 0, sizeof(out_frame));
 
     ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
     /* Use ether_hdr to set the fields in the Ethernet header */
@@ -111,7 +111,7 @@ On the other hand, creating an ICMP message would look something like this::
        it is stored in payload_len */
     int frame_len = sizeof(ethhdr_t) + sizeof(iphdr_t) + ICMP_HDR_SIZE + payload_len;
     uint8_t out_frame[frame_len];
-    memset(frame, 0, sizeof(out_frame));
+    memset(out_frame, 0, sizeof(out_frame));
 
     ethhdr_t* ether_hdr = (ethhdr_t*) out_frame;
     /* Use ether_hdr to set the fields in the Ethernet header */
@@ -126,7 +126,7 @@ The ``chirouter_send_frame`` function
 -------------------------------------
 
 Once you've crafted an Ethernet frame, you will need to send it through one of the router's interfaces.
-This is done using the ``chirouter_send_frame`` function, defined in the ``chirouter.h`` header file.
+This is done using the ``chirouter_send_frame`` function, declared (and documented) in the ``chirouter.h`` header file.
 
 arp.c / arp.h
 -------------
@@ -141,7 +141,7 @@ This thread will wake up every second to purge stale entries in the ARP cache
 For each pending request in the list, it will call ``chirouter_arp_process_pending_req``,
 which must either re-send the pending ARP request or cancel the request and send 
 ICMP Host Unreachable messages in reply to all the withheld frames (this is
-described in more detail in :ref:`chirouter-assignment`.).
+described in more detail in :ref:`chirouter-assignment`).
 
 Because the main thread and the ARP thread may both need to access the ARP cache or the
 list of pending ARP requests at the same time, you must *always* lock the ``lock_arp`` mutex
@@ -158,39 +158,42 @@ locked before the functions are called.
 utils.c / utils.h
 -----------------
 
-This module provides two useful functions: one to compute an IP or ICMP checksum, and one to
-compare MAC addresses. If you need to add functions in your implementation that need to
-be shared by ``router.c`` and ``arp.c``, you should add them to this module.
+This module provides a few useful functions: ``cksum`` (to compute an IP or ICMP checksum),
+``ethernet_addr_is_equal`` (to compare MAC addresses), and ``xmalloc``/``xcalloc``
+(versions of ``malloc``/``calloc`` that exit the program if memory cannot be allocated).
+If you need to add functions in your implementation that need to be shared by
+``router.c`` and ``arp.c``, you should add them to this module.
 
 
 The logging functions
 ---------------------
 
 chirouter prints out detailed information to standard output using a
-series of logging functions declared in ``src/router/log.h``. We encourage you
+series of logging functions declared in ``src/c/log.h``. We encourage you
 to use these logging functions instead of using ``printf`` directly. More
 specifically, you should use the printf-style ``chilog()`` function to print
 messages:
 
 .. code-block:: c
 
-    chilog(DEBUG, "Received Ethernet frame with unsupported Ethertype: %i)", ntohs(hdr->type));
+    chilog(DEBUG, "Received Ethernet frame with unsupported Ethertype: %i", ntohs(hdr->type));
 
 And the ``chilog_ethernet()``, ``chilog_arp()``, ``chilog_ip()``, and
 ``chilog_icmp()`` functions to log the contents of an Ethernet header,
-ARP message, IP header, or ICMP message. For example, suppose we have
+ARP message, IP header, or ICMP message (note that ``chilog_ethernet()`` takes
+the entire frame and its length, and prints the frame's payload too). There is also
+a ``chilog_hex()`` function to print arbitrary data in hexdump format. For example, suppose we have
 received an Ethernet frame (a ``frame`` variable of type ``ethernet_frame_t``) containing
-and ICMP message. We could log each header like this:
+an ICMP message. We could log each header like this:
 
 .. code-block:: c
 
-    ethhdr_t* ether_hdr = (ethhdr_t*) frame->raw;
     iphdr_t* ip_hdr = (iphdr_t*) (frame->raw + sizeof(ethhdr_t));
     icmp_packet_t* icmp = (icmp_packet_t*) (frame->raw + sizeof(ethhdr_t) + sizeof(iphdr_t));
 
-    chilog_ethernet(DEBUG, ether_hdr, LOG_OUTBOUND);
-    chilog_ip(DEBUG, ip_hdr, LOG_OUTBOUND);
-    chilog_icmp(DEBUG, icmp, LOG_OUTBOUND);
+    chilog_ethernet(DEBUG, frame->raw, frame->length, LOG_INBOUND);
+    chilog_ip(DEBUG, ip_hdr, LOG_INBOUND);
+    chilog_icmp(DEBUG, icmp, LOG_INBOUND);
 
 The last parameter of these functions can be ``LOG_INBOUND`` or ``LOG_OUTBOUND``
 to designate a message that is being received or sent, respectively (this
@@ -206,7 +209,7 @@ In all the functions, the first parameter is used to specify the log level:
    continue running, but a specific part of it to fail (e.g., an individual
    socket).
 
--  ``WARNING``: Used to indicate unexpected situation which, while not
+-  ``WARNING``: Used to indicate unexpected situations which, while not
    technically an error, could cause one.
 
 -  ``INFO``: Used to print general information about the state of the program.
@@ -229,6 +232,6 @@ The level of logging is controlled by the ``-v`` argument when running
 -  ``-vvv``: Also print ``TRACE`` messages.
 
 We recommend running at the ``-vv`` level, which will print all the inbound
-Ethernet frames. The ``-vvv`` contains much lower-level information that
+Ethernet frames. The ``-vvv`` level prints much lower-level information that
 the instructors may need to debug a specific issue, but which is typically
 not relevant in most situations when implementing chirouter.

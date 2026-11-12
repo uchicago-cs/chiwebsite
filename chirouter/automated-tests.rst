@@ -23,21 +23,23 @@ tests:
 
 ::
 
-   ================================ test session starts ================================
-   platform linux -- Python 3.10.12, pytest-8.2.0, pluggy-1.5.0
+   ============================= test session starts ==============================
+   platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0
    rootdir: /chirouter/src/python/chirouter/tests
    configfile: pytest.ini
-   plugins: json-0.4.0
-   collected 24 items
+   plugins: json-report-1.5.0, metadata-3.1.1
+   collected 31 items
 
-   src/python/chirouter/tests/test_2router.py .....                              [ 20%]
-   src/python/chirouter/tests/test_3router.py ......                             [ 45%]
-   src/python/chirouter/tests/test_basic.py .............                        [100%]
+   src/python/chirouter/tests/test_2router.py .....                         [ 16%]
+   src/python/chirouter/tests/test_3router.py ......                        [ 35%]
+   src/python/chirouter/tests/test_basic.py ....................            [100%]
 
-   ------------------- generated json report: /chirouter/tests.json --------------------
-   =========================== 24 passed in 98.03s (0:01:38) ===========================
+   --------------------------------- JSON report ----------------------------------
+   report saved to: tests.json
+   ======================== 31 passed in 89.17s (0:01:29) =========================
 
-In the chirouter terminal, you will see the log messages for each test.
+In the chirouter terminal, you will see the log messages for each test (if you
+ran chirouter with ``-v`` or ``-vv``).
 
 To get a score report, run ``./run-grade``:
 
@@ -48,13 +50,13 @@ To get a score report, run ``./run-grade``:
    =========================================================================
    Category                            Passed / Total       Score  / Points
    -------------------------------------------------------------------------
-   Responding to ARP requests          1      / 1           5.00   / 5.00
-   ICMP requests to router             3      / 3           15.00  / 15.00
+   Responding to ARP requests          2      / 2           5.00   / 5.00
+   ICMP requests to router             6      / 6           15.00  / 15.00
    ARP requests and ARP replies        1      / 1           10.00  / 10.00
-   IP forwarding                       2      / 2           15.00  / 15.00
+   IP forwarding                       3      / 3           15.00  / 15.00
    Handling ARP pending requests       1      / 1           10.00  / 10.00
-   Timing out pending ARP requests     1      / 1           5.00   / 5.00
-   Basic Topology                      4      / 4           15.00  / 15.00
+   Timing out pending ARP requests     2      / 2           5.00   / 5.00
+   Basic Topology                      5      / 5           15.00  / 15.00
    The Two Router Topology             5      / 5           15.00  / 15.00
    The Three Router Topology           6      / 6           10.00  / 10.00
    -------------------------------------------------------------------------
@@ -71,17 +73,11 @@ following parameters:
 
 - ``-x``: Stop after the first failed test. This can be useful when you're failing
   multiple tests, and want to focus on debugging one failed test at a time.
-- ``-s``: Do not suppress output from successful tests. By default, py.test only
-  shows the output produced by chirouter if a test fails. In some cases, you may want
-  to look at the log messages of a successful test; use this option to force py.test
-  to show the output for that test.
-- ``--chirouter-loglevel N``: This controls the logging level of the chirouter server run
-  by the tests. You can specify the following values for ``N``:
-
-  - ``0``: Corresponds to the default level of logging.
-  - ``1``: Corresponds to calling chirouter with the ``-v`` option.
-  - ``2``: Corresponds to calling chirouter with the ``-vv`` option.
-  - ``3``: Corresponds to calling chirouter with the ``-vvv`` option.
+- ``-s``: Do not suppress output from successful tests. By default, pytest only
+  shows the output of a test if the test fails; use this option to see the output
+  of every test. Note that chirouter's log messages are not part of this output:
+  they always appear in the terminal where you are running chirouter (so, if you
+  want more detailed log messages, run chirouter with ``-v`` or ``-vv``).
 
 If you are familiar with pytest (the testing framework we use to run the tests),
 you can actually pass any parameter accepted by pytest to ``run-tests``.
@@ -94,7 +90,7 @@ If you want to run only a specific category of tests, you can use the
 
     ./run-tests --chirouter-category RESPONDING_ARP_REQUESTS
 
-To see the exact categories available in each assignment, run the following
+To see the exact categories available, run the following
 inside your ``build/`` directory::
 
     make test-categories

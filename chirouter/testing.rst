@@ -4,10 +4,10 @@ Testing your Implementation
 ===========================
 
 chirouter includes automated tests, but we recommend you first start by testing your
-implementation manually from the mininet command-line interface (CLI), as this
+implementation manually from the Mininet command-line interface (CLI), as this
 will provide you with better information on the progress of your implementation.
 We also suggest you follow the implementation order described
-in this page, and running the corresponding manual tests as you
+in this page, and run the corresponding manual tests as you
 complete each part of your router, as it will allow you to verify that certain components of the router
 are working correctly before moving on to other components.
 
@@ -21,7 +21,7 @@ Basic Topology
 
 We will start by using a basic network topology with a single router, and then
 move on to more complex network topologies with multiple routers. More specifically,
-you will use the ``basic.json`` topology file when running mininet.
+you will use the ``basic.json`` topology file when running Mininet.
 This will simulate the following network topology:
 
 .. figure:: topology.png
@@ -36,7 +36,7 @@ network. The routing table for the router will be the following::
    10.0.0.0        0.0.0.0         255.0.0.0       eth3            
 
 Notice how the topology also defines four hosts (``server1``, ``server2``,
-``client1``, and ``client2``). Using the mininet CLI, you will be able
+``client1``, and ``client2``). Using the Mininet CLI, you will be able
 to run standard network commands (such as ping, traceroute, etc.) from those
 hosts.
 
@@ -47,7 +47,7 @@ Your very first task will be to respond to ARP requests. Otherwise, the other
 devices on the network will be unable to send you IP datagrams.
 
 To test whether you are generating correct ARP replies, you can run the following
-from mininet::
+from Mininet::
 
    mininet> client1 ping -c 4 10.0.0.1
    
@@ -56,7 +56,7 @@ will make ``client1`` send an ARP request for 10.0.0.1 (the IP address for the
 router's ``eth3`` interface). If you generate a correct ARP
 reply, the reply will be stored in client1's ARP cache. You can see the state of this
 cache by running ``arp -n`` in ``client1``. If your ARP reply was successful, you
-will see and entry for ``10.0.0.1`` (the MAC address will likely be different when
+will see an entry for ``10.0.0.1`` (the MAC address will likely be different when
 you run it)::
 
    mininet> client1 arp -n
@@ -64,8 +64,8 @@ you run it)::
    10.0.0.1                 ether   e2:37:3d:e5:c5:29   C                     client1-eth0
 
 Note: ``client1``'s ARP cache is completely distinct from the one you're implementing. ``client1``
-represents a computer on the network, and is completely simulated by mininet. You are implementing
-the router, which has its own ARP cache (and which you cannot query or see from the mininet
+represents a computer on the network, and is completely simulated by Mininet. You are implementing
+the router, which has its own ARP cache (and which you cannot query or see from the Mininet
 CLI).
     
 Responding to ICMP requests directed to the router
@@ -81,17 +81,14 @@ this::
 
    mininet> client1 ping -c 4 10.0.0.1
    PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
-   84 bytes from 10.0.0.1: icmp_seq=1 ttl=255 time=22.3 ms
-   84 bytes from 10.0.0.1: icmp_seq=2 ttl=255 time=3.19 ms
-   84 bytes from 10.0.0.1: icmp_seq=3 ttl=255 time=20.5 ms
-   84 bytes from 10.0.0.1: icmp_seq=4 ttl=255 time=38.3 ms
+   64 bytes from 10.0.0.1: icmp_seq=1 ttl=255 time=22.3 ms
+   64 bytes from 10.0.0.1: icmp_seq=2 ttl=255 time=3.19 ms
+   64 bytes from 10.0.0.1: icmp_seq=3 ttl=255 time=20.5 ms
+   64 bytes from 10.0.0.1: icmp_seq=4 ttl=255 time=38.3 ms
    
    --- 10.0.0.1 ping statistics ---
    4 packets transmitted, 4 received, 0% packet loss, time 3003ms
    rtt min/avg/max/mdev = 3.197/21.120/38.381/12.460 ms
-
-**Note**: If for this ping command (or any other ping commands listed on this page),
-you get ``64 bytes from`` instead of ``84 bytes from``, that is still considered correct.
 
 To test whether you're generating ICMP Host Unreachable messages correctly, ping one
 of the router's *other* IP addresses::
@@ -131,7 +128,7 @@ Note: ``traceroute`` may seem to hang at first. This is normal: it just takes lo
 other commands.
 
 Traceroute actually uses UDP packets where the IP datagram has increasingly larger TTLs.
-This means that intermediate hops will return a Time Limit Exceeded response, and the
+This means that intermediate hops will return a Time Exceeded response, and the
 destination host will return a Port Unreachable when the IP datagram has the TTL
 set to the right number of hops.
 
@@ -177,7 +174,7 @@ IP forwarding
 Next, remove the first assumption we listed above. Instead of assuming you're only
 dealing with messages going to ``server1``, you must be able to deal with any IP
 datagram. However, you do not yet have to support gateways, nor implement Longest
-Prefix Match (as there will always be at most one match in the routing table)
+Prefix Match (as there will always be at most one match in the routing table).
 
 This means that, if you ping ``server2`` instead of ``server1``, your router must be
 able to send the ICMP messages to the right network (but, like above, the first messages
@@ -204,7 +201,7 @@ Handling ARP pending requests
 Now, we remove the second assumption. When you send an ARP request, you must create
 a pending ARP request. All the IP datagrams that are waiting for the outcome of that
 ARP request must be stored in the pending request's list of withheld frames and,
-when and ARP reply arrives, you must forward those IP datagrams. However,
+when an ARP reply arrives, you must forward those IP datagrams. However,
 you do not need to worry about re-sending ARP requests or timing out requests
 that have been sent too many times (since we are going to access hosts that we
 know exist on each network).
@@ -253,8 +250,8 @@ And you should be able to traceroute the servers::
 
    mininet> client1 traceroute -n server1
    traceroute to 192.168.1.2 (192.168.1.2), 30 hops max, 60 byte packets
-    1  10.0.0.1 (10.0.0.1)  105.121 ms  108.790 ms  172.695 ms
-    2  192.168.1.2 (192.168.1.2)  242.927 ms  306.856 ms  306.985 ms
+    1  10.0.0.1  105.121 ms  108.790 ms  172.695 ms
+    2  192.168.1.2  242.927 ms  306.856 ms  306.985 ms
 
 To ensure that your implementation is correct, and that it doesn't happen to work
 because your router had cached an earlier reply, you should run each of the above
@@ -408,7 +405,7 @@ And the routing table for Router 3 is::
 If your implementation works with the 2-router topology, it is likely that it
 will also work with this 3-router topology. However, this topology serves
 as a final check that you didn't hardwire anything in your router in a way
-that just happens to work when there is only one or two routers.
+that just happens to work when there are only one or two routers.
 
 If implemented correctly, you should be able to ping from ``host1``
 to ``host100`` (this tests whether you've implemented Longest Prefix Match correctly)::
@@ -424,17 +421,18 @@ to ``host100`` (this tests whether you've implemented Longest Prefix Match corre
     4 packets transmitted, 4 received, 0% packet loss, time 3004ms
     rtt min/avg/max/mdev = 86.804/110.837/167.881/33.479 ms
 
-Note: When running this test, you may encounter this warning in your chirouter logs::
+Note: When running this test, you may occasionally encounter this warning in your chirouter logs::
 
-    [2018-02-23 10:19:05]   WARN Received a non-broadcast Ethernet frame with a destination address that doesn't match the interface
+    [2026-11-03 10:19:05]   WARN Received a non-broadcast Ethernet frame with a destination address that doesn't match the interface
 
-The reason for this is that the "switches" in each network actually
-behave like hubs. This means that, when ``host100`` sends frames
-intended for Router 2's ``eth3`` interface, these will also be received by Router 1's ``eth1`` interface.
-You can safely ignore these warnings in this test, but you should not encounter them in
-other tests.
+The reason for this is that the switches in each network send a frame on all
+their ports when they have not yet learned which port the frame's destination
+address is on. In this topology, ``host100``, Router 1's ``eth1`` interface, and
+Router 2's ``eth3`` interface are on the same network so, if this happens with a frame
+that ``host100`` sends to Router 2's ``eth3`` interface, it will also be received by
+Router 1's ``eth1`` interface. You can safely ignore these warnings.
 
-Ping from ``host1`` to ``host4`` and viceversa::
+Ping from ``host1`` to ``host4`` and vice versa::
 
     mininet> host1 ping -c 4 host4
     PING 10.4.0.42 (10.4.0.42) 56(84) bytes of data.
@@ -460,7 +458,7 @@ Ping from ``host1`` to ``host4`` and viceversa::
     4 packets transmitted, 4 received, 0% packet loss, time 3005ms
     rtt min/avg/max/mdev = 21.410/40.953/51.891/11.867 ms
 
-Traceroute from ``host1`` to ``host4`` (and viceversa)::
+Traceroute from ``host1`` to ``host4`` (and vice versa)::
 
     mininet> host1 traceroute host4
     traceroute to 10.4.0.42 (10.4.0.42), 30 hops max, 60 byte packets

@@ -28,7 +28,7 @@ only need to support a small subset of ICMP:
 * Destination Unreachable (ICMP Type 3):
 
   * Network Unreachable (Code 0)
-  * Host Unreachabe (Code 1)
+  * Host Unreachable (Code 1)
   * Port Unreachable (Code 3)
   
 * Time Exceeded (ICMP Type 11)
@@ -48,6 +48,18 @@ addresses, you will need to send an ICMP reply:
   this behaviour will change slightly)
 * If your router receives an ICMP Echo Request directed to one of its IP addresses, 
   you must send an ICMP Echo Reply to the host that sent the ICMP Echo Request.
+
+If more than one of the above applies to an IP datagram, the earlier rules take
+precedence. In particular, if your router receives a TCP/UDP packet directed to the
+IP address of the interface on which it was received, and that packet's TTL is 1, you must
+send an ICMP Port Unreachable message, not a Time Exceeded message (this is what allows
+``traceroute`` to detect that it has reached the router).
+
+Optionally, if your router receives an IP datagram directed to the IP address of the
+interface on which it was received, and that datagram is not a TCP, UDP, or ICMP
+message (and its TTL is not 1), you may send an ICMP Protocol Unreachable message
+(ICMP Type 3, Code 2) to the host that sent the IP datagram. You are not required
+to implement this.
 
 For the above, you can assume that the source Ethernet address of the frame that
 triggered one of the above responses can be used as the destination Ethernet address
@@ -81,7 +93,7 @@ MAC address of the destination host.
 
 Your router has an ARP cache, and you must always check whether an entry already
 exists for that IP address. If it does not, you will need to send
-an ARP request for that MAC address.
+an ARP request for that IP address.
 
 However, after sending the ARP request, you *must not* actively wait for the reply.
 Instead, you must create a pending ARP request (see :ref:`chirouter-implementing`)
@@ -117,7 +129,7 @@ will send an ICMP Host Unreachable reply for each of the frames in the withheld 
 IP Forwarding
 -------------
 
-When your routers receive an IP datagram that is *not* directed to one of its IP addresses,
+When your router receives an IP datagram that is *not* directed to one of its IP addresses,
 you must check whether the IP datagram can be forwarded. You must check the routing table
 and see whether the destination IP address of the IP datagram matches any of the
 networks in the routing table. If there are multiple matching entries, you must use
